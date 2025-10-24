@@ -7,6 +7,37 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## 🐳 Docker Setup
+
+This project includes a complete Docker environment with PHP 8.4, Nginx, and MySQL.
+
+### Quick Start
+
+```bash
+# Show all available commands
+make help
+
+# Fresh installation (recommended)
+make fresh
+
+# Your app will be running at http://localhost:8080
+```
+
+For detailed instructions, see [DOCKER_QUICK_START.md](DOCKER_QUICK_START.md)
+
+### Common Commands
+
+```bash
+make up              # Start services
+make down            # Stop services
+make shell-cli       # Access PHP CLI
+make migrate         # Run migrations
+make test            # Run tests
+make logs            # View logs
+```
+
+---
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

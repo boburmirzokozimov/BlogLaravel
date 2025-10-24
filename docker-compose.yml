@@ -1,0 +1,77 @@
+services:
+  # PHP-FPM Service
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: blog-php-fpm
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/custom.ini
+    networks:
+      - blog-network
+    depends_on:
+      - database
+
+  # Nginx Service
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+    container_name: blog-nginx
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - blog-network
+    depends_on:
+      - php-fpm
+
+  # PHP-CLI Service
+  php-cli:
+    build:
+      context: .
+      dockerfile: docker/php-cli/Dockerfile
+    container_name: blog-php-cli
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - blog-network
+    depends_on:
+      - database
+    tty: true
+    stdin_open: true
+
+  # Database Service (MySQL)
+  database:
+    image: mysql:8.0
+    container_name: blog-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: blog
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: password
+      MYSQL_USER: blog_user
+    volumes:
+      - dbdata:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - blog-network
+
+networks:
+  blog-network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+
