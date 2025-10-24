@@ -1,0 +1,20 @@
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+  paths:
+    - app
+    - routes
+
+  excludePaths:
+    - tests/*
+    - tests/**
+
+  level: 1 # можешь повышать по мере готовности
+
+  ignoreErrors:
+    # можно добавлять конкретные ошибки по regex
+    # пример:
+    # - '#Access to an undefined property App\\Models\\.*#'
+
+  checkModelAppends: false
