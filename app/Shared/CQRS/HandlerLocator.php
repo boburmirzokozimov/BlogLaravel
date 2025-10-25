@@ -24,7 +24,7 @@ final readonly class HandlerLocator
         $handlerClass = $this->resolveHandlerClass($command);
         $handler = $this->container->make($handlerClass);
         if (!$handler instanceof CommandHandler) {
-            throw new RuntimeException("Resolved handler [$handlerClass] for [{$command::class}] must implement " . CommandHandler::class);
+            throw new RuntimeException("Resolved handler [$handlerClass] for [" . get_class($command) . "] must implement " . CommandHandler::class);
         }
         return $handler;
     }
@@ -58,7 +58,7 @@ final readonly class HandlerLocator
         $handlerClass = $this->resolveHandlerClass($query);
         $handler = $this->container->make($handlerClass);
         if (!$handler instanceof QueryHandler) {
-            throw new RuntimeException("Resolved handler [$handlerClass] for [{$query::class}] must implement " . QueryHandler::class);
+            throw new RuntimeException("Resolved handler [$handlerClass] for [" . get_class($query) . "] must implement " . QueryHandler::class);
         }
         return $handler;
     }
