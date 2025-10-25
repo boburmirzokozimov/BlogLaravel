@@ -30,6 +30,10 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (Throwable $e): JsonResponse {
+            // Get current environment
+            $env = app()->environment();
+            $isDevOrTesting = in_array($env, ['local', 'development', 'testing']);
+
             return match (true) {
                 $e instanceof AuthenticationException => response()->json([
                     'error' => [
@@ -37,6 +41,23 @@ return Application::configure(basePath: dirname(__DIR__))
                         'en' => __('errors.unauthenticated', [], 'en')
                     ]
                 ], 401),
+                // Dev/Testing environment - show detailed error info
+                $isDevOrTesting => response()->json([
+                    'error' => [
+                        'message' => $e->getMessage(),
+                        'type' => get_class($e),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                        'trace' => $e->getTraceAsString(),
+                    ]
+                ], 400),
+                // Default handler - use translations
+                default => response()->json([
+                    'error' => [
+                        'ru' => __('errors.bad_request', [], 'ru'),
+                        'en' => __('errors.bad_request', [], 'en')
+                    ]
+                ], 400),
             };
         });
     })->create();
