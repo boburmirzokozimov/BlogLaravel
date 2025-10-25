@@ -37,7 +37,6 @@ final readonly class HandlerLocator
     {
         $messageClass = $message::class;
         $key = $this->cacheKeyFor($messageClass);
-
         return $this->cache->remember($key, 86400, function () use ($message, $messageClass) {
             $ref = new ReflectionClass($messageClass);
             $attrs = $ref->getAttributes(HandlerAttr::class);
