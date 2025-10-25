@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Application\User\User\Commands;
+namespace App\Application\UserManagement\Commands;
 
-use App\Application\User\User\Handlers\CreateUserHandler;
-use App\Shared\CQRS\Attributes\Handler;
-use App\Shared\CQRS\Command;
+use App\Application\UserManagement\Handlers\CreateUserHandler;
+use App\Shared\Attributes\Handler;
+use App\Shared\CQRS\Command\Command;
 
 /**
  * @handler App\Application\User\Handlers\CreateUserHandler

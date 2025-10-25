@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use App\Shared\CQRS\Behaviors\LoggingBehavior;
 use App\Shared\CQRS\Behaviors\TransactionBehavior;
-use App\Shared\CQRS\CommandBus;
+use App\Shared\CQRS\Bus\CommandBus;
+use App\Shared\CQRS\Bus\QueryBus;
 use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
-use App\Shared\CQRS\QueryBus;
 use Illuminate\Pipeline\Pipeline;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;

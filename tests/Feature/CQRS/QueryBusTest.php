@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Application\User\User\Queries\GetUserById;
-use App\Models\User;
-use App\Shared\CQRS\Query;
-use App\Shared\CQRS\QueryBus;
+use App\Application\UserManagement\Queries\GetUserById;
+use App\Infrastructure\User\User;
+use App\Shared\CQRS\Bus\QueryBus;
+use App\Shared\CQRS\Query\Query;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use RuntimeException;

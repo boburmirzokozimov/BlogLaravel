@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace App\Shared\CQRS;
 
-use App\Shared\CQRS\Attributes\Handler as HandlerAttr;
+use App\Shared\Attributes\Handler as HandlerAttr;
+use App\Shared\CQRS\Command\Command;
+use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\CQRS\Query\Query;
+use App\Shared\CQRS\Query\QueryHandler;
 use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Container\Container;
 use ReflectionClass;

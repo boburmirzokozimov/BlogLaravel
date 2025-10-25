@@ -2,9 +2,8 @@
 
 namespace App\Shared\CQRS\Behaviors;
 
-use App\Shared\CQRS\Behavior;
-use App\Shared\CQRS\Command;
-use App\Shared\CQRS\Query;
+use App\Shared\CQRS\Command\Command;
+use App\Shared\CQRS\Query\Query;
 use Closure;
 use Illuminate\Support\Facades\DB;
 

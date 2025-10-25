@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\CQRS;
 
-use App\Application\User\User\Commands\CreateUser;
-use App\Application\User\User\Handlers\CreateUserHandler;
-use App\Application\User\User\Handlers\GetUserByIdHandler;
-use App\Application\User\User\Queries\GetUserById;
+use App\Application\UserManagement\Commands\CreateUser;
+use App\Application\UserManagement\Handlers\CreateUserHandler;
+use App\Application\UserManagement\Handlers\GetUserByIdHandler;
+use App\Application\UserManagement\Queries\GetUserById;
 use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
 use Illuminate\Cache\ArrayStore;

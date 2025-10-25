@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Shared\CQRS;
+namespace App\Shared\CQRS\Behaviors;
 
+use App\Shared\CQRS\Command\Command;
+use App\Shared\CQRS\Query\Query;
 use Closure;
 
 /**

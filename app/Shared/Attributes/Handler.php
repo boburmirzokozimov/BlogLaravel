@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\CQRS\Attributes;
+namespace App\Shared\Attributes;
 
 use Attribute;
 

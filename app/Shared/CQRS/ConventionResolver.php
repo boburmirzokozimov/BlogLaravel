@@ -2,6 +2,8 @@
 
 namespace App\Shared\CQRS;
 
+use App\Shared\CQRS\Command\Command;
+use App\Shared\CQRS\Query\Query;
 use RuntimeException;
 
 final class ConventionResolver

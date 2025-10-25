@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Application\User\User\Handlers;
+namespace App\Application\UserManagement\Handlers;
 
-use App\Application\User\User\Queries\GetUserById;
-use App\Models\User;
-use App\Shared\CQRS\Query;
-use App\Shared\CQRS\QueryHandler;
+use App\Application\UserManagement\Queries\GetUserById;
+use App\Infrastructure\User\User;
+use App\Shared\CQRS\Query\Query;
+use App\Shared\CQRS\Query\QueryHandler;
 use InvalidArgumentException;
 
 final class GetUserByIdHandler implements QueryHandler

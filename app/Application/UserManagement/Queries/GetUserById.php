@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Application\User\User\Queries;
+namespace App\Application\UserManagement\Queries;
 
-use App\Shared\CQRS\Query;
+use App\Shared\CQRS\Query\Query;
 
 final readonly class GetUserById implements Query
 {

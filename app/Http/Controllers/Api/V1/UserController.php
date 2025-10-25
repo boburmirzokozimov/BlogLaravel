@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Application\User\User\Commands\CreateUser;
-use App\Application\User\User\Queries\GetUserById;
+use App\Application\UserManagement\Commands\CreateUser;
+use App\Application\UserManagement\Queries\GetUserById;
 use App\Http\Controllers\Controller;
-use App\Shared\CQRS\CommandBus;
-use App\Shared\CQRS\QueryBus;
+use App\Shared\CQRS\Bus\CommandBus;
+use App\Shared\CQRS\Bus\QueryBus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

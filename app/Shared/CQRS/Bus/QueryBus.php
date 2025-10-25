@@ -1,7 +1,10 @@
 <?php
 
-namespace App\Shared\CQRS;
+namespace App\Shared\CQRS\Bus;
 
+use App\Shared\CQRS\Behaviors\Behavior;
+use App\Shared\CQRS\HandlerLocator;
+use App\Shared\CQRS\Query\Query;
 use Illuminate\Contracts\Pipeline\Pipeline;
 
 final readonly class QueryBus
