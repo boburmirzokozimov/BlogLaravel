@@ -59,7 +59,10 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJsonStructure([
-                'error' => ['ru', 'en'],
+                'error' => [
+                    'code',
+                    'message' => ['en', 'ru'],
+                ],
             ]);
     }
 
@@ -73,7 +76,10 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJsonStructure([
-                'error' => ['ru', 'en'],
+                'error' => [
+                    'code',
+                    'message' => ['en', 'ru'],
+                ],
             ]);
     }
 

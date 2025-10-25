@@ -33,7 +33,7 @@ final readonly class CreateUserHandler implements CommandHandler
 
         $user = User::create(
             $command->name,
-            new Email($command->email),
+            Email::fromString($command->email),
             PasswordHash::fromPlain($command->password)
         );
 

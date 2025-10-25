@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\ForceJsonResponseMiddleware;
 use App\Http\Middleware\SetLocaleMiddleware;
+use App\Shared\Exceptions\DomainException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -34,58 +35,91 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (Throwable $e): ?JsonResponse {
-            // Let Laravel handle validation exceptions normally (422 status)
             if ($e instanceof ValidationException) {
                 return null;
             }
 
-            // Get current environment
             $env = app()->environment();
             $isDevOrTesting = in_array($env, ['local', 'development', 'testing']);
+
+            if ($e instanceof DomainException) {
+                $response = $e->toArray();
+                
+                if ($isDevOrTesting) {
+                    $response['debug'] = [
+                        'type' => get_class($e),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine(),
+                    ];
+                }
+                
+                return response()->json($response, $e->status());
+            }
 
             return match (true) {
                 $e instanceof AuthenticationException => response()->json([
                     'error' => [
-                        'ru' => __('errors.unauthenticated', [], 'ru'),
-                        'en' => __('errors.unauthenticated', [], 'en')
+                        'code' => 'UNAUTHENTICATED',
+                        'message' => [
+                            'en' => __('errors.unauthenticated', [], 'en'),
+                            'ru' => __('errors.unauthenticated', [], 'ru'),
+                        ]
                     ]
                 ], 401),
-                // JWT Token Expired
+                
                 $e instanceof TokenExpiredException => response()->json([
                     'error' => [
-                        'ru' => __('errors.token_expired', [], 'ru'),
-                        'en' => __('errors.token_expired', [], 'en')
+                        'code' => 'TOKEN_EXPIRED',
+                        'message' => [
+                            'en' => __('errors.token_expired', [], 'en'),
+                            'ru' => __('errors.token_expired', [], 'ru'),
+                        ]
                     ]
                 ], 401),
-                // JWT Token Invalid
+                
                 $e instanceof TokenInvalidException => response()->json([
                     'error' => [
-                        'ru' => __('errors.token_invalid', [], 'ru'),
-                        'en' => __('errors.token_invalid', [], 'en')
+                        'code' => 'TOKEN_INVALID',
+                        'message' => [
+                            'en' => __('errors.token_invalid', [], 'en'),
+                            'ru' => __('errors.token_invalid', [], 'ru'),
+                        ]
                     ]
                 ], 401),
-                // JWT Token Blacklisted
+                
                 $e instanceof TokenBlacklistedException => response()->json([
                     'error' => [
-                        'ru' => __('errors.token_blacklisted', [], 'ru'),
-                        'en' => __('errors.token_blacklisted', [], 'en')
+                        'code' => 'TOKEN_BLACKLISTED',
+                        'message' => [
+                            'en' => __('errors.token_blacklisted', [], 'en'),
+                            'ru' => __('errors.token_blacklisted', [], 'ru'),
+                        ]
                     ]
                 ], 401),
-                // Dev/Testing environment - show detailed error info
+                
                 $isDevOrTesting => response()->json([
                     'error' => [
-                        'message' => $e->getMessage(),
+                        'code' => 'BAD_REQUEST',
+                        'message' => [
+                            'en' => $e->getMessage(),
+                            'ru' => $e->getMessage(),
+                        ],
+                    ],
+                    'debug' => [
                         'type' => get_class($e),
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
                         'trace' => $e->getTraceAsString(),
                     ]
                 ], 400),
-                // Default handler - use translations
+                
                 default => response()->json([
                     'error' => [
-                        'ru' => __('errors.bad_request', [], 'ru'),
-                        'en' => __('errors.bad_request', [], 'en')
+                        'code' => 'BAD_REQUEST',
+                        'message' => [
+                            'en' => __('errors.bad_request', [], 'en'),
+                            'ru' => __('errors.bad_request', [], 'ru'),
+                        ]
                     ]
                 ], 400),
             };

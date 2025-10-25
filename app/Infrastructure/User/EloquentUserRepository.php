@@ -33,8 +33,8 @@ class EloquentUserRepository implements UserRepository
         return User::reconstitute(
             UserId::fromString($record->id),
             $record->name,
-            new Email($record->email),
-            new PasswordHash($record->password)
+            Email::fromString($record->email),
+            PasswordHash::fromHash($record->password)
         );
     }
 
@@ -46,8 +46,8 @@ class EloquentUserRepository implements UserRepository
         return User::reconstitute(
             UserId::fromString($record->id),
             $record->name,
-            new Email($record->email),
-            new PasswordHash($record->password)
+            Email::fromString($record->email),
+            PasswordHash::fromHash($record->password)
         );
     }
 }
