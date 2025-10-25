@@ -18,7 +18,7 @@
                     "Authentication"
                 ],
                 "summary": "Register a new user",
-                "operationId": "6796c44e1f6079c411abbfed066c5907",
+                "operationId": "38e3071463848ba373dfeae5623cdfa4",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -63,17 +63,39 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "access_token": {
+                                        "code": {
                                             "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                            "example": "SUCCESS"
                                         },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "User registered successfully"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Пользователь успешно зарегистрирован"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -82,7 +104,41 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "VALIDATION_FAILED"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Validation failed"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Ошибка валидации данных"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "error": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -93,7 +149,7 @@
                     "Authentication"
                 ],
                 "summary": "Login user",
-                "operationId": "da2ca4d7a5cdec77b8b45a20373535cb",
+                "operationId": "b9b760991d94b179960cd7ddc93eedf2",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -127,17 +183,39 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "access_token": {
+                                        "code": {
                                             "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                            "example": "SUCCESS"
                                         },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "User logged in successfully"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Пользователь успешно вошел в систему"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -146,7 +224,33 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized"
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "UNAUTHORIZED"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Необходима авторизация"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -157,20 +261,96 @@
                     "Authentication"
                 ],
                 "summary": "Get authenticated user information",
-                "operationId": "ae2f8c1ae1f9c5aee99c01f5d13da30b",
+                "operationId": "c24e88aea4324667c5f4e38549a5298f",
                 "responses": {
                     "200": {
                         "description": "User information",
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/User"
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SUCCESS"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Operation completed successfully"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Операция выполнена успешно"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "9d0e5c1e-5b0a-4b1a-8c9a-1e5b0a4b1a8c"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "John Doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "email_verified_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "nullable": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "UNAUTHENTICATED"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Необходима авторизация"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -186,7 +366,7 @@
                     "Authentication"
                 ],
                 "summary": "Logout user",
-                "operationId": "c4eddaf1a2e990cc90e4326c0d731d41",
+                "operationId": "b66dd8a7864f561822c01bc8339363fb",
                 "responses": {
                     "200": {
                         "description": "Successfully logged out",
@@ -194,15 +374,19 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "SUCCESS"
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
                                                     "type": "string",
-                                                    "example": "Successfully logged out"
+                                                    "example": "User logged out successfully"
                                                 },
                                                 "ru": {
                                                     "type": "string",
-                                                    "example": "Успешный выход из системы"
+                                                    "example": "Пользователь успешно вышел из системы"
                                                 }
                                             },
                                             "type": "object"
@@ -214,7 +398,33 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "UNAUTHENTICATED"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Необходима авторизация"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -230,7 +440,7 @@
                     "Authentication"
                 ],
                 "summary": "Refresh JWT token",
-                "operationId": "48bc0aaee4ed3ed89ef12f9065e2df85",
+                "operationId": "a501ac96cd420264a7019d4e727a867e",
                 "responses": {
                     "200": {
                         "description": "New access token",
@@ -238,17 +448,39 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "access_token": {
+                                        "code": {
                                             "type": "string",
-                                            "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                            "example": "SUCCESS"
                                         },
-                                        "token_type": {
-                                            "type": "string",
-                                            "example": "bearer"
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Token refreshed successfully"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Токен успешно обновлен"
+                                                }
+                                            },
+                                            "type": "object"
                                         },
-                                        "expires_in": {
-                                            "type": "integer",
-                                            "example": 3600
+                                        "data": {
+                                            "properties": {
+                                                "access_token": {
+                                                    "type": "string",
+                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
+                                                },
+                                                "token_type": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 3600
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -257,7 +489,33 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "code": {
+                                            "type": "string",
+                                            "example": "UNAUTHENTICATED"
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Необходима авторизация"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [

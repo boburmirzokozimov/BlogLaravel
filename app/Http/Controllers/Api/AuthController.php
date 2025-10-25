@@ -36,13 +36,49 @@ class AuthController extends Controller
                 description: 'Successful registration',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                        new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                        new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'User registered successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно зарегистрирован')
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
+                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                            ],
+                            type: 'object'
+                        )
                     ]
                 )
             ),
-            new OA\Response(response: 422, description: 'Validation error')
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'VALIDATION_FAILED'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Validation failed'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации данных')
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'error',
+                            type: 'object',
+                            example: ['email' => ['The email field is required.']]
+                        )
+                    ]
+                )
+            )
         ]
     )]
     public function register(RegisterRequest $request)
@@ -85,13 +121,44 @@ class AuthController extends Controller
                 description: 'Successful login',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                        new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                        new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'User logged in successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вошел в систему')
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
+                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                            ],
+                            type: 'object'
+                        )
                     ]
                 )
             ),
-            new OA\Response(response: 401, description: 'Unauthorized')
+            new OA\Response(
+                response: 401,
+                description: 'Unauthorized',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHORIZED'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                            ],
+                            type: 'object'
+                        )
+                    ]
+                )
+            )
         ]
     )]
     public function login(Request $request)
@@ -121,9 +188,49 @@ class AuthController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'User information',
-                content: new OA\JsonContent(ref: '#/components/schemas/User')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Operation completed successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Операция выполнена успешно')
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'id', type: 'string', format: 'uuid', example: '9d0e5c1e-5b0a-4b1a-8c9a-1e5b0a4b1a8c'),
+                                new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                                new OA\Property(property: 'email', type: 'string', example: 'john@example.com'),
+                                new OA\Property(property: 'email_verified_at', type: 'string', format: 'date-time', nullable: true),
+                                new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time')
+                            ],
+                            type: 'object'
+                        )
+                    ]
+                )
             ),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                            ],
+                            type: 'object'
+                        )
+                    ]
+                )
+            )
         ]
     )]
     public function me()
@@ -144,18 +251,35 @@ class AuthController extends Controller
                 description: 'Successfully logged out',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string', example: 'Successfully logged out'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Успешный выход из системы')
+                                new OA\Property(property: 'en', type: 'string', example: 'User logged out successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вышел из системы')
                             ],
                             type: 'object'
                         )
                     ]
                 )
             ),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                            ],
+                            type: 'object'
+                        )
+                    ]
+                )
+            )
         ]
     )]
     public function logout()
@@ -178,13 +302,44 @@ class AuthController extends Controller
                 description: 'New access token',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                        new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                        new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Token refreshed successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Токен успешно обновлен')
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
+                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                            ],
+                            type: 'object'
+                        )
                     ]
                 )
             ),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                            ],
+                            type: 'object'
+                        )
+                    ]
+                )
+            )
         ]
     )]
     public function refresh()
