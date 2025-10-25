@@ -8,6 +8,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -39,6 +42,27 @@ return Application::configure(basePath: dirname(__DIR__))
                     'error' => [
                         'ru' => __('errors.unauthenticated', [], 'ru'),
                         'en' => __('errors.unauthenticated', [], 'en')
+                    ]
+                ], 401),
+                // JWT Token Expired
+                $e instanceof TokenExpiredException => response()->json([
+                    'error' => [
+                        'ru' => __('errors.token_expired', [], 'ru'),
+                        'en' => __('errors.token_expired', [], 'en')
+                    ]
+                ], 401),
+                // JWT Token Invalid
+                $e instanceof TokenInvalidException => response()->json([
+                    'error' => [
+                        'ru' => __('errors.token_invalid', [], 'ru'),
+                        'en' => __('errors.token_invalid', [], 'en')
+                    ]
+                ], 401),
+                // JWT Token Blacklisted
+                $e instanceof TokenBlacklistedException => response()->json([
+                    'error' => [
+                        'ru' => __('errors.token_blacklisted', [], 'ru'),
+                        'en' => __('errors.token_blacklisted', [], 'en')
                     ]
                 ], 401),
                 // Dev/Testing environment - show detailed error info
