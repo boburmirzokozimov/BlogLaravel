@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\CQRS;
 
-use App\Auth\User\User\Commands\CreateUser;
-use App\Auth\User\User\Queries\GetUserById;
+use App\Application\User\User\Commands\CreateUser;
+use App\Application\User\User\Queries\GetUserById;
 use App\Shared\CQRS\Command;
 use App\Shared\CQRS\ConventionResolver;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($command);
 
         $this->assertEquals(
-            'App\Auth\User\User\Handlers\CreateUserHandler',
+            'App\Application\User\User\Handlers\CreateUserHandler',
             $handlerClass
         );
     }
@@ -30,7 +30,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($query);
 
         $this->assertEquals(
-            'App\Auth\User\User\Handlers\GetUserByIdHandler',
+            'App\Application\User\User\Handlers\GetUserByIdHandler',
             $handlerClass
         );
     }

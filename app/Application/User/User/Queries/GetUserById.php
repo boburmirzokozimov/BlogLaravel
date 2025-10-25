@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\User\User\Queries;
+namespace App\Application\User\User\Queries;
 
 use App\Shared\CQRS\Query;
 

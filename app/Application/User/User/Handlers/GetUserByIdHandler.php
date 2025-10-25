@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Auth\User\User\Handlers;
+namespace App\Application\User\User\Handlers;
 
-use App\Auth\User\User\Queries\GetUserById;
+use App\Application\User\User\Queries\GetUserById;
 use App\Models\User;
 use App\Shared\CQRS\Query;
 use App\Shared\CQRS\QueryHandler;

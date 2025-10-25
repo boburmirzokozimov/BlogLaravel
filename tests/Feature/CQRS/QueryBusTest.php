@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Auth\User\User\Queries\GetUserById;
+use App\Application\User\User\Queries\GetUserById;
 use App\Models\User;
 use App\Shared\CQRS\Query;
 use App\Shared\CQRS\QueryBus;

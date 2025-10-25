@@ -1,6 +1,9 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\CqrsServiceProvider;
+
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\CqrsServiceProvider::class,
+    AppServiceProvider::class,
+    CqrsServiceProvider::class,
 ];

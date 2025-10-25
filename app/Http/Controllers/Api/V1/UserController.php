@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Auth\User\User\Commands\CreateUser;
-use App\Auth\User\User\Queries\GetUserById;
+use App\Application\User\User\Commands\CreateUser;
+use App\Application\User\User\Queries\GetUserById;
 use App\Http\Controllers\Controller;
 use App\Shared\CQRS\CommandBus;
 use App\Shared\CQRS\QueryBus;

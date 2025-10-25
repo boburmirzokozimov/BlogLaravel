@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Auth\User\User\Commands\CreateUser;
+use App\Application\User\User\Commands\CreateUser;
 use App\Models\User;
 use App\Shared\CQRS\Command;
 use App\Shared\CQRS\CommandBus;

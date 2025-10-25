@@ -1,14 +1,16 @@
 <?php
 
-namespace App\Auth\User\User\Handlers;
+namespace App\Application\User\User\Handlers;
 
-use App\Auth\User\User\Commands\CreateUser;
+use App\Application\User\User\Commands\CreateUser;
 use App\Models\User;
+use App\Shared\CQRS\Attributes\Handles;
 use App\Shared\CQRS\Command;
 use App\Shared\CQRS\CommandHandler;
 use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
 
+#[Handles(CreateUser::class)]
 final class CreateUserHandler implements CommandHandler
 {
     public function __invoke(Command $command): void

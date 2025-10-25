@@ -12,7 +12,7 @@ class ForceJsonResponseMiddleware
         if ($request->is('api/*')) {
             $request->headers->set('Accept', 'application/json');
         }
-        
+
         return $next($request);
     }
 }
