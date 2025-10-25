@@ -13,7 +13,7 @@ class ApiResponse
      */
     public static function success(
         mixed $data = null,
-        string $messageKey = 'errors.success',
+        string $messageKey = 'messages.success',
         array $messageParams = [],
         int $statusCode = 200
     ): JsonResponse {

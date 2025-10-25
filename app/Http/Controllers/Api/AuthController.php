@@ -61,7 +61,7 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             data: TokenResource::fromToken($token),
-            messageKey: 'errors.user_registered'
+            messageKey: 'messages.user_registered'
         );
     }
 
@@ -108,7 +108,7 @@ class AuthController extends Controller
 
         return ApiResponse::success(
             data: TokenResource::fromToken($token),
-            messageKey: 'errors.user_logged_in'
+            messageKey: 'messages.user_logged_in'
         );
     }
 
@@ -129,8 +129,7 @@ class AuthController extends Controller
     public function me()
     {
         return ApiResponse::success(
-            data: new UserResource(auth()->user()),
-            messageKey: 'errors.success'
+            data: new UserResource(auth()->user())
         );
     }
 
@@ -164,7 +163,7 @@ class AuthController extends Controller
         auth()->logout();
         
         return ApiResponse::success(
-            messageKey: 'errors.user_logged_out'
+            messageKey: 'messages.user_logged_out'
         );
     }
 
@@ -192,7 +191,7 @@ class AuthController extends Controller
     {
         return ApiResponse::success(
             data: TokenResource::fromToken(auth()->refresh()),
-            messageKey: 'errors.token_refreshed'
+            messageKey: 'messages.token_refreshed'
         );
     }
 }

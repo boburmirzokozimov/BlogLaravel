@@ -1,13 +1,6 @@
 <?php
 
 return [
-    // Success Messages
-    'success' => 'Operation completed successfully',
-    'user_registered' => 'User registered successfully',
-    'user_logged_in' => 'User logged in successfully',
-    'user_logged_out' => 'User logged out successfully',
-    'token_refreshed' => 'Token refreshed successfully',
-    
     // Authentication & Authorization
     'unauthenticated' => 'Unauthenticated',
     'unauthorized' => 'Unauthorized access',
