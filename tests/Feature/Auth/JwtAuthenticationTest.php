@@ -21,7 +21,7 @@ class JwtAuthenticationTest extends TestCase
         $response = $this->withBearerToken($registeredUser->token)
             ->getJson('/api/v1/me');
 
-        $response->assertStatus(200)
+        $response->assertStatus(201)
             ->assertJson([
                 'email' => 'john@example.com',
             ]);
