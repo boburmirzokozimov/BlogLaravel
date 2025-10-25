@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\RegisterRequest;
-use App\Infrastructure\User\User;
+use App\Infrastructure\User\EloquentUser;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -12,7 +12,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = User::create([
+        $user = EloquentUser::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),

@@ -19,7 +19,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($command);
 
         $this->assertEquals(
-            'App\Application\User\Handlers\CreateUserHandler',
+            'App\Application\UserManagement\Handlers\CreateUserHandler',
             $handlerClass
         );
     }
@@ -30,7 +30,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($query);
 
         $this->assertEquals(
-            'App\Application\User\Handlers\GetUserByIdHandler',
+            'App\Application\UserManagement\Handlers\GetUserByIdHandler',
             $handlerClass
         );
     }

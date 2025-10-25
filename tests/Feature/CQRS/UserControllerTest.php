@@ -37,7 +37,7 @@ class UserControllerTest extends TestCase
         ]);
 
         $response = $this->getJson("/api/v1/users/{$user->id}");
-        dd($response->json());
+
         $response->assertStatus(200)
             ->assertJson([
                 'data' => [

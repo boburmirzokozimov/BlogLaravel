@@ -6,17 +6,12 @@ use App\Application\UserManagement\Commands\CreateUser;
 use App\Application\UserManagement\Handlers\CreateUserHandler;
 use App\Application\UserManagement\Handlers\GetUserByIdHandler;
 use App\Application\UserManagement\Queries\GetUserById;
-use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
-use Illuminate\Cache\ArrayStore;
-use Illuminate\Cache\Repository as CacheRepository;
-use Illuminate\Container\Container;
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class HandlerLocatorTest extends TestCase
 {
     private HandlerLocator $locator;
-    private Container $container;
 
     public function test_locates_command_handler(): void
     {
@@ -37,10 +32,7 @@ class HandlerLocatorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->container = new Container();
-        $cache = new CacheRepository(new ArrayStore());
-        $resolver = new ConventionResolver();
-        $this->locator = new HandlerLocator($this->container, $resolver, $cache);
+        $this->locator = app(HandlerLocator::class);
     }
 }
 

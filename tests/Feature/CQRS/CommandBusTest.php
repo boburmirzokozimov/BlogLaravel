@@ -3,7 +3,7 @@
 namespace Tests\Feature\CQRS;
 
 use App\Application\UserManagement\Commands\CreateUser;
-use App\Infrastructure\User\User;
+use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\CommandBus;
 use App\Shared\CQRS\Command\Command;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -56,7 +56,7 @@ class CommandBusTest extends TestCase
             password: 'password123'
         ));
 
-        $user = User::where('email', 'bob@example.com')->first();
+        $user = EloquentUser::where('email', 'bob@example.com')->first();
         $this->assertNotNull($user);
         $this->assertEquals('Bob Smith', $user->name);
     }

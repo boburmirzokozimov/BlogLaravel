@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use App\Infrastructure\User\User;
+use App\Infrastructure\User\EloquentUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
@@ -14,11 +14,11 @@ abstract class TestCase extends BaseTestCase
      * Create a registered user with JWT token
      *
      * @param array $attributes
-     * @return object{user: User, token: string}
+     * @return object{user: EloquentUser, token: string}
      */
     protected function registeredUser(array $attributes = []): object
     {
-        $user = User::factory()->create($attributes);
+        $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
 
         return (object)[
@@ -31,11 +31,11 @@ abstract class TestCase extends BaseTestCase
      * Create and authenticate as a user with JWT token
      *
      * @param array $attributes
-     * @return User
+     * @return EloquentUser
      */
-    protected function actingAsRegisteredUser(array $attributes = []): User
+    protected function actingAsRegisteredUser(array $attributes = []): EloquentUser
     {
-        $user = User::factory()->create($attributes);
+        $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
 
         $this->withHeader('Authorization', 'Bearer ' . $token);

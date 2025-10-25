@@ -3,7 +3,7 @@
 namespace Tests\Feature\CQRS;
 
 use App\Application\UserManagement\Queries\GetUserById;
-use App\Infrastructure\User\User;
+use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\QueryBus;
 use App\Shared\CQRS\Query\Query;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -17,7 +17,7 @@ class QueryBusTest extends TestCase
 
     public function test_ask_resolves_handler_by_convention(): void
     {
-        $user = User::factory()->create([
+        $user = EloquentUser::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
@@ -25,7 +25,7 @@ class QueryBusTest extends TestCase
         $bus = app(QueryBus::class);
         $result = $bus->ask(new GetUserById($user->id));
 
-        $this->assertInstanceOf(User::class, $result);
+        $this->assertInstanceOf(EloquentUser::class, $result);
         $this->assertEquals($user->id, $result->id);
         $this->assertEquals('Test User', $result->name);
     }
