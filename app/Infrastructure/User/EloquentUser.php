@@ -10,8 +10,17 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class EloquentUser extends Authenticatable implements JWTSubject
 {
+    protected $table = 'users';
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): UserFactory
+    {
+        return UserFactory::new();
+    }
 
     /**
      * The attributes that are mass assignable.

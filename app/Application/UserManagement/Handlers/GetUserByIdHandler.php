@@ -3,14 +3,19 @@
 namespace App\Application\UserManagement\Handlers;
 
 use App\Application\UserManagement\Queries\GetUserById;
-use App\Infrastructure\User\User;
+use App\Domain\User\Entities\User;
+use App\Domain\User\Repositories\UserRepository;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
 use InvalidArgumentException;
 
-final class GetUserByIdHandler implements QueryHandler
+final readonly class GetUserByIdHandler implements QueryHandler
 {
-    public function __invoke(Query $query): mixed
+    public function __construct(private UserRepository $repository)
+    {
+    }
+
+    public function __invoke(Query $query): User
     {
         if (!$query instanceof GetUserById) {
             throw new InvalidArgumentException(
@@ -22,7 +27,7 @@ final class GetUserByIdHandler implements QueryHandler
             );
         }
 
-        return User::findOrFail($query->userId);
+        return $this->repository->getById($query->userId);
     }
 }
 

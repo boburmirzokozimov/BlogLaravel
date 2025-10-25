@@ -8,6 +8,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Validation\ValidationException;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -32,7 +33,12 @@ return Application::configure(basePath: dirname(__DIR__))
 //        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->renderable(function (Throwable $e): JsonResponse {
+        $exceptions->renderable(function (Throwable $e): ?JsonResponse {
+            // Let Laravel handle validation exceptions normally (422 status)
+            if ($e instanceof ValidationException) {
+                return null;
+            }
+
             // Get current environment
             $env = app()->environment();
             $isDevOrTesting = in_array($env, ['local', 'development', 'testing']);

@@ -8,8 +8,8 @@ use App\Shared\CQRS\Bus\CommandBus;
 use App\Shared\CQRS\Bus\QueryBus;
 use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
+use Illuminate\Cache\Repository;
 use Illuminate\Pipeline\Pipeline;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class CqrsServiceProvider extends ServiceProvider
@@ -24,7 +24,7 @@ class CqrsServiceProvider extends ServiceProvider
         $this->app->singleton(HandlerLocator::class, fn($app) => new HandlerLocator(
             $app,
             $app->make(ConventionResolver::class),
-            $app->make(Cache::class),
+            $app->make(Repository::class),
         ));
 
         $this->app->singleton(CommandBus::class, fn($app) => new CommandBus(

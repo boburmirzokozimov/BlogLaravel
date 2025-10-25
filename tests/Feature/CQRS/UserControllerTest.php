@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Infrastructure\User\User;
+use App\Infrastructure\User\EloquentUser;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -31,13 +31,13 @@ class UserControllerTest extends TestCase
 
     public function test_user_can_be_retrieved_via_cqrs(): void
     {
-        $user = User::factory()->create([
+        $user = EloquentUser::factory()->create([
             'name' => 'Jane Doe',
             'email' => 'jane@example.com',
         ]);
 
         $response = $this->getJson("/api/v1/users/{$user->id}");
-
+        dd($response->json());
         $response->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -62,7 +62,7 @@ class UserControllerTest extends TestCase
 
     public function test_validation_fails_for_duplicate_email(): void
     {
-        User::factory()->create(['email' => 'duplicate@example.com']);
+        EloquentUser::factory()->create(['email' => 'duplicate@example.com']);
 
         $response = $this->postJson('/api/v1/users', [
             'name' => 'Test User',

@@ -17,7 +17,7 @@ class PasswordHash
         );
     }
 
-    public function value()
+    public function value(): string
     {
         return $this->password;
     }
