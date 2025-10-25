@@ -6,29 +6,32 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
+use App\Domain\User\ValueObjects\UserId;
 
 class EloquentUserRepository implements UserRepository
 {
 
-    public function save(User $user): void
+    public function save(User $user): EloquentUser
     {
-        EloquentUser::updateOrCreate(
+        return EloquentUser::updateOrCreate(
             [
-                'email' => $user->email()->value()
+                'id' => $user->id()->toString()
             ],
             [
                 'name' => $user->name(),
+                'email' => $user->email()->value(),
                 'password' => $user->password()->value()
             ]
         );
     }
 
-    public function getById(int $id): ?User
+    public function getById(UserId $id): ?User
     {
-        $record = EloquentUser::where('id', $id)->first();
+        $record = EloquentUser::where('id', $id->toString())->first();
         if (!$record) return null;
 
-        return new User(
+        return User::reconstitute(
+            UserId::fromString($record->id),
             $record->name,
             new Email($record->email),
             new PasswordHash($record->password)
@@ -40,7 +43,8 @@ class EloquentUserRepository implements UserRepository
         $record = EloquentUser::where('email', $email)->first();
         if (!$record) return null;
 
-        return new User(
+        return User::reconstitute(
+            UserId::fromString($record->id),
             $record->name,
             new Email($record->email),
             new PasswordHash($record->password)

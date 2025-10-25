@@ -7,6 +7,7 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
+use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
 use InvalidArgumentException;
@@ -18,7 +19,7 @@ final readonly class CreateUserHandler implements CommandHandler
     {
     }
 
-    public function __invoke(Command $command): void
+    public function __invoke(Command $command): EloquentUser
     {
         if (!$command instanceof CreateUser) {
             throw new InvalidArgumentException(
@@ -29,13 +30,16 @@ final readonly class CreateUserHandler implements CommandHandler
                 )
             );
         }
-        $user = new User(
+
+        $user = User::create(
             $command->name,
             new Email($command->email),
-            PasswordHash::fromPlain($command->password),
+            PasswordHash::fromPlain($command->password)
         );
 
-        $this->users->save($user);
+        $user = $this->users->save($user);
+
+        return $user;
     }
 }
 

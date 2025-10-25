@@ -2,21 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\UserManagement\Commands\CreateUser;
 use App\Http\Requests\RegisterRequest;
-use App\Infrastructure\User\EloquentUser;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
+
     public function register(RegisterRequest $request)
     {
         $data = $request->validated();
 
-        $user = EloquentUser::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $user = $this->commands->dispatch(
+            new CreateUser(
+                name: $data['name'],
+                email: $data['email'],
+                password: $data['password']
+            )
+        );
 
         $token = auth('api')->login($user);
 
@@ -27,7 +30,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 

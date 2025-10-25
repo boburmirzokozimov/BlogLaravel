@@ -13,10 +13,9 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
     public function __construct(
-        private readonly CommandBus $commands,
-        private readonly QueryBus   $queries,
-    )
-    {
+        private readonly CommandBus $commandBus,
+        private readonly QueryBus $queryBus,
+    ) {
     }
 
     /**
@@ -30,7 +29,7 @@ class UserController extends Controller
             'password' => 'required|string|min:8',
         ]);
 
-        $this->commands->dispatch(
+        $this->commandBus->dispatch(
             new CreateUser(
                 name: $data['name'],
                 email: $data['email'],
@@ -46,9 +45,9 @@ class UserController extends Controller
     /**
      * Display the specified user.
      */
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
-        $user = $this->queries->ask(new GetUserById($id));
+        $user = $this->queryBus->ask(new GetUserById($id));
 
         return response()->json([
             'data' => $user

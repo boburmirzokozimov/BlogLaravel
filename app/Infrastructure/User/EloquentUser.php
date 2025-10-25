@@ -15,6 +15,16 @@ class EloquentUser extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable;
 
     /**
+     * Indicates if the IDs are auto-incrementing.
+     */
+    public $incrementing = false;
+
+    /**
+     * The data type of the auto-incrementing ID.
+     */
+    protected $keyType = 'string';
+
+    /**
      * Create a new factory instance for the model.
      */
     protected static function newFactory(): UserFactory
@@ -28,6 +38,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'name',
         'email',
         'password',

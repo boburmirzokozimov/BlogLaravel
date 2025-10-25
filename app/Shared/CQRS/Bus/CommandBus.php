@@ -22,11 +22,11 @@ final readonly class CommandBus
     /**
      * Dispatches a command to its handler.
      */
-    public function dispatch(Command $command): void
+    public function dispatch(Command $command): mixed
     {
         $handler = $this->locator->forCommand($command);
 
-        $this->pipeline
+        return $this->pipeline
             ->send($command)
             ->through($this->behaviors)
             ->then(fn($msg) => $handler($msg));
