@@ -40,13 +40,73 @@ return Application::configure(basePath: dirname(__DIR__))
 
             // Handle ValidationException with standardized format
             if ($e instanceof ValidationException) {
+                $validator = $e->validator;
+                $translatedErrors = [];
+                
+                foreach ($validator->failed() as $field => $rules) {
+                    $translatedErrors[$field] = [];
+                    
+                    foreach ($rules as $rule => $parameters) {
+                        $ruleName = \Illuminate\Support\Str::snake($rule);
+                        $attribute = str_replace('_', ' ', $field);
+                        
+                        // Determine the type for size-based rules
+                        $type = 'string'; // default
+                        if ($validator->hasRule($field, ['Numeric', 'Integer'])) {
+                            $type = 'numeric';
+                        } elseif ($validator->hasRule($field, ['Array'])) {
+                            $type = 'array';
+                        } elseif ($validator->hasRule($field, ['File', 'Image', 'Mimes', 'Mimetypes'])) {
+                            $type = 'file';
+                        }
+                        
+                        // Build parameters array for translation with proper keys
+                        $params = ['attribute' => $attribute];
+                        
+                        // Map parameters based on the rule
+                        if (in_array($rule, ['Min', 'Max', 'Size'])) {
+                            $params[strtolower($rule)] = $parameters[0] ?? '';
+                        } elseif ($rule === 'Between') {
+                            $params['min'] = $parameters[0] ?? '';
+                            $params['max'] = $parameters[1] ?? '';
+                        } elseif ($rule === 'RequiredIf') {
+                            $params['other'] = $parameters[0] ?? '';
+                            $params['value'] = $parameters[1] ?? '';
+                        } elseif ($rule === 'Same') {
+                            $params['other'] = $parameters[0] ?? '';
+                        } else {
+                            // Generic parameter mapping
+                            foreach ($parameters as $key => $value) {
+                                $params[is_numeric($key) ? "param{$key}" : $key] = $value;
+                            }
+                        }
+                        
+                        // Get translated messages
+                        $messageEn = __("validation.{$ruleName}", $params, 'en');
+                        $messageRu = __("validation.{$ruleName}", $params, 'ru');
+                        
+                        // If the message is an array (like min, max, size), select the appropriate type
+                        if (is_array($messageEn)) {
+                            $messageEn = $messageEn[$type] ?? $messageEn['string'];
+                        }
+                        if (is_array($messageRu)) {
+                            $messageRu = $messageRu[$type] ?? $messageRu['string'];
+                        }
+                        
+                        $translatedErrors[$field][] = [
+                            'en' => $messageEn,
+                            'ru' => $messageRu,
+                        ];
+                    }
+                }
+                
                 return response()->json([
                     'code' => 'VALIDATION_FAILED',
                     'message' => [
                         'en' => __('errors.validation_failed', [], 'en'),
                         'ru' => __('errors.validation_failed', [], 'ru'),
                     ],
-                    'error' => $e->errors(),
+                    'error' => $translatedErrors,
                 ], 422);
             }
 
