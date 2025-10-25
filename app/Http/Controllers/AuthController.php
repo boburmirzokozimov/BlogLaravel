@@ -55,7 +55,7 @@ class AuthController extends Controller
             )
         );
 
-        $token = auth('api')->login($user);
+        $token = auth()->login($user);
 
         return TokenResource::fromToken($token);
     }
@@ -94,7 +94,12 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json([
+                'error' => [
+                    'en' => __('messages.unauthorized', [], 'en'),
+                    'ru' => __('messages.unauthorized', [], 'ru'),
+                ]
+            ], 401);
         }
 
         return TokenResource::fromToken($token);
@@ -116,7 +121,9 @@ class AuthController extends Controller
     )]
     public function me()
     {
-        return new UserResource(auth()->user());
+        return new UserResource(auth()->user())
+            ->response()
+            ->setStatusCode(200);
     }
 
     #[OA\Post(
@@ -130,7 +137,14 @@ class AuthController extends Controller
                 description: 'Successfully logged out',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'message', type: 'string', example: 'Successfully logged out')
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Successfully logged out'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Успешный выход из системы')
+                            ],
+                            type: 'object'
+                        )
                     ]
                 )
             ),
@@ -140,7 +154,7 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return MessageResource::success('Successfully logged out');
+        return MessageResource::trans('successfully_logged_out');
     }
 
     #[OA\Post(

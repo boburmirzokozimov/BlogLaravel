@@ -21,7 +21,7 @@ class JwtAuthenticationTest extends TestCase
         $response = $this->withBearerToken($registeredUser->token)
             ->getJson('/api/v1/me');
 
-        $response->assertStatus(201)
+        $response->assertStatus(200)
             ->assertJson([
                 'email' => 'john@example.com',
             ]);
@@ -43,7 +43,10 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson([
-                'message' => 'Successfully logged out',
+                'message' => [
+                    'en' => 'Successfully logged out',
+                    'ru' => 'Успешный выход из системы',
+                ],
             ]);
     }
 

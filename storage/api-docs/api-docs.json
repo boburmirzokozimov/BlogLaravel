@@ -59,8 +59,17 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string",
-                                            "example": "User created successfully"
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "User created successfully"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Пользователь успешно создан"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -300,8 +309,17 @@
                                 "schema": {
                                     "properties": {
                                         "message": {
-                                            "type": "string",
-                                            "example": "Successfully logged out"
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Successfully logged out"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Успешный выход из системы"
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
