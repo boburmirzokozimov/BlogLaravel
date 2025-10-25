@@ -8,6 +8,8 @@ use App\Application\User\User\Handlers\GetUserByIdHandler;
 use App\Application\User\User\Queries\GetUserById;
 use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
+use Illuminate\Cache\ArrayStore;
+use Illuminate\Cache\Repository as CacheRepository;
 use Illuminate\Container\Container;
 use PHPUnit\Framework\TestCase;
 
@@ -36,8 +38,9 @@ class HandlerLocatorTest extends TestCase
     {
         parent::setUp();
         $this->container = new Container();
+        $cache = new CacheRepository(new ArrayStore());
         $resolver = new ConventionResolver();
-        $this->locator = new HandlerLocator($this->container, $resolver);
+        $this->locator = new HandlerLocator($this->container, $resolver, $cache);
     }
 }
 

@@ -1,87 +1,65 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Shared\CQRS;
 
-use App\Shared\CQRS\Attributes\Handler;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Shared\CQRS\Attributes\Handler as HandlerAttr;
+use Illuminate\Contracts\Cache\Repository as CacheRepository;
 use Illuminate\Contracts\Container\Container;
 use ReflectionClass;
-use ReflectionException;
 use RuntimeException;
 
 final readonly class HandlerLocator
 {
     public function __construct(
         private Container          $container,
-        private ConventionResolver $resolver
+        private ConventionResolver $resolver,
+        private CacheRepository    $cache
     )
     {
     }
 
-    /**
-     * Resolves and instantiates a CommandHandler for the given Command.
-     * @throws BindingResolutionException
-     * @throws ReflectionException
-     */
     public function forCommand(Command $command): CommandHandler
     {
-        $handlerClass = $this->resolveHandlerFromAttributeOrConvention($command);
-
+        $handlerClass = $this->resolveHandlerClass($command);
         $handler = $this->container->make($handlerClass);
-
         if (!$handler instanceof CommandHandler) {
-            throw new RuntimeException(
-                sprintf(
-                    'Handler [%s] must implement [%s]',
-                    $handlerClass,
-                    CommandHandler::class
-                )
-            );
+            throw new RuntimeException("Resolved handler [$handlerClass] for [{$command::class}] must implement " . CommandHandler::class);
         }
-
         return $handler;
     }
 
-    /**
-     * @throws ReflectionException
-     */
-    private function resolveHandlerFromAttributeOrConvention(Command|Query $entity): string
+    public function resolveHandlerClass(Command|Query $message): string
     {
-        $ref = new ReflectionClass($entity::class);
+        $messageClass = $message::class;
+        $key = $this->cacheKeyFor($messageClass);
 
-        $attrs = $ref->getAttributes(Handler::class);
-        if ($attrs) {
-            $attr = $attrs[0]->newInstance();
-            if (!class_exists($attr->class)) {
-                throw new RuntimeException("Handler class [{$attr->class}] not found for message");
+        return $this->cache->remember($key, 86400, function () use ($message, $messageClass) {
+            $ref = new ReflectionClass($messageClass);
+            $attrs = $ref->getAttributes(HandlerAttr::class);
+            if ($attrs) {
+                $class = $attrs[0]->newInstance()->class;
+                if (!class_exists($class)) {
+                    throw new RuntimeException("Handler class [$class] declared on [$messageClass] does not exist");
+                }
+                return $class;
             }
-            return $attr->class;
-        }
-
-        return $this->resolver->resolveHandlerClass($entity);
+            return $this->resolver->resolveHandlerClass($message);
+        });
     }
 
-    /**
-     * Resolves and instantiates a QueryHandler for the given Query.
-     * @throws BindingResolutionException|ReflectionException
-     */
+    private function cacheKeyFor(string $messageClass): string
+    {
+        return 'cqrs.handler.' . strtr($messageClass, ['\\' => '.']); // safe key
+    }
+
     public function forQuery(Query $query): QueryHandler
     {
-        $handlerClass = $this->resolveHandlerFromAttributeOrConvention($query);
-
+        $handlerClass = $this->resolveHandlerClass($query);
         $handler = $this->container->make($handlerClass);
-
         if (!$handler instanceof QueryHandler) {
-            throw new RuntimeException(
-                sprintf(
-                    'Handler [%s] must implement [%s]',
-                    $handlerClass,
-                    QueryHandler::class
-                )
-            );
+            throw new RuntimeException("Resolved handler [$handlerClass] for [{$query::class}] must implement " . QueryHandler::class);
         }
-
         return $handler;
     }
 }
-

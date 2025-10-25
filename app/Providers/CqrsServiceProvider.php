@@ -9,6 +9,7 @@ use App\Shared\CQRS\ConventionResolver;
 use App\Shared\CQRS\HandlerLocator;
 use App\Shared\CQRS\QueryBus;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\ServiceProvider;
 
 class CqrsServiceProvider extends ServiceProvider
@@ -22,7 +23,8 @@ class CqrsServiceProvider extends ServiceProvider
 
         $this->app->singleton(HandlerLocator::class, fn($app) => new HandlerLocator(
             $app,
-            $app->make(ConventionResolver::class)
+            $app->make(ConventionResolver::class),
+            $app->make(Cache::class),
         ));
 
         $this->app->singleton(CommandBus::class, fn($app) => new CommandBus(

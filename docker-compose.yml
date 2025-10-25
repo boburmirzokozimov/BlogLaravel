@@ -14,6 +14,7 @@ services:
       - blog-network
     depends_on:
       - database
+      - redis
 
   # Nginx Service
   nginx:
@@ -47,6 +48,7 @@ services:
       - blog-network
     depends_on:
       - database
+      - redis
     tty: true
     stdin_open: true
 
@@ -67,11 +69,31 @@ services:
     networks:
       - blog-network
 
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    container_name: blog-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD:-}"
+    volumes:
+      - redisdata:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - blog-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 networks:
   blog-network:
     driver: bridge
 
 volumes:
   dbdata:
+    driver: local
+  redisdata:
     driver: local
 
