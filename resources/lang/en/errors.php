@@ -1,6 +1,13 @@
 <?php
 
 return [
+    // Success Messages
+    'success' => 'Operation completed successfully',
+    'user_registered' => 'User registered successfully',
+    'user_logged_in' => 'User logged in successfully',
+    'user_logged_out' => 'User logged out successfully',
+    'token_refreshed' => 'Token refreshed successfully',
+    
     // Authentication & Authorization
     'unauthenticated' => 'Unauthenticated',
     'unauthorized' => 'Unauthorized access',
@@ -12,10 +19,20 @@ return [
     'token_blacklisted' => 'Token has been blacklisted',
     
     // Validation & Input Errors
-    'validation' => 'Validation error',
     'validation_failed' => 'Validation failed',
     'bad_request' => 'Bad request',
     'invariant_violation' => 'Business rule violation',
+    
+    // Field Validation Messages
+    'validation' => [
+        'required' => 'The :field field is required',
+        'email' => 'The :field must be a valid email address',
+        'unique' => 'The :field has already been taken',
+        'min' => 'The :field must be at least :min characters',
+        'max' => 'The :field may not be greater than :max characters',
+        'confirmed' => 'The :field confirmation does not match',
+        'string' => 'The :field must be a string',
+    ],
     
     // Resource Errors
     'not_found' => ':entity not found with ID: :id',

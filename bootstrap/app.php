@@ -35,16 +35,24 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (Throwable $e): ?JsonResponse {
-            if ($e instanceof ValidationException) {
-                return null;
-            }
-
             $env = app()->environment();
             $isDevOrTesting = in_array($env, ['local', 'development', 'testing']);
 
+            // Handle ValidationException with standardized format
+            if ($e instanceof ValidationException) {
+                return response()->json([
+                    'code' => 'VALIDATION_FAILED',
+                    'message' => [
+                        'en' => __('errors.validation_failed', [], 'en'),
+                        'ru' => __('errors.validation_failed', [], 'ru'),
+                    ],
+                    'error' => $e->errors(),
+                ], 422);
+            }
+
             if ($e instanceof DomainException) {
                 $response = $e->toArray();
-                
+
                 if ($isDevOrTesting) {
                     $response['debug'] = [
                         'type' => get_class($e),
@@ -52,58 +60,48 @@ return Application::configure(basePath: dirname(__DIR__))
                         'line' => $e->getLine(),
                     ];
                 }
-                
+
                 return response()->json($response, $e->status());
             }
 
             return match (true) {
                 $e instanceof AuthenticationException => response()->json([
-                    'error' => [
-                        'code' => 'UNAUTHENTICATED',
-                        'message' => [
-                            'en' => __('errors.unauthenticated', [], 'en'),
-                            'ru' => __('errors.unauthenticated', [], 'ru'),
-                        ]
+                    'code' => 'UNAUTHENTICATED',
+                    'message' => [
+                        'en' => __('errors.unauthenticated', [], 'en'),
+                        'ru' => __('errors.unauthenticated', [], 'ru'),
                     ]
                 ], 401),
                 
                 $e instanceof TokenExpiredException => response()->json([
-                    'error' => [
-                        'code' => 'TOKEN_EXPIRED',
-                        'message' => [
-                            'en' => __('errors.token_expired', [], 'en'),
-                            'ru' => __('errors.token_expired', [], 'ru'),
-                        ]
+                    'code' => 'TOKEN_EXPIRED',
+                    'message' => [
+                        'en' => __('errors.token_expired', [], 'en'),
+                        'ru' => __('errors.token_expired', [], 'ru'),
                     ]
                 ], 401),
                 
                 $e instanceof TokenInvalidException => response()->json([
-                    'error' => [
-                        'code' => 'TOKEN_INVALID',
-                        'message' => [
-                            'en' => __('errors.token_invalid', [], 'en'),
-                            'ru' => __('errors.token_invalid', [], 'ru'),
-                        ]
+                    'code' => 'TOKEN_INVALID',
+                    'message' => [
+                        'en' => __('errors.token_invalid', [], 'en'),
+                        'ru' => __('errors.token_invalid', [], 'ru'),
                     ]
                 ], 401),
                 
                 $e instanceof TokenBlacklistedException => response()->json([
-                    'error' => [
-                        'code' => 'TOKEN_BLACKLISTED',
-                        'message' => [
-                            'en' => __('errors.token_blacklisted', [], 'en'),
-                            'ru' => __('errors.token_blacklisted', [], 'ru'),
-                        ]
+                    'code' => 'TOKEN_BLACKLISTED',
+                    'message' => [
+                        'en' => __('errors.token_blacklisted', [], 'en'),
+                        'ru' => __('errors.token_blacklisted', [], 'ru'),
                     ]
                 ], 401),
                 
                 $isDevOrTesting => response()->json([
-                    'error' => [
-                        'code' => 'BAD_REQUEST',
-                        'message' => [
-                            'en' => $e->getMessage(),
-                            'ru' => $e->getMessage(),
-                        ],
+                    'code' => 'BAD_REQUEST',
+                    'message' => [
+                        'en' => $e->getMessage(),
+                        'ru' => $e->getMessage(),
                     ],
                     'debug' => [
                         'type' => get_class($e),
@@ -114,12 +112,10 @@ return Application::configure(basePath: dirname(__DIR__))
                 ], 400),
                 
                 default => response()->json([
-                    'error' => [
-                        'code' => 'BAD_REQUEST',
-                        'message' => [
-                            'en' => __('errors.bad_request', [], 'en'),
-                            'ru' => __('errors.bad_request', [], 'ru'),
-                        ]
+                    'code' => 'BAD_REQUEST',
+                    'message' => [
+                        'en' => __('errors.bad_request', [], 'en'),
+                        'ru' => __('errors.bad_request', [], 'ru'),
                     ]
                 ], 400),
             };

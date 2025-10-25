@@ -1,6 +1,13 @@
 <?php
 
 return [
+    // Success Messages
+    'success' => 'Операция выполнена успешно',
+    'user_registered' => 'Пользователь успешно зарегистрирован',
+    'user_logged_in' => 'Пользователь успешно вошел в систему',
+    'user_logged_out' => 'Пользователь успешно вышел из системы',
+    'token_refreshed' => 'Токен успешно обновлен',
+    
     // Authentication & Authorization
     'unauthenticated' => 'Необходима авторизация',
     'unauthorized' => 'Несанкционированный доступ',
@@ -12,10 +19,20 @@ return [
     'token_blacklisted' => 'Токен заблокирован',
     
     // Validation & Input Errors
-    'validation' => 'Ошибка валидации',
     'validation_failed' => 'Ошибка валидации данных',
     'bad_request' => 'Неверный запрос',
     'invariant_violation' => 'Нарушение бизнес-правила',
+    
+    // Field Validation Messages
+    'validation' => [
+        'required' => 'Поле :field обязательно для заполнения',
+        'email' => 'Поле :field должно быть корректным email адресом',
+        'unique' => 'Такое значение :field уже существует',
+        'min' => 'Поле :field должно содержать минимум :min символов',
+        'max' => 'Поле :field не может содержать более :max символов',
+        'confirmed' => 'Поле :field не совпадает с подтверждением',
+        'string' => 'Поле :field должно быть строкой',
+    ],
     
     // Resource Errors
     'not_found' => ':entity с ID :id не найден',

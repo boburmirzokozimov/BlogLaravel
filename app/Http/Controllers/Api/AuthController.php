@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Application\UserManagement\Commands\CreateUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\ApiResponse;
 use App\Http\Resources\MessageResource;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
@@ -58,7 +59,10 @@ class AuthController extends Controller
 
         $token = auth()->login($user);
 
-        return TokenResource::fromToken($token);
+        return ApiResponse::success(
+            data: TokenResource::fromToken($token),
+            messageKey: 'errors.user_registered'
+        );
     }
 
     #[OA\Post(
@@ -95,15 +99,17 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!$token = auth('api')->attempt($credentials)) {
-            return response()->json([
-                'error' => [
-                    'en' => __('messages.unauthorized', [], 'en'),
-                    'ru' => __('messages.unauthorized', [], 'ru'),
-                ]
-            ], 401);
+            return ApiResponse::error(
+                code: 'UNAUTHORIZED',
+                messageKey: 'errors.unauthenticated',
+                statusCode: 401
+            );
         }
 
-        return TokenResource::fromToken($token);
+        return ApiResponse::success(
+            data: TokenResource::fromToken($token),
+            messageKey: 'errors.user_logged_in'
+        );
     }
 
     #[OA\Get(
@@ -122,9 +128,10 @@ class AuthController extends Controller
     )]
     public function me()
     {
-        return new UserResource(auth()->user())
-            ->response()
-            ->setStatusCode(200);
+        return ApiResponse::success(
+            data: new UserResource(auth()->user()),
+            messageKey: 'errors.success'
+        );
     }
 
     #[OA\Post(
@@ -155,7 +162,10 @@ class AuthController extends Controller
     public function logout()
     {
         auth()->logout();
-        return MessageResource::trans('successfully_logged_out');
+        
+        return ApiResponse::success(
+            messageKey: 'errors.user_logged_out'
+        );
     }
 
     #[OA\Post(
@@ -180,6 +190,9 @@ class AuthController extends Controller
     )]
     public function refresh()
     {
-        return TokenResource::fromToken(auth()->refresh());
+        return ApiResponse::success(
+            data: TokenResource::fromToken(auth()->refresh()),
+            messageKey: 'errors.token_refreshed'
+        );
     }
 }

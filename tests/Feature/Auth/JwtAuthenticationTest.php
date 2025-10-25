@@ -22,8 +22,16 @@ class JwtAuthenticationTest extends TestCase
             ->getJson('/api/v1/me');
 
         $response->assertStatus(200)
+            ->assertJsonStructure([
+                'code',
+                'message' => ['en', 'ru'],
+                'data' => ['id', 'name', 'email', 'email_verified_at', 'created_at', 'updated_at'],
+            ])
             ->assertJson([
-                'email' => 'john@example.com',
+                'code' => 'SUCCESS',
+                'data' => [
+                    'email' => 'john@example.com',
+                ],
             ]);
     }
 
@@ -42,11 +50,12 @@ class JwtAuthenticationTest extends TestCase
         $response = $this->postJson('/api/v1/logout');
 
         $response->assertStatus(200)
+            ->assertJsonStructure([
+                'code',
+                'message' => ['en', 'ru'],
+            ])
             ->assertJson([
-                'message' => [
-                    'en' => 'Successfully logged out',
-                    'ru' => 'Успешный выход из системы',
-                ],
+                'code' => 'SUCCESS',
             ]);
     }
 
@@ -59,10 +68,8 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJsonStructure([
-                'error' => [
-                    'code',
-                    'message' => ['en', 'ru'],
-                ],
+                'code',
+                'message' => ['en', 'ru'],
             ]);
     }
 
@@ -76,10 +83,8 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(401)
             ->assertJsonStructure([
-                'error' => [
-                    'code',
-                    'message' => ['en', 'ru'],
-                ],
+                'code',
+                'message' => ['en', 'ru'],
             ]);
     }
 
@@ -97,9 +102,12 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'access_token',
-                'token_type',
-                'expires_in',
+                'code',
+                'message' => ['en', 'ru'],
+                'data' => ['access_token', 'token_type', 'expires_in'],
+            ])
+            ->assertJson([
+                'code' => 'SUCCESS',
             ]);
     }
 
@@ -115,9 +123,12 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'access_token',
-                'token_type',
-                'expires_in',
+                'code',
+                'message' => ['en', 'ru'],
+                'data' => ['access_token', 'token_type', 'expires_in'],
+            ])
+            ->assertJson([
+                'code' => 'SUCCESS',
             ]);
     }
 }

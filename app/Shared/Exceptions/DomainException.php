@@ -55,15 +55,13 @@ abstract class DomainException extends RuntimeException
     public function toArray(): array
     {
         $response = [
-            'error' => [
-                'code' => $this->errorCode(),
-                'message' => $this->getMultiLangMessages(),
-            ],
+            'code' => $this->errorCode(),
+            'message' => $this->getMultiLangMessages(),
         ];
 
-        $context = $this->context();
-        if (!empty($context)) {
-            $response['error']['context'] = $context;
+        $errorDetails = $this->context();
+        if (!empty($errorDetails)) {
+            $response['error'] = $errorDetails;
         }
 
         return $response;
