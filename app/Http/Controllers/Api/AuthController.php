@@ -204,6 +204,7 @@ class AuthController extends Controller
                                 new OA\Property(property: 'id', type: 'string', format: 'uuid', example: '9d0e5c1e-5b0a-4b1a-8c9a-1e5b0a4b1a8c'),
                                 new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
                                 new OA\Property(property: 'email', type: 'string', example: 'john@example.com'),
+                                new OA\Property(property: 'status', type: 'string', enum: ['active', 'inactive', 'pending', 'suspended'], example: 'active'),
                                 new OA\Property(property: 'email_verified_at', type: 'string', format: 'date-time', nullable: true),
                                 new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
                                 new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),

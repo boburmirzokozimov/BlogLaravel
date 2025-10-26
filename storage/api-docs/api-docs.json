@@ -301,6 +301,16 @@
                                                     "type": "string",
                                                     "example": "john@example.com"
                                                 },
+                                                "status": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "active",
+                                                        "inactive",
+                                                        "pending",
+                                                        "suspended"
+                                                    ],
+                                                    "example": "active"
+                                                },
                                                 "email_verified_at": {
                                                     "type": "string",
                                                     "format": "date-time",
@@ -534,7 +544,8 @@
                 "required": [
                     "id",
                     "name",
-                    "email"
+                    "email",
+                    "status"
                 ],
                 "properties": {
                     "id": {
@@ -553,6 +564,17 @@
                         "type": "string",
                         "format": "email",
                         "example": "john@example.com"
+                    },
+                    "status": {
+                        "description": "User status",
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "pending",
+                            "suspended"
+                        ],
+                        "example": "active"
                     },
                     "email_verified_at": {
                         "description": "Email verification timestamp",
