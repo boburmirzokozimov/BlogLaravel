@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Domain\User\ValueObjects;
 
+use Illuminate\Support\Carbon;
 use InvalidArgumentException;
 use JsonSerializable;
 use Stringable;
@@ -10,19 +11,26 @@ use Stringable;
 final class Email implements Stringable, JsonSerializable
 {
     private string $value;
+    private ?Carbon $emailVerifiedAt;
 
-    private function __construct(string $value)
+    private function __construct(string $value, ?Carbon $emailVerifiedAt = null)
     {
         $norm = mb_strtolower(trim($value));
         if (!filter_var($norm, FILTER_VALIDATE_EMAIL)) {
             throw new InvalidArgumentException("Invalid email: {$value}");
         }
         $this->value = $norm;
+        $this->emailVerifiedAt = $emailVerifiedAt;
     }
 
     public static function fromString(string $value): self
     {
         return new self($value);
+    }
+
+    public static function reconstitute(string $email, Carbon $verifiedAt): Email
+    {
+        return new self($email, $verifiedAt);
     }
 
     public function equals(self $other): bool
@@ -43,5 +51,15 @@ final class Email implements Stringable, JsonSerializable
     public function jsonSerialize(): string
     {
         return $this->value;
+    }
+
+    public function activate(): void
+    {
+        $this->emailVerifiedAt = Carbon::now();
+    }
+
+    public function active(): bool
+    {
+        return $this->emailVerifiedAt !== null;
     }
 }

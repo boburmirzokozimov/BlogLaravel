@@ -15,6 +15,7 @@ return [
     'validation_failed' => 'Validation failed',
     'bad_request' => 'Bad request',
     'invariant_violation' => 'Business rule violation',
+    'email_has_been_activated_already' => 'Email has already been activated',
     
     // Field Validation Messages
     'validation' => [

@@ -5,6 +5,7 @@ namespace App\Domain\User\Entities;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Domain\User\ValueObjects\UserId;
+use App\Shared\Exceptions\InvariantViolation;
 use InvalidArgumentException;
 
 class User
@@ -22,10 +23,11 @@ class User
      * Create a new user with generated UUID
      */
     public static function create(
-        string $name,
-        Email $email,
+        string       $name,
+        Email        $email,
         PasswordHash $password
-    ): self {
+    ): self
+    {
         return new self(
             UserId::generate(),
             $name,
@@ -38,11 +40,12 @@ class User
      * Reconstitute user from persistence
      */
     public static function reconstitute(
-        UserId $id,
-        string $name,
-        Email $email,
+        UserId       $id,
+        string       $name,
+        Email        $email,
         PasswordHash $password
-    ): self {
+    ): self
+    {
         return new self($id, $name, $email, $password);
     }
 
@@ -72,5 +75,14 @@ class User
     public function password(): PasswordHash
     {
         return $this->password;
+    }
+
+    public function activateEmail(): void
+    {
+        if ($this->email->active()) {
+            throw new InvariantViolation('email_has_been_activated_already');
+        }
+
+        $this->email->activate();
     }
 }

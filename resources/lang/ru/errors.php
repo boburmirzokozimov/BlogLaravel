@@ -15,6 +15,7 @@ return [
     'validation_failed' => 'Ошибка валидации данных',
     'bad_request' => 'Неверный запрос',
     'invariant_violation' => 'Нарушение бизнес-правила',
+    'email_has_been_activated_already' => 'Email уже был активирован',
     
     // Field Validation Messages
     'validation' => [

@@ -33,7 +33,7 @@ class EloquentUserRepository implements UserRepository
         return User::reconstitute(
             UserId::fromString($record->id),
             $record->name,
-            Email::fromString($record->email),
+            Email::reconstitute($record->email, $record->email_verified_at),
             PasswordHash::fromHash($record->password)
         );
     }
