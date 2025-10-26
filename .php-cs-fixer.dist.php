@@ -151,7 +151,7 @@ $rules = [
     'no_spaces_around_offset' => [
         'positions' => ['inside', 'outside'],
     ],
-    'visibility_required' => [
+    'modifier_keywords' => [
         'elements' => ['property', 'method', 'const'],
     ],
 ];

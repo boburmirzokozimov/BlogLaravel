@@ -234,3 +234,8 @@ info: ## Show application info
 	@echo "$(BLUE)Running Containers:$(NC)"
 	@docker-compose ps
 
+full:
+	docker-compose exec php-cli composer fix
+	docker-compose exec php-cli composer analyse
+	docker-compose exec php-cli php artisan test
+
