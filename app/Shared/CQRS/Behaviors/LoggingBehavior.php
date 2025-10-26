@@ -9,12 +9,12 @@ use Illuminate\Support\Facades\Log;
 
 class LoggingBehavior implements Behavior
 {
-
     public function handle(Command|Query $message, Closure $next): mixed
     {
-        Log::info('[CQRS] Handling ' . $message::class, ['message' => (array)$message]);
+        Log::info('[CQRS] Handling '.$message::class, ['message' => (array) $message]);
         $result = $next($message);
-        Log::info('[CQRS] Handled ' . $message::class);
+        Log::info('[CQRS] Handled '.$message::class);
+
         return $result;
     }
 }

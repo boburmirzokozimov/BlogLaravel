@@ -12,11 +12,9 @@ final readonly class QueryBus
     /** @param class-string<Behavior>[] $behaviors */
     public function __construct(
         private HandlerLocator $locator,
-
-        private Pipeline       $pipeline,
-        private array          $behaviors = []
-    )
-    {
+        private Pipeline $pipeline,
+        private array $behaviors = []
+    ) {
     }
 
     /**
@@ -25,10 +23,10 @@ final readonly class QueryBus
     public function ask(Query $query): mixed
     {
         $handler = $this->locator->forQuery($query);
+
         return $this->pipeline
             ->send($query)
             ->through($this->behaviors) // order matters
-            ->then(fn($msg) => $handler($msg));
+            ->then(fn ($msg) => $handler($msg));
     }
 }
-

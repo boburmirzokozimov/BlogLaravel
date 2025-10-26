@@ -51,4 +51,3 @@ class QueryBusTest extends TestCase
         $bus->ask($mockQuery);
     }
 }
-

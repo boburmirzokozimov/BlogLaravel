@@ -6,7 +6,6 @@ use App\Application\UserManagement\Commands\CreateUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\ApiResponse;
-use App\Http\Resources\MessageResource;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
@@ -25,7 +24,7 @@ class AuthController extends Controller
                     new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john@example.com'),
                     new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
-                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'password123')
+                    new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'password123'),
                 ]
             )
         ),
@@ -41,7 +40,7 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'User registered successfully'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно зарегистрирован')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно зарегистрирован'),
                             ],
                             type: 'object'
                         ),
@@ -50,10 +49,10 @@ class AuthController extends Controller
                             properties: [
                                 new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
                                 new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -67,7 +66,7 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Validation failed'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации данных')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации данных'),
                             ],
                             type: 'object'
                         ),
@@ -75,10 +74,10 @@ class AuthController extends Controller
                             property: 'error',
                             type: 'object',
                             example: ['email' => ['The email field is required.']]
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function register(RegisterRequest $request)
@@ -110,7 +109,7 @@ class AuthController extends Controller
                 required: ['email', 'password'],
                 properties: [
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123')
+                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
                 ]
             )
         ),
@@ -126,7 +125,7 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'User logged in successfully'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вошел в систему')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вошел в систему'),
                             ],
                             type: 'object'
                         ),
@@ -135,10 +134,10 @@ class AuthController extends Controller
                             properties: [
                                 new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
                                 new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -152,13 +151,13 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function login(Request $request)
@@ -195,7 +194,7 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Operation completed successfully'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Операция выполнена успешно')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Операция выполнена успешно'),
                             ],
                             type: 'object'
                         ),
@@ -207,10 +206,10 @@ class AuthController extends Controller
                                 new OA\Property(property: 'email', type: 'string', example: 'john@example.com'),
                                 new OA\Property(property: 'email_verified_at', type: 'string', format: 'date-time', nullable: true),
                                 new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
-                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time')
+                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -224,13 +223,13 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function me()
@@ -256,10 +255,10 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'User logged out successfully'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вышел из системы')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Пользователь успешно вышел из системы'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -273,19 +272,19 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function logout()
     {
         auth()->logout();
-        
+
         return ApiResponse::success(
             messageKey: 'messages.user_logged_out'
         );
@@ -307,7 +306,7 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Token refreshed successfully'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Токен успешно обновлен')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Токен успешно обновлен'),
                             ],
                             type: 'object'
                         ),
@@ -316,10 +315,10 @@ class AuthController extends Controller
                             properties: [
                                 new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
                                 new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600)
+                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
             ),
@@ -333,13 +332,13 @@ class AuthController extends Controller
                             property: 'message',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
-                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация')
+                                new OA\Property(property: 'ru', type: 'string', example: 'Необходима авторизация'),
                             ],
                             type: 'object'
-                        )
+                        ),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function refresh()

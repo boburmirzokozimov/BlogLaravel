@@ -33,8 +33,7 @@ abstract class Controller
 {
     public function __construct(
         protected readonly CommandBus $commands,
-        protected readonly QueryBus   $queries,
-    )
-    {
+        protected readonly QueryBus $queries,
+    ) {
     }
 }

@@ -1,8 +1,10 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\User\ValueObjects;
 
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Stringable;
 
@@ -18,6 +20,17 @@ final class PasswordHash implements Stringable
         $this->hash = $hash;
     }
 
+    /** Factory: from already hashed value (e.g. from DB) */
+    public static function fromHash(string $hash): self
+    {
+        return new self($hash);
+    }
+
+    public static function generateRandom(): self
+    {
+        return self::fromPlain(Str::random(6));
+    }
+
     /** Factory: from plain password (hash internally) */
     public static function fromPlain(string $plain): self
     {
@@ -26,12 +39,6 @@ final class PasswordHash implements Stringable
         }
 
         return new self(password_hash($plain, PASSWORD_BCRYPT));
-    }
-
-    /** Factory: from already hashed value (e.g. from DB) */
-    public static function fromHash(string $hash): self
-    {
-        return new self($hash);
     }
 
     /** Verify a plaintext password against this hash */

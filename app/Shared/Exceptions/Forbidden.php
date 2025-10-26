@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Shared\Exceptions;
@@ -8,11 +9,10 @@ use Throwable;
 final class Forbidden extends DomainException
 {
     public function __construct(
-        string     $translationKey = 'errors.forbidden',
-        array      $translationParams = [],
+        string $translationKey = 'errors.forbidden',
+        array $translationParams = [],
         ?Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct(
             $translationKey,
             $translationParams,
@@ -31,4 +31,3 @@ final class Forbidden extends DomainException
         return 403;
     }
 }
-

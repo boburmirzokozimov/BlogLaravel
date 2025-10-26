@@ -53,4 +53,3 @@ class ConventionResolverTest extends TestCase
         $this->resolver = new ConventionResolver();
     }
 }
-

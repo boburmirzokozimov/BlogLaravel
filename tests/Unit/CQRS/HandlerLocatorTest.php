@@ -35,4 +35,3 @@ class HandlerLocatorTest extends TestCase
         $this->locator = app(HandlerLocator::class);
     }
 }
-

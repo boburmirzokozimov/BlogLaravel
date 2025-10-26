@@ -5,18 +5,19 @@ return [
     'unauthenticated' => 'Unauthenticated',
     'unauthorized' => 'Unauthorized access',
     'forbidden' => 'Access forbidden',
-    
+
     // JWT Token Errors
     'token_expired' => 'Token has expired',
     'token_invalid' => 'Token is invalid',
     'token_blacklisted' => 'Token has been blacklisted',
-    
+
     // Validation & Input Errors
     'validation_failed' => 'Validation failed',
     'bad_request' => 'Bad request',
     'invariant_violation' => 'Business rule violation',
     'email_has_been_activated_already' => 'Email has already been activated',
-    
+    'user_has_already_been_activated' => 'User has already been activated',
+
     // Field Validation Messages
     'validation' => [
         'required' => 'The :field field is required',
@@ -27,11 +28,11 @@ return [
         'confirmed' => 'The :field confirmation does not match',
         'string' => 'The :field must be a string',
     ],
-    
+
     // Resource Errors
     'not_found' => ':entity not found with ID: :id',
     'conflict' => 'Resource conflict',
-    
+
     // Rate Limiting
     'too_many_requests' => 'Too many requests. Please try again later',
     'service_unavailable' => 'Service temporarily unavailable',

@@ -4,12 +4,11 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Http\Request;
 
 class ApiResponse
 {
     /**
-     * Create a standardized success response
+     * Create a standardized success response.
      */
     public static function success(
         mixed $data = null,
@@ -30,7 +29,7 @@ class ApiResponse
             if ($data instanceof JsonResource) {
                 $data = $data->toArray(request());
             }
-            
+
             $response['data'] = $data;
         }
 
@@ -38,7 +37,7 @@ class ApiResponse
     }
 
     /**
-     * Create a standardized error response
+     * Create a standardized error response.
      */
     public static function error(
         string $code,
@@ -62,4 +61,3 @@ class ApiResponse
         return response()->json($response, $statusCode);
     }
 }
-

@@ -19,15 +19,15 @@ class CqrsServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->singleton(ConventionResolver::class, fn() => new ConventionResolver());
+        $this->app->singleton(ConventionResolver::class, fn () => new ConventionResolver());
 
-        $this->app->singleton(HandlerLocator::class, fn($app) => new HandlerLocator(
+        $this->app->singleton(HandlerLocator::class, fn ($app) => new HandlerLocator(
             $app,
             $app->make(ConventionResolver::class),
             $app->make(Repository::class),
         ));
 
-        $this->app->singleton(CommandBus::class, fn($app) => new CommandBus(
+        $this->app->singleton(CommandBus::class, fn ($app) => new CommandBus(
             $app->make(HandlerLocator::class),
             $app->make(Pipeline::class),
             [
@@ -36,7 +36,7 @@ class CqrsServiceProvider extends ServiceProvider
             ]
         ));
 
-        $this->app->singleton(QueryBus::class, fn($app) => new QueryBus(
+        $this->app->singleton(QueryBus::class, fn ($app) => new QueryBus(
             $app->make(HandlerLocator::class),
             $app->make(Pipeline::class),
             [
@@ -52,4 +52,3 @@ class CqrsServiceProvider extends ServiceProvider
         //
     }
 }
-

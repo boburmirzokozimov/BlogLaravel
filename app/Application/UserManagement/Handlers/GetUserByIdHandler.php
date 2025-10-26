@@ -12,7 +12,6 @@ use InvalidArgumentException;
 #[Handles(GetUserById::class)]
 final readonly class GetUserByIdHandler implements QueryHandler
 {
-
     public function __invoke(Query $query): EloquentUser
     {
         if (!$query instanceof GetUserById) {
@@ -28,4 +27,3 @@ final readonly class GetUserByIdHandler implements QueryHandler
         return EloquentUser::where('id', $query->userId)->firstOrFail();
     }
 }
-

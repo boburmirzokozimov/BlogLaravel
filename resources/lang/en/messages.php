@@ -3,7 +3,7 @@
 return [
     // General Success Messages
     'success' => 'Operation completed successfully',
-    
+
     // Authentication & User Messages
     'user_registered' => 'User registered successfully',
     'user_logged_in' => 'User logged in successfully',

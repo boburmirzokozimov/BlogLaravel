@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Domain\User\ValueObjects;
@@ -11,6 +12,7 @@ use Stringable;
 final class Email implements Stringable, JsonSerializable
 {
     private string $value;
+
     private ?Carbon $emailVerifiedAt;
 
     private function __construct(string $value, ?Carbon $emailVerifiedAt = null)
@@ -28,7 +30,7 @@ final class Email implements Stringable, JsonSerializable
         return new self($value);
     }
 
-    public static function reconstitute(string $email, Carbon $verifiedAt): Email
+    public static function reconstitute(string $email, ?Carbon $verifiedAt): self
     {
         return new self($email, $verifiedAt);
     }
@@ -61,5 +63,15 @@ final class Email implements Stringable, JsonSerializable
     public function active(): bool
     {
         return $this->emailVerifiedAt !== null;
+    }
+
+    public function change(string $email): void
+    {
+        $this->value = $email;
+    }
+
+    public function getEmailVerifiedAt(): ?Carbon
+    {
+        return $this->emailVerifiedAt;
     }
 }

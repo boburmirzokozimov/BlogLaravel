@@ -6,4 +6,3 @@ interface CommandHandler
 {
     public function __invoke(Command $command): mixed;
 }
-

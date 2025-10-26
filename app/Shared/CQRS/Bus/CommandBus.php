@@ -9,14 +9,12 @@ use Illuminate\Contracts\Pipeline\Pipeline;
 
 final readonly class CommandBus
 {
-
     /** @param class-string<Behavior>[] $behaviors */
     public function __construct(
         private HandlerLocator $locator,
-        private Pipeline       $pipeline,
-        private array          $behaviors = []
-    )
-    {
+        private Pipeline $pipeline,
+        private array $behaviors = []
+    ) {
     }
 
     /**
@@ -29,7 +27,6 @@ final readonly class CommandBus
         return $this->pipeline
             ->send($command)
             ->through($this->behaviors)
-            ->then(fn($msg) => $handler($msg));
+            ->then(fn ($msg) => $handler($msg));
     }
 }
-

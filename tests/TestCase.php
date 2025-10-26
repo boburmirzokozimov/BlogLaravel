@@ -11,7 +11,7 @@ abstract class TestCase extends BaseTestCase
     use RefreshDatabase;
 
     /**
-     * Create a registered user with JWT token
+     * Create a registered user with JWT token.
      *
      * @param array $attributes
      * @return object{user: EloquentUser, token: string}
@@ -21,14 +21,14 @@ abstract class TestCase extends BaseTestCase
         $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
 
-        return (object)[
+        return (object) [
             'user' => $user,
             'token' => $token,
         ];
     }
 
     /**
-     * Create and authenticate as a user with JWT token
+     * Create and authenticate as a user with JWT token.
      *
      * @param array $attributes
      * @return EloquentUser
@@ -38,19 +38,19 @@ abstract class TestCase extends BaseTestCase
         $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
 
-        $this->withHeader('Authorization', 'Bearer ' . $token);
+        $this->withHeader('Authorization', 'Bearer '.$token);
 
         return $user;
     }
 
     /**
-     * Set authorization header with bearer token
+     * Set authorization header with bearer token.
      *
      * @param string $token
      * @return $this
      */
     protected function withBearerToken(string $token): self
     {
-        return $this->withHeader('Authorization', 'Bearer ' . $token);
+        return $this->withHeader('Authorization', 'Bearer '.$token);
     }
 }

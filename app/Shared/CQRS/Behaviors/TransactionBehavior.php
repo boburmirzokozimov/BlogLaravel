@@ -11,6 +11,6 @@ class TransactionBehavior implements Behavior
 {
     public function handle(Command|Query $message, Closure $next): mixed
     {
-        return DB::transaction(fn() => $next($message));
+        return DB::transaction(fn () => $next($message));
     }
 }

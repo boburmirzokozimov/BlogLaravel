@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Shared\Exceptions;
@@ -8,11 +9,10 @@ use Throwable;
 final class TooManyRequests extends DomainException
 {
     public function __construct(
-        string     $translationKey = 'errors.too_many_requests',
-        array      $translationParams = [],
+        string $translationKey = 'errors.too_many_requests',
+        array $translationParams = [],
         ?Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct(
             $translationKey,
             $translationParams,
@@ -31,4 +31,3 @@ final class TooManyRequests extends DomainException
         return 429;
     }
 }
-

@@ -17,7 +17,7 @@ final readonly class UserId implements Stringable
     }
 
     /**
-     * Generate a new random UUID
+     * Generate a new random UUID.
      */
     public static function generate(): self
     {
@@ -25,7 +25,7 @@ final readonly class UserId implements Stringable
     }
 
     /**
-     * Create from existing UUID string
+     * Create from existing UUID string.
      */
     public static function fromString(string $uuid): self
     {
@@ -33,7 +33,7 @@ final readonly class UserId implements Stringable
     }
 
     /**
-     * Get the UUID as string
+     * Get the UUID as string.
      */
     public function toString(): string
     {
@@ -41,7 +41,7 @@ final readonly class UserId implements Stringable
     }
 
     /**
-     * Magic method to convert to string
+     * Magic method to convert to string.
      */
     public function __toString(): string
     {
@@ -49,11 +49,10 @@ final readonly class UserId implements Stringable
     }
 
     /**
-     * Check equality with another UserId
+     * Check equality with another UserId.
      */
-    public function equals(UserId $other): bool
+    public function equals(self $other): bool
     {
         return $this->value === $other->value;
     }
 }
-

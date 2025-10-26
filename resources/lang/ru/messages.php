@@ -3,7 +3,7 @@
 return [
     // General Success Messages
     'success' => 'Операция выполнена успешно',
-    
+
     // Authentication & User Messages
     'user_registered' => 'Пользователь успешно зарегистрирован',
     'user_logged_in' => 'Пользователь успешно вошел в систему',

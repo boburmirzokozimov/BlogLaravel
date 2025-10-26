@@ -7,7 +7,7 @@ use Tests\TestCase;
 class JwtAuthenticationTest extends TestCase
 {
     /**
-     * Example test using registeredUser() helper
+     * Example test using registeredUser() helper.
      */
     public function test_user_can_access_protected_route_with_token(): void
     {
@@ -25,18 +25,19 @@ class JwtAuthenticationTest extends TestCase
             ->assertJsonStructure([
                 'code',
                 'message' => ['en', 'ru'],
-                'data' => ['id', 'name', 'email', 'email_verified_at', 'created_at', 'updated_at'],
+                'data' => ['id', 'name', 'email', 'status', 'email_verified_at', 'created_at', 'updated_at'],
             ])
             ->assertJson([
                 'code' => 'SUCCESS',
                 'data' => [
                     'email' => 'john@example.com',
+                    'status' => 'active',
                 ],
             ]);
     }
 
     /**
-     * Example test using actingAsRegisteredUser() helper
+     * Example test using actingAsRegisteredUser() helper.
      */
     public function test_user_can_logout(): void
     {
@@ -60,7 +61,7 @@ class JwtAuthenticationTest extends TestCase
     }
 
     /**
-     * Test without authentication
+     * Test without authentication.
      */
     public function test_protected_route_requires_authentication(): void
     {
@@ -74,7 +75,7 @@ class JwtAuthenticationTest extends TestCase
     }
 
     /**
-     * Test with invalid token
+     * Test with invalid token.
      */
     public function test_invalid_token_returns_error(): void
     {
@@ -89,7 +90,7 @@ class JwtAuthenticationTest extends TestCase
     }
 
     /**
-     * Test user registration
+     * Test user registration.
      */
     public function test_user_can_register(): void
     {
@@ -112,7 +113,7 @@ class JwtAuthenticationTest extends TestCase
     }
 
     /**
-     * Test token refresh
+     * Test token refresh.
      */
     public function test_user_can_refresh_token(): void
     {
@@ -132,4 +133,3 @@ class JwtAuthenticationTest extends TestCase
             ]);
     }
 }
-

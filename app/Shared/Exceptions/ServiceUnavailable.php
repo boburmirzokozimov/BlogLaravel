@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Shared\Exceptions;
@@ -8,11 +9,10 @@ use Throwable;
 final class ServiceUnavailable extends DomainException
 {
     public function __construct(
-        string     $translationKey = 'errors.service_unavailable',
-        array      $translationParams = [],
+        string $translationKey = 'errors.service_unavailable',
+        array $translationParams = [],
         ?Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct(
             $translationKey,
             $translationParams,
@@ -31,4 +31,3 @@ final class ServiceUnavailable extends DomainException
         return 400;
     }
 }
-

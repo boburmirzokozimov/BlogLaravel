@@ -14,6 +14,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $name
  * @property string $email
  * @property string $password
+ * @property string $status
  * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property Carbon|null $created_at
@@ -25,14 +26,17 @@ class EloquentUser extends Authenticatable implements JWTSubject
      * Indicates if the IDs are auto-incrementing.
      */
     public $incrementing = false;
+
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
     protected $table = 'users';
+
     /**
      * The data type of the auto-incrementing ID.
      */
     protected $keyType = 'string';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -43,7 +47,10 @@ class EloquentUser extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'email_verified_at',
+        'status',
     ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -67,6 +74,9 @@ class EloquentUser extends Authenticatable implements JWTSubject
         return $this->getKey();
     }
 
+    /**
+     * @return string[]
+     */
     public function getJWTCustomClaims(): array
     {
         return [];

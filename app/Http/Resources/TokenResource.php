@@ -15,6 +15,17 @@ class TokenResource extends JsonResource
     public static $wrap = null;
 
     /**
+     * Create token resource from token string.
+     */
+    public static function fromToken(string $token, ?int $expiresIn = null): self
+    {
+        return new self([
+            'token' => $token,
+            'expires_in' => $expiresIn ?? auth()->factory()->getTTL() * 60,
+        ]);
+    }
+
+    /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
@@ -27,16 +38,4 @@ class TokenResource extends JsonResource
             'expires_in' => $this->resource['expires_in'],
         ];
     }
-
-    /**
-     * Create token resource from token string.
-     */
-    public static function fromToken(string $token, ?int $expiresIn = null): static
-    {
-        return new static([
-            'token' => $token,
-            'expires_in' => $expiresIn ?? auth()->factory()->getTTL() * 60,
-        ]);
-    }
 }
-

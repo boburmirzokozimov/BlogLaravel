@@ -4,6 +4,7 @@ namespace App\Domain\User\Entities;
 
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
+use App\Domain\User\ValueObjects\Status;
 use App\Domain\User\ValueObjects\UserId;
 use App\Shared\Exceptions\InvariantViolation;
 use InvalidArgumentException;
@@ -11,42 +12,42 @@ use InvalidArgumentException;
 class User
 {
     public function __construct(
-        private UserId       $id,
-        private string       $name,
-        private Email        $email,
+        private UserId $id,
+        private string $name,
+        private Email $email,
         private PasswordHash $password,
-    )
-    {
+        private Status $status,
+    ) {
     }
 
     /**
-     * Create a new user with generated UUID
+     * Create a new user with generated UUID.
      */
     public static function create(
-        string       $name,
-        Email        $email,
+        string $name,
+        Email $email,
         PasswordHash $password
-    ): self
-    {
+    ): self {
         return new self(
             UserId::generate(),
             $name,
             $email,
-            $password
+            $password,
+            Status::pending()
         );
     }
 
     /**
-     * Reconstitute user from persistence
+     * Reconstitute user from persistence.
      */
     public static function reconstitute(
-        UserId       $id,
-        string       $name,
-        Email        $email,
-        PasswordHash $password
-    ): self
-    {
-        return new self($id, $name, $email, $password);
+        UserId $id,
+        string $name,
+        Email $email,
+        PasswordHash $password,
+        Status $status
+    ): self {
+        return new self($id, $name, $email, $password, $status);
     }
 
     public function id(): UserId
@@ -77,12 +78,25 @@ class User
         return $this->password;
     }
 
-    public function activateEmail(): void
+    public function attachEmail(string $email): void
     {
         if ($this->email->active()) {
             throw new InvariantViolation('email_has_been_activated_already');
         }
-
+        $this->email->change($email);
         $this->email->activate();
+    }
+
+    public function activate(): void
+    {
+        if ($this->status->equals(Status::active())) {
+            throw new InvariantViolation('user_has_already_been_activated');
+        }
+        $this->status->activate();
+    }
+
+    public function status(): Status
+    {
+        return $this->status;
     }
 }

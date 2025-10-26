@@ -78,6 +78,4 @@ class CommandBusTest extends TestCase
         // Assert (rough example)
         $this->assertDatabaseHas('users', ['email' => 'alice@example.com']);
     }
-
 }
-

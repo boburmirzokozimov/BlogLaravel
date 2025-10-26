@@ -33,7 +33,7 @@ final class ConventionResolver
         if (!class_exists($handlerClass)) {
             throw new RuntimeException(
                 sprintf(
-                    'Handler [%s] not found for message [%s]. ' .
+                    'Handler [%s] not found for message [%s]. '.
                     'Expected handler at: %s',
                     $handlerClass,
                     $messageClass,
@@ -45,4 +45,3 @@ final class ConventionResolver
         return $handlerClass;
     }
 }
-

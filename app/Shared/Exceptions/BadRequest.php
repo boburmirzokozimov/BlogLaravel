@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Shared\Exceptions;
@@ -7,12 +8,16 @@ use Throwable;
 
 final class BadRequest extends DomainException
 {
+    /**
+     * @param string $translationKey
+     * @param array $translationParams
+     * @param Throwable|null $previous
+     */
     public function __construct(
-        string     $translationKey = 'errors.bad_request',
-        array      $translationParams = [],
+        string $translationKey = 'errors.bad_request',
+        array $translationParams = [],
         ?Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct(
             $translationKey,
             $translationParams,
@@ -31,4 +36,3 @@ final class BadRequest extends DomainException
         return 400;
     }
 }
-

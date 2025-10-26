@@ -51,11 +51,10 @@ use OpenApi\Attributes as OA;
             format: 'date-time',
             description: 'User last update timestamp',
             example: '2024-01-15T10:30:00.000000Z'
-        )
+        ),
     ]
 )]
 class UserSchema
 {
     // This class is only used for OpenAPI documentation
 }
-

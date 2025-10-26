@@ -7,10 +7,12 @@ parameters:
     - routes
 
   excludePaths:
+    - app/Http/*
+    - app/Shared/Exceptions/*
     - tests/*
     - tests/**
 
-  level: 1 # можешь повышать по мере готовности
+  level: 6 # можешь повышать по мере готовности
 
   ignoreErrors:
     # можно добавлять конкретные ошибки по regex

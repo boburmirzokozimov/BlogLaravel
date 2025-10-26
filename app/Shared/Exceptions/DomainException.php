@@ -8,6 +8,7 @@ use Throwable;
 abstract class DomainException extends RuntimeException
 {
     protected string $translationKey;
+
     protected array $translationParams = [];
 
     public function __construct(
@@ -18,7 +19,7 @@ abstract class DomainException extends RuntimeException
     ) {
         $this->translationKey = $translationKey;
         $this->translationParams = $translationParams;
-        
+
         // Use English message as fallback
         $message = __($translationKey, $translationParams, 'en');
         parent::__construct($message, $code, $previous);

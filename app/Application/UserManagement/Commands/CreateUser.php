@@ -16,8 +16,6 @@ final readonly class CreateUser implements Command
         public string $name,
         public string $email,
         public string $password,
-    )
-    {
+    ) {
     }
 }
-
