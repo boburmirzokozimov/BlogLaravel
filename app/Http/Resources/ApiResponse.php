@@ -1,63 +1,58 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResponse
 {
     /**
-     * Create a standardized success response.
+     * Return a success response with bilingual message
      */
-    public static function success(
-        mixed $data = null,
-        string $messageKey = 'messages.success',
-        array $messageParams = [],
-        int $statusCode = 200
-    ): JsonResponse {
+    public static function success(string $messageKey, array $data = [], int $statusCode = 200): JsonResponse
+    {
         $response = [
-            'code' => 'SUCCESS',
+            'success' => true,
             'message' => [
-                'en' => __($messageKey, $messageParams, 'en'),
-                'ru' => __($messageKey, $messageParams, 'ru'),
+                'en' => trans("messages.{$messageKey}", [], 'en'),
+                'ru' => trans("messages.{$messageKey}", [], 'ru'),
             ],
         ];
 
-        if ($data !== null) {
-            // If data is a JsonResource, convert it to array
-            if ($data instanceof JsonResource) {
-                $data = $data->toArray(request());
-            }
-
-            $response['data'] = $data;
+        if (!empty($data)) {
+            $response = array_merge($response, $data);
         }
 
         return response()->json($response, $statusCode);
     }
 
     /**
-     * Create a standardized error response.
+     * Return an error response with bilingual message
      */
-    public static function error(
-        string $code,
-        string $messageKey,
-        array $messageParams = [],
-        mixed $errorDetails = null,
-        int $statusCode = 400
-    ): JsonResponse {
+    public static function error(string $messageKey, int $statusCode = 400, array $data = []): JsonResponse
+    {
         $response = [
-            'code' => $code,
+            'success' => false,
             'message' => [
-                'en' => __($messageKey, $messageParams, 'en'),
-                'ru' => __($messageKey, $messageParams, 'ru'),
+                'en' => trans("messages.{$messageKey}", [], 'en'),
+                'ru' => trans("messages.{$messageKey}", [], 'ru'),
             ],
         ];
 
-        if ($errorDetails !== null) {
-            $response['error'] = $errorDetails;
+        if (!empty($data)) {
+            $response = array_merge($response, $data);
         }
 
         return response()->json($response, $statusCode);
+    }
+
+    /**
+     * Return a resource response
+     */
+    public static function resource($resource, int $statusCode = 200): JsonResponse
+    {
+        return response()->json($resource, $statusCode);
     }
 }

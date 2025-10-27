@@ -534,10 +534,549 @@
                     }
                 ]
             }
+        },
+        "/api/v1/blog-posts": {
+            "get": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "List all published blog posts",
+                "operationId": "0c658a50b7b4e77330ddc8714078fda2",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Number of posts to return",
+                        "schema": {
+                            "type": "integer",
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Offset for pagination",
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of published blog posts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "posts": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BlogPost"
+                                            }
+                                        },
+                                        "count": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Create a new blog post",
+                "operationId": "04de636194eaa47a0220ed2f93efb2da",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "example": "My First Blog Post"
+                                    },
+                                    "content": {
+                                        "type": "string",
+                                        "example": "This is the content of my blog post..."
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "my-first-blog-post",
+                                        "nullable": true
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        },
+                                        "example": [
+                                            "laravel",
+                                            "php"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Blog post created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string"
+                                                },
+                                                "ru": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "post_id": {
+                                            "type": "string",
+                                            "format": "uuid"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/blog-posts/{id}": {
+            "get": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Get blog post by ID",
+                "operationId": "e49722f1ba6d2294f8ca0f24fe339706",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Blog Post UUID",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog post details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlogPost"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Update blog post",
+                "operationId": "bb7abbb6c2ea7006f113a708b8007185",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "content"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "tags": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Blog post updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string"
+                                                },
+                                                "ru": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Delete blog post",
+                "operationId": "7c69d0a41f77102bef7ae6ccff2de436",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog post deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string"
+                                                },
+                                                "ru": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/blog-posts/slug/{slug}": {
+            "get": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Get blog post by slug",
+                "operationId": "2a17307057d1c46ebecaf0a5782e18c0",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "description": "Blog Post slug",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog post details",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BlogPost"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/blog-posts/{id}/publish": {
+            "post": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Publish blog post",
+                "operationId": "59951afcebdb16292ffc69d5ffb254bf",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog post published successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string"
+                                                },
+                                                "ru": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/blog-posts/{id}/archive": {
+            "post": {
+                "tags": [
+                    "Blog Posts"
+                ],
+                "summary": "Archive blog post",
+                "operationId": "a1fe6183f1b869046ea40e3986f950b4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Blog post archived successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string"
+                                                },
+                                                "ru": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Blog post not found"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
         "schemas": {
+            "BlogPost": {
+                "title": "Blog Post",
+                "description": "Blog post model",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "a1b2c3d4-e5f6-7890-1234-567890abcdef"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "My First Blog Post"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "my-first-blog-post"
+                    },
+                    "content": {
+                        "type": "string",
+                        "example": "This is the full content of my blog post..."
+                    },
+                    "excerpt": {
+                        "type": "string",
+                        "example": "This is the full content..."
+                    },
+                    "word_count": {
+                        "type": "integer",
+                        "example": 250
+                    },
+                    "author_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "b2c3d4e5-f6a7-8901-2345-67890abcdef1"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "draft",
+                            "published",
+                            "archived"
+                        ],
+                        "example": "published"
+                    },
+                    "published_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-10-27T10:00:00.000000Z",
+                        "nullable": true
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "laravel",
+                            "php",
+                            "web development"
+                        ]
+                    },
+                    "is_published": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_draft": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_archived": {
+                        "type": "boolean",
+                        "example": false
+                    }
+                },
+                "type": "object"
+            },
             "User": {
                 "title": "User",
                 "description": "User model with UUID identifier",
@@ -608,6 +1147,10 @@
         }
     },
     "tags": [
+        {
+            "name": "Blog Posts",
+            "description": "Blog Post Management"
+        },
         {
             "name": "Authentication",
             "description": "Authentication endpoints"
