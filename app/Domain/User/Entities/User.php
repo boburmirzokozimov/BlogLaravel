@@ -5,14 +5,14 @@ namespace App\Domain\User\Entities;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Domain\User\ValueObjects\Status;
-use App\Domain\User\ValueObjects\UserId;
 use App\Shared\Exceptions\InvariantViolation;
+use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 
 class User
 {
     public function __construct(
-        private UserId $id,
+        private Id $id,
         private string $name,
         private Email $email,
         private PasswordHash $password,
@@ -29,7 +29,7 @@ class User
         PasswordHash $password
     ): self {
         return new self(
-            UserId::generate(),
+            Id::generate(),
             $name,
             $email,
             $password,
@@ -41,7 +41,7 @@ class User
      * Reconstitute user from persistence.
      */
     public static function reconstitute(
-        UserId $id,
+        Id $id,
         string $name,
         Email $email,
         PasswordHash $password,
@@ -50,7 +50,7 @@ class User
         return new self($id, $name, $email, $password, $status);
     }
 
-    public function id(): UserId
+    public function id(): Id
     {
         return $this->id;
     }

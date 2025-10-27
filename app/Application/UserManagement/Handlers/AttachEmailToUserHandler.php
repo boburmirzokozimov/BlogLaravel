@@ -6,11 +6,11 @@ use App\Application\UserManagement\Commands\AttachEmailToUser;
 use App\Application\UserManagement\Commands\CreateUser;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
-use App\Domain\User\ValueObjects\UserId;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
 use App\Shared\Exceptions\NotFound;
+use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 
 final readonly class AttachEmailToUserHandler implements CommandHandler
@@ -30,7 +30,7 @@ final readonly class AttachEmailToUserHandler implements CommandHandler
                 )
             );
         }
-        $user = $this->userRepository->getById(UserId::fromString($command->id));
+        $user = $this->userRepository->getById(Id::fromString($command->id));
 
         if ($user === null) {
             throw new NotFound(User::class, $command->id);

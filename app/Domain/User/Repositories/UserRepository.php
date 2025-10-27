@@ -3,14 +3,14 @@
 namespace App\Domain\User\Repositories;
 
 use App\Domain\User\Entities\User;
-use App\Domain\User\ValueObjects\UserId;
 use App\Infrastructure\User\EloquentUser;
+use App\Shared\ValueObjects\Id;
 
 interface UserRepository
 {
     public function save(User $user): EloquentUser;
 
-    public function getById(UserId $id): ?User;
+    public function getById(Id $id): ?User;
 
     public function getByEmail(string $email): ?User;
 }

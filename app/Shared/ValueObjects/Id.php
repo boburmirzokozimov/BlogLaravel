@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Domain\User\ValueObjects;
+namespace App\Shared\ValueObjects;
 
 use InvalidArgumentException;
 use Ramsey\Uuid\Uuid;
 use Stringable;
 
-final readonly class UserId implements Stringable
+final readonly class Id implements Stringable
 {
     private function __construct(
         private string $value

@@ -6,8 +6,8 @@ use App\Domain\User\Entities\User;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Domain\User\ValueObjects\Status;
-use App\Domain\User\ValueObjects\UserId;
 use App\Shared\Exceptions\InvariantViolation;
+use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Tests\TestCase;
 
@@ -29,7 +29,7 @@ class UserTest extends TestCase
 
     public function test_can_reconstitute_user_from_persistence(): void
     {
-        $id = UserId::generate();
+        $id = Id::generate();
         $email = Email::fromString('test@example.com');
         $password = PasswordHash::fromPlain('password123');
         $status = Status::active();
@@ -111,7 +111,7 @@ class UserTest extends TestCase
     public function test_activate_throws_exception_when_user_already_active(): void
     {
         $user = User::reconstitute(
-            UserId::generate(),
+            Id::generate(),
             'Test User',
             Email::fromString('test@example.com'),
             PasswordHash::fromPlain('password123'),
@@ -126,7 +126,7 @@ class UserTest extends TestCase
 
     public function test_user_getters_return_correct_values(): void
     {
-        $id = UserId::generate();
+        $id = Id::generate();
         $email = Email::fromString('test@example.com');
         $password = PasswordHash::fromPlain('password123');
         $status = Status::active();

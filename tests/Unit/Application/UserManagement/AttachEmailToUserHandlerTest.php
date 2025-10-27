@@ -10,10 +10,10 @@ use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Domain\User\ValueObjects\Status;
-use App\Domain\User\ValueObjects\UserId;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\Exceptions\InvariantViolation;
 use App\Shared\Exceptions\NotFound;
+use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
 use Tests\TestCase;
@@ -26,7 +26,7 @@ class AttachEmailToUserHandlerTest extends TestCase
 
     public function test_can_attach_email_to_user(): void
     {
-        $userId = UserId::generate();
+        $userId = Id::generate();
         $user = User::create(
             'Test User',
             Email::fromString('old@example.com'),
@@ -41,7 +41,7 @@ class AttachEmailToUserHandlerTest extends TestCase
         $this->userRepository
             ->shouldReceive('getById')
             ->once()
-            ->with(Mockery::on(fn($id) => $id->equals($userId)))
+            ->with(Mockery::on(fn ($id) => $id->equals($userId)))
             ->andReturn($user);
 
         $this->userRepository
@@ -60,12 +60,12 @@ class AttachEmailToUserHandlerTest extends TestCase
 
     public function test_throws_exception_when_user_not_found(): void
     {
-        $userId = UserId::generate();
+        $userId = Id::generate();
 
         $this->userRepository
             ->shouldReceive('getById')
             ->once()
-            ->with(Mockery::on(fn($id) => $id->equals($userId)))
+            ->with(Mockery::on(fn ($id) => $id->equals($userId)))
             ->andReturn(null);
 
         $this->expectException(NotFound::class);
@@ -76,7 +76,7 @@ class AttachEmailToUserHandlerTest extends TestCase
 
     public function test_throws_exception_when_email_already_activated(): void
     {
-        $userId = UserId::generate();
+        $userId = Id::generate();
         $email = Email::fromString('test@example.com');
         $email->activate(); // Email is already active
 
@@ -91,7 +91,7 @@ class AttachEmailToUserHandlerTest extends TestCase
         $this->userRepository
             ->shouldReceive('getById')
             ->once()
-            ->with(Mockery::on(fn($id) => $id->equals($userId)))
+            ->with(Mockery::on(fn ($id) => $id->equals($userId)))
             ->andReturn($user);
 
         $this->expectException(InvariantViolation::class);
@@ -103,7 +103,7 @@ class AttachEmailToUserHandlerTest extends TestCase
 
     public function test_throws_exception_when_user_already_activated(): void
     {
-        $userId = UserId::generate();
+        $userId = Id::generate();
         $user = User::reconstitute(
             $userId,
             'Test User',
@@ -115,7 +115,7 @@ class AttachEmailToUserHandlerTest extends TestCase
         $this->userRepository
             ->shouldReceive('getById')
             ->once()
-            ->with(Mockery::on(fn($id) => $id->equals($userId)))
+            ->with(Mockery::on(fn ($id) => $id->equals($userId)))
             ->andReturn($user);
 
         $this->expectException(InvariantViolation::class);
@@ -135,7 +135,7 @@ class AttachEmailToUserHandlerTest extends TestCase
 
     public function test_activates_user_after_attaching_email(): void
     {
-        $userId = UserId::generate();
+        $userId = Id::generate();
         $user = User::create(
             'Test User',
             Email::fromString('old@example.com'),

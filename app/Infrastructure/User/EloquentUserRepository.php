@@ -7,7 +7,7 @@ use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Domain\User\ValueObjects\Status;
-use App\Domain\User\ValueObjects\UserId;
+use App\Shared\ValueObjects\Id;
 
 class EloquentUserRepository implements UserRepository
 {
@@ -27,7 +27,7 @@ class EloquentUserRepository implements UserRepository
         );
     }
 
-    public function getById(UserId $id): ?User
+    public function getById(Id $id): ?User
     {
         $record = EloquentUser::where('id', $id->toString())->first();
         if (!$record) {
@@ -35,7 +35,7 @@ class EloquentUserRepository implements UserRepository
         }
 
         return User::reconstitute(
-            UserId::fromString($record->id),
+            Id::fromString($record->id),
             $record->name,
             Email::reconstitute($record->email, $record->email_verified_at),
             PasswordHash::fromHash($record->password),
@@ -51,7 +51,7 @@ class EloquentUserRepository implements UserRepository
         }
 
         return User::reconstitute(
-            UserId::fromString($record->id),
+            Id::fromString($record->id),
             $record->name,
             Email::fromString($record->email),
             PasswordHash::fromHash($record->password),
