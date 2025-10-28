@@ -53,4 +53,3 @@ final readonly class UpdateBlogPostHandler implements CommandHandler
         return null;
     }
 }
-

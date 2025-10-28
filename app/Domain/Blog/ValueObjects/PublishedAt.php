@@ -16,7 +16,7 @@ final readonly class PublishedAt implements Stringable
     }
 
     /**
-     * Create with current timestamp
+     * Create with current timestamp.
      */
     public static function now(): self
     {
@@ -24,7 +24,7 @@ final readonly class PublishedAt implements Stringable
     }
 
     /**
-     * Create from DateTimeInterface
+     * Create from DateTimeInterface.
      */
     public static function fromDateTime(DateTimeInterface $dateTime): self
     {
@@ -36,7 +36,7 @@ final readonly class PublishedAt implements Stringable
     }
 
     /**
-     * Create from string
+     * Create from string.
      */
     public static function fromString(string $dateTime): self
     {

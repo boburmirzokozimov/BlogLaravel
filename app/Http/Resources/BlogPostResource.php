@@ -44,4 +44,3 @@ class BlogPostResource extends JsonResource
         ];
     }
 }
-

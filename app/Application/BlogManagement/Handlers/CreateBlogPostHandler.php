@@ -11,6 +11,7 @@ use App\Domain\Blog\ValueObjects\AuthorId;
 use App\Domain\Blog\ValueObjects\Content;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
 use InvalidArgumentException;
@@ -22,7 +23,7 @@ final readonly class CreateBlogPostHandler implements CommandHandler
     ) {
     }
 
-    public function __invoke(Command $command): mixed
+    public function __invoke(Command $command): EloquentBlogPost
     {
         if (!$command instanceof CreateBlogPost) {
             throw new InvalidArgumentException(
@@ -45,9 +46,6 @@ final readonly class CreateBlogPostHandler implements CommandHandler
             $post->setTags($command->tags);
         }
 
-        $this->repository->save($post);
-
-        return $post->id()->toString();
+        return $this->repository->save($post);
     }
 }
-

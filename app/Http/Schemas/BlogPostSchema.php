@@ -27,5 +27,6 @@ use OpenApi\Attributes as OA;
     ],
     type: 'object'
 )]
-class BlogPostSchema {}
-
+class BlogPostSchema
+{
+}

@@ -16,12 +16,19 @@ use App\Shared\ValueObjects\Id;
 final class BlogPost
 {
     private Id $id;
+
     private Title $title;
+
     private Slug $slug;
+
     private Content $content;
+
     private AuthorId $authorId;
+
     private PostStatus $status;
+
     private ?PublishedAt $publishedAt;
+
     private array $tags = [];
 
     // domain events
@@ -48,7 +55,7 @@ final class BlogPost
     }
 
     /**
-     * Create a new draft blog post
+     * Create a new draft blog post.
      */
     public static function create(
         Title $title,
@@ -69,7 +76,7 @@ final class BlogPost
     }
 
     /**
-     * Reconstitute from persistence
+     * Reconstitute from persistence.
      */
     public static function reconstitute(
         Id $id,
@@ -152,7 +159,7 @@ final class BlogPost
     // Business Logic Methods
 
     /**
-     * Update the blog post content and title
+     * Update the blog post content and title.
      */
     public function update(Title $title, Content $content, ?Slug $slug = null): void
     {
@@ -168,7 +175,7 @@ final class BlogPost
     }
 
     /**
-     * Publish the blog post
+     * Publish the blog post.
      */
     public function publish(): void
     {
@@ -185,7 +192,7 @@ final class BlogPost
     }
 
     /**
-     * Archive the blog post
+     * Archive the blog post.
      */
     public function archive(): void
     {
@@ -197,7 +204,7 @@ final class BlogPost
     }
 
     /**
-     * Revert to draft status
+     * Revert to draft status.
      */
     public function unpublish(): void
     {
@@ -210,7 +217,7 @@ final class BlogPost
     }
 
     /**
-     * Add a tag to the blog post
+     * Add a tag to the blog post.
      */
     public function addTag(string $tag): void
     {
@@ -224,44 +231,46 @@ final class BlogPost
     }
 
     /**
-     * Remove a tag from the blog post
+     * Remove a tag from the blog post.
      */
     public function removeTag(string $tag): void
     {
         $normalizedTag = strtolower(trim($tag));
         $this->tags = array_values(array_filter(
             $this->tags,
-            fn($t) => $t !== $normalizedTag
+            fn ($t) => $t !== $normalizedTag
         ));
     }
 
     /**
-     * Set all tags (replacing existing ones)
+     * Set all tags (replacing existing ones).
      */
     public function setTags(array $tags): void
     {
         $this->tags = array_values(array_unique(array_map(
-            fn($tag) => strtolower(trim($tag)),
+            fn ($tag) => strtolower(trim($tag)),
             $tags
         )));
     }
 
     /**
-     * Check if post has a specific tag
+     * Check if post has a specific tag.
      */
     public function hasTag(string $tag): bool
     {
         $normalizedTag = strtolower(trim($tag));
+
         return in_array($normalizedTag, $this->tags, true);
     }
 
     /**
-     * Get domain events
+     * Get domain events.
      */
     public function releaseEvents(): array
     {
         $events = $this->events;
         $this->events = [];
+
         return $events;
     }
 }

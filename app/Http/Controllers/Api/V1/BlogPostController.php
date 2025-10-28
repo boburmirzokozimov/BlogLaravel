@@ -24,7 +24,6 @@ use OpenApi\Attributes as OA;
 #[OA\Tag(name: 'Blog Posts', description: 'Blog Post Management')]
 class BlogPostController extends Controller
 {
-
     #[OA\Get(
         path: '/api/v1/blog-posts',
         summary: 'List all published blog posts',
@@ -41,7 +40,7 @@ class BlogPostController extends Controller
                 in: 'query',
                 description: 'Offset for pagination',
                 schema: new OA\Schema(type: 'integer', default: 0)
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -50,16 +49,16 @@ class BlogPostController extends Controller
                 content: new OA\JsonContent(
                     properties: [
                         new OA\Property(property: 'posts', type: 'array', items: new OA\Items(ref: '#/components/schemas/BlogPost')),
-                        new OA\Property(property: 'count', type: 'integer')
+                        new OA\Property(property: 'count', type: 'integer'),
                     ]
                 )
-            )
+            ),
         ]
     )]
     public function index(Request $request)
     {
-        $limit = (int)($request->query('limit', 10));
-        $offset = (int)($request->query('offset', 0));
+        $limit = (int) ($request->query('limit', 10));
+        $offset = (int) ($request->query('offset', 0));
 
         $posts = $this->queries->ask(new ListPublishedBlogPosts($limit, $offset));
 
@@ -70,7 +69,6 @@ class BlogPostController extends Controller
         path: '/api/v1/blog-posts',
         summary: 'Create a new blog post',
         security: [['bearerAuth' => []]],
-        tags: ['Blog Posts'],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -84,10 +82,11 @@ class BlogPostController extends Controller
                         type: 'array',
                         items: new OA\Items(type: 'string'),
                         example: ['laravel', 'php']
-                    )
+                    ),
                 ]
             )
         ),
+        tags: ['Blog Posts'],
         responses: [
             new OA\Response(
                 response: 201,
@@ -99,15 +98,15 @@ class BlogPostController extends Controller
                             type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string')
+                                new OA\Property(property: 'ru', type: 'string'),
                             ]
                         ),
-                        new OA\Property(property: 'post_id', type: 'string', format: 'uuid')
+                        new OA\Property(property: 'post_id', type: 'string', format: 'uuid'),
                     ]
                 )
             ),
             new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
     public function store(CreateBlogPostRequest $request)
@@ -115,19 +114,19 @@ class BlogPostController extends Controller
 
         $authorId = auth()->id();
 
-        $postId = $this->commands->dispatch(
+        $post = $this->commands->dispatch(
             new CreateBlogPost(
                 title: $request->validated('title'),
                 content: $request->validated('content'),
                 authorId: $authorId,
-                slug: $request->validated('slug') ?? null,
+                slug: $request->validated('slug'),
                 tags: $request->validated('tags') ?? []
             )
         );
 
         return ApiResponse::success(
             'blog_post_created_successfully',
-            ['post_id' => $postId],
+            new BlogPostResource($post),
             201
         );
     }
@@ -143,7 +142,7 @@ class BlogPostController extends Controller
                 required: true,
                 description: 'Blog Post UUID',
                 schema: new OA\Schema(type: 'string', format: 'uuid')
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -151,7 +150,7 @@ class BlogPostController extends Controller
                 description: 'Blog post details',
                 content: new OA\JsonContent(ref: '#/components/schemas/BlogPost')
             ),
-            new OA\Response(response: 404, description: 'Blog post not found')
+            new OA\Response(response: 404, description: 'Blog post not found'),
         ]
     )]
     public function show(string $id)
@@ -172,7 +171,7 @@ class BlogPostController extends Controller
                 required: true,
                 description: 'Blog Post slug',
                 schema: new OA\Schema(type: 'string')
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -180,7 +179,7 @@ class BlogPostController extends Controller
                 description: 'Blog post details',
                 content: new OA\JsonContent(ref: '#/components/schemas/BlogPost')
             ),
-            new OA\Response(response: 404, description: 'Blog post not found')
+            new OA\Response(response: 404, description: 'Blog post not found'),
         ]
     )]
     public function showBySlug(string $slug)
@@ -201,7 +200,7 @@ class BlogPostController extends Controller
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
-            )
+            ),
         ],
         requestBody: new OA\RequestBody(
             required: true,
@@ -211,7 +210,7 @@ class BlogPostController extends Controller
                     new OA\Property(property: 'title', type: 'string'),
                     new OA\Property(property: 'content', type: 'string'),
                     new OA\Property(property: 'slug', type: 'string', nullable: true),
-                    new OA\Property(property: 'tags', type: 'array', items: new OA\Items(type: 'string'))
+                    new OA\Property(property: 'tags', type: 'array', items: new OA\Items(type: 'string')),
                 ]
             )
         ),
@@ -226,15 +225,15 @@ class BlogPostController extends Controller
                             type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string')
+                                new OA\Property(property: 'ru', type: 'string'),
                             ]
-                        )
+                        ),
                     ]
                 )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
             new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
     public function update(UpdateBlogPostRequest $request, string $id)
@@ -263,7 +262,7 @@ class BlogPostController extends Controller
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -276,14 +275,14 @@ class BlogPostController extends Controller
                             type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string')
+                                new OA\Property(property: 'ru', type: 'string'),
                             ]
-                        )
+                        ),
                     ]
                 )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
     public function publish(string $id)
@@ -304,7 +303,7 @@ class BlogPostController extends Controller
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -317,14 +316,14 @@ class BlogPostController extends Controller
                             type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string')
+                                new OA\Property(property: 'ru', type: 'string'),
                             ]
-                        )
+                        ),
                     ]
                 )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
     public function archive(string $id)
@@ -345,7 +344,7 @@ class BlogPostController extends Controller
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
-            )
+            ),
         ],
         responses: [
             new OA\Response(
@@ -358,14 +357,14 @@ class BlogPostController extends Controller
                             type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string')
+                                new OA\Property(property: 'ru', type: 'string'),
                             ]
-                        )
+                        ),
                     ]
                 )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated')
+            new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
     public function destroy(string $id)
@@ -375,4 +374,3 @@ class BlogPostController extends Controller
         return ApiResponse::success('blog_post_deleted_successfully');
     }
 }
-

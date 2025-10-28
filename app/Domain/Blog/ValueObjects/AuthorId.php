@@ -15,7 +15,7 @@ final readonly class AuthorId implements Stringable
     }
 
     /**
-     * Create from User ID
+     * Create from User ID.
      */
     public static function fromUserId(Id $userId): self
     {
@@ -23,7 +23,7 @@ final readonly class AuthorId implements Stringable
     }
 
     /**
-     * Create from UUID string
+     * Create from UUID string.
      */
     public static function fromString(string $uuid): self
     {

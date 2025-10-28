@@ -64,4 +64,3 @@ class EloquentBlogPost extends Model
         ];
     }
 }
-

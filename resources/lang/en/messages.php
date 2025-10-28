@@ -13,7 +13,7 @@ return [
     'user_updated_successfully' => 'User updated successfully',
     'user_deleted_successfully' => 'User deleted successfully',
     'user_not_found' => 'User not found',
-    
+
     // Blog Post Messages
     'blog_post_created_successfully' => 'Blog post created successfully',
     'blog_post_updated_successfully' => 'Blog post updated successfully',
@@ -23,7 +23,7 @@ return [
     'blog_post_not_found' => 'Blog post not found',
     'blog_post_already_published' => 'Blog post is already published',
     'blog_post_already_archived' => 'Blog post is already archived',
-    
+
     // Validation Messages
     'validation_failed' => 'Validation failed',
     'unauthorized' => 'Unauthorized',

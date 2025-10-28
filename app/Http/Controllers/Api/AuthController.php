@@ -8,6 +8,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\ApiResponse;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -95,8 +96,8 @@ class AuthController extends Controller
         $token = auth()->login($user);
 
         return ApiResponse::success(
-            data: TokenResource::fromToken($token),
-            messageKey: 'messages.user_registered'
+            messageKey: 'messages.user_registered',
+            data: TokenResource::fromToken($token)
         );
     }
 
@@ -166,15 +167,14 @@ class AuthController extends Controller
 
         if (!$token = auth('api')->attempt($credentials)) {
             return ApiResponse::error(
-                code: 'UNAUTHORIZED',
                 messageKey: 'errors.unauthenticated',
                 statusCode: 401
             );
         }
 
         return ApiResponse::success(
-            data: TokenResource::fromToken($token),
-            messageKey: 'messages.user_logged_in'
+            messageKey: 'messages.user_logged_in',
+            data: TokenResource::fromToken($token)
         );
     }
 
@@ -233,9 +233,10 @@ class AuthController extends Controller
             ),
         ]
     )]
-    public function me()
+    public function me(): JsonResponse
     {
         return ApiResponse::success(
+            messageKey: 'messages.user_logged_in',
             data: new UserResource(auth()->user())
         );
     }
@@ -342,11 +343,11 @@ class AuthController extends Controller
             ),
         ]
     )]
-    public function refresh()
+    public function refresh(): JsonResponse
     {
         return ApiResponse::success(
-            data: TokenResource::fromToken(auth()->refresh()),
-            messageKey: 'messages.token_refreshed'
+            messageKey: 'messages.token_refreshed',
+            data: TokenResource::fromToken(auth()->refresh())
         );
     }
 }

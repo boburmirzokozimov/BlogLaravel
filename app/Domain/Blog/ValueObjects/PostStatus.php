@@ -7,7 +7,9 @@ use InvalidArgumentException;
 class PostStatus
 {
     private const DRAFT = 'draft';
+
     private const PUBLISHED = 'published';
+
     private const ARCHIVED = 'archived';
 
     private function __construct(private readonly string $value)

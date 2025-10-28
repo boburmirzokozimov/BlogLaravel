@@ -35,4 +35,3 @@ final readonly class DeleteBlogPostHandler implements CommandHandler
         return null;
     }
 }
-

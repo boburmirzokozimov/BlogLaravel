@@ -15,7 +15,7 @@ final readonly class Content implements Stringable
     }
 
     /**
-     * Create content with validation
+     * Create content with validation.
      */
     public static function fromString(string $content): self
     {
@@ -43,7 +43,7 @@ final readonly class Content implements Stringable
             return $this->value;
         }
 
-        return substr($this->value, 0, $length) . '...';
+        return substr($this->value, 0, $length).'...';
     }
 
     public function wordCount(): int

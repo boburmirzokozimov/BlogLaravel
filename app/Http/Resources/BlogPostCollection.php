@@ -24,9 +24,8 @@ class BlogPostCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            'posts' => $this->collection->map(fn($post) => new BlogPostResource($post)),
+            'posts' => $this->collection->map(fn ($post) => new BlogPostResource($post)),
             'count' => $this->collection->count(),
         ];
     }
 }
-

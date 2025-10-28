@@ -8,14 +8,13 @@ class Title
 {
     private function __construct(
         private string $title
-    )
-    {
+    ) {
     }
 
-    public static function new(string $title): Title
+    public static function new(string $title): self
     {
         if (strlen($title) < 3) {
-            throw new InvariantViolation("Title must be at least 3 characters long");
+            throw new InvariantViolation('Title must be at least 3 characters long');
         }
 
         return new self($title);
@@ -30,5 +29,4 @@ class Title
     {
         return $this->title;
     }
-
 }

@@ -6,6 +6,7 @@ namespace App\Application\BlogManagement\Handlers;
 
 use App\Application\BlogManagement\Commands\ArchiveBlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
 use App\Shared\ValueObjects\Id;
@@ -19,7 +20,7 @@ final readonly class ArchiveBlogPostHandler implements CommandHandler
     ) {
     }
 
-    public function __invoke(Command $command): mixed
+    public function __invoke(Command $command): EloquentBlogPost
     {
         if (!$command instanceof ArchiveBlogPost) {
             throw new InvalidArgumentException(
@@ -39,9 +40,6 @@ final readonly class ArchiveBlogPostHandler implements CommandHandler
 
         $post->archive();
 
-        $this->repository->save($post);
-
-        return null;
+        return $this->repository->save($post);
     }
 }
-

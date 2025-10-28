@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResponse
 {
     /**
-     * Return a success response with bilingual message
+     * Return a success response with bilingual message.
      */
-    public static function success(string $messageKey, array $data = [], int $statusCode = 200): JsonResponse
+    public static function success(
+        string $messageKey, JsonResource $data, int $statusCode = 200): JsonResponse
     {
         $response = [
             'success' => true,
@@ -19,17 +21,14 @@ class ApiResponse
                 'en' => trans("messages.{$messageKey}", [], 'en'),
                 'ru' => trans("messages.{$messageKey}", [], 'ru'),
             ],
+            'data' => $data,
         ];
-
-        if (!empty($data)) {
-            $response = array_merge($response, $data);
-        }
 
         return response()->json($response, $statusCode);
     }
 
     /**
-     * Return an error response with bilingual message
+     * Return an error response with bilingual message.
      */
     public static function error(string $messageKey, int $statusCode = 400, array $data = []): JsonResponse
     {
@@ -39,20 +38,10 @@ class ApiResponse
                 'en' => trans("messages.{$messageKey}", [], 'en'),
                 'ru' => trans("messages.{$messageKey}", [], 'ru'),
             ],
+            'data' => $data,
         ];
-
-        if (!empty($data)) {
-            $response = array_merge($response, $data);
-        }
 
         return response()->json($response, $statusCode);
     }
 
-    /**
-     * Return a resource response
-     */
-    public static function resource($resource, int $statusCode = 200): JsonResponse
-    {
-        return response()->json($resource, $statusCode);
-    }
 }

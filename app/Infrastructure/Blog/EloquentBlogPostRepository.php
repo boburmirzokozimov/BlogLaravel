@@ -16,9 +16,9 @@ use App\Shared\ValueObjects\Id;
 
 class EloquentBlogPostRepository implements BlogPostRepository
 {
-    public function save(BlogPost $post): void
+    public function save(BlogPost $post): EloquentBlogPost
     {
-        EloquentBlogPost::updateOrCreate(
+        return EloquentBlogPost::updateOrCreate(
             ['id' => $post->id()->toString()],
             [
                 'title' => $post->title()->getTitle(),
@@ -60,7 +60,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return $records->map(fn($record) => $this->toDomain($record))->all();
+        return $records->map(fn ($record) => $this->toDomain($record))->all();
     }
 
     public function findPublished(int $limit = 10, int $offset = 0): array
@@ -71,7 +71,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
             ->offset($offset)
             ->get();
 
-        return $records->map(fn($record) => $this->toDomain($record))->all();
+        return $records->map(fn ($record) => $this->toDomain($record))->all();
     }
 
     public function delete(Id $id): void
@@ -80,7 +80,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
     }
 
     /**
-     * Convert Eloquent model to domain entity
+     * Convert Eloquent model to domain entity.
      */
     private function toDomain(EloquentBlogPost $record): BlogPost
     {
@@ -100,4 +100,3 @@ class EloquentBlogPostRepository implements BlogPostRepository
         );
     }
 }
-

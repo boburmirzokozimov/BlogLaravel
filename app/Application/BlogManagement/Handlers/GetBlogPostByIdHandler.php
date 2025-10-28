@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Application\BlogManagement\Handlers;
 
 use App\Application\BlogManagement\Queries\GetBlogPostById;
-use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
@@ -41,4 +40,3 @@ final readonly class GetBlogPostByIdHandler implements QueryHandler
         return $post;
     }
 }
-

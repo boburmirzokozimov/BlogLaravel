@@ -14,7 +14,7 @@ final readonly class Slug implements Stringable
     }
 
     /**
-     * Create slug from title (auto-generate)
+     * Create slug from title (auto-generate).
      */
     public static function fromTitle(string $title): self
     {
@@ -26,7 +26,7 @@ final readonly class Slug implements Stringable
     }
 
     /**
-     * Create from existing slug string
+     * Create from existing slug string.
      */
     public static function fromString(string $slug): self
     {

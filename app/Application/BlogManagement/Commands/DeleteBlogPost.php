@@ -16,4 +16,3 @@ final readonly class DeleteBlogPost implements Command
     ) {
     }
 }
-
