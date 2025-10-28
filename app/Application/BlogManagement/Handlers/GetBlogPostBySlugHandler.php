@@ -6,6 +6,7 @@ namespace App\Application\BlogManagement\Handlers;
 
 use App\Application\BlogManagement\Queries\GetBlogPostBySlug;
 use App\Domain\Blog\Repositories\BlogPostRepository;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
 use InvalidArgumentException;
@@ -18,7 +19,7 @@ final readonly class GetBlogPostBySlugHandler implements QueryHandler
     ) {
     }
 
-    public function __invoke(Query $query): mixed
+    public function __invoke(Query $query): EloquentBlogPost
     {
         if (!$query instanceof GetBlogPostBySlug) {
             throw new InvalidArgumentException(

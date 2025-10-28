@@ -13,6 +13,7 @@ use App\Domain\Blog\ValueObjects\PublishedAt;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class EloquentBlogPostRepository implements BlogPostRepository
 {
@@ -43,7 +44,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
         return $this->toDomain($record);
     }
 
-    public function findBySlug(string $slug): ?BlogPost
+    public function findBySlug(string $slug): ?EloquentBlogPost
     {
         $record = EloquentBlogPost::where('slug', $slug)->first();
 
@@ -51,27 +52,21 @@ class EloquentBlogPostRepository implements BlogPostRepository
             return null;
         }
 
-        return $this->toDomain($record);
+        return $record;
     }
 
-    public function findByAuthor(AuthorId $authorId): array
+    public function findByAuthor(AuthorId $authorId): LengthAwarePaginator
     {
-        $records = EloquentBlogPost::where('author_id', $authorId->toString())
+        return EloquentBlogPost::where('author_id', $authorId->toString())
             ->orderBy('created_at', 'desc')
-            ->get();
-
-        return $records->map(fn ($record) => $this->toDomain($record))->all();
+            ->paginate();
     }
 
-    public function findPublished(int $limit = 10, int $offset = 0): array
+    public function findPublished(int $limit = 10, int $offset = 0): LengthAwarePaginator
     {
-        $records = EloquentBlogPost::where('status', 'published')
+        return EloquentBlogPost::where('status', 'published')
             ->orderBy('published_at', 'desc')
-            ->limit($limit)
-            ->offset($offset)
-            ->get();
-
-        return $records->map(fn ($record) => $this->toDomain($record))->all();
+            ->paginate();
     }
 
     public function delete(Id $id): void

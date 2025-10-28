@@ -8,6 +8,7 @@ use App\Application\BlogManagement\Handlers\CreateBlogPostHandler;
 use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Domain\Blog\ValueObjects\PostStatus;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
@@ -25,6 +26,8 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $content = 'This is test content';
         $authorId = Id::generate()->toString();
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('save')
             ->once()
@@ -35,13 +38,13 @@ class CreateBlogPostHandlerTest extends UnitTestCase
                     && $post->authorId()->toString() === $authorId
                     && $post->isDraft()
                     && empty($post->tags());
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new CreateBlogPost($title, $content, $authorId);
         $result = ($this->handler)($command);
 
-        $this->assertIsString($result);
-        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     public function test_can_create_blog_post_with_slug(): void
@@ -51,19 +54,21 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $authorId = Id::generate()->toString();
         $slug = 'custom-slug';
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('save')
             ->once()
             ->with(Mockery::on(function ($post) use ($slug) {
                 return $post instanceof BlogPost
                     && $post->slug()->value() === $slug;
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new CreateBlogPost($title, $content, $authorId, $slug);
         $result = ($this->handler)($command);
 
-        $this->assertIsString($result);
-        $this->assertNotEmpty($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     public function test_can_create_blog_post_with_tags(): void
@@ -73,18 +78,21 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $authorId = Id::generate()->toString();
         $tags = ['php', 'laravel', 'testing'];
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('save')
             ->once()
             ->with(Mockery::on(function ($post) use ($tags) {
                 return $post instanceof BlogPost
                     && $post->tags() === $tags;
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new CreateBlogPost($title, $content, $authorId, null, $tags);
         $result = ($this->handler)($command);
 
-        $this->assertIsString($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     public function test_throws_exception_when_wrong_command_type(): void
@@ -102,6 +110,8 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $content = 'This is test content';
         $authorId = Id::generate()->toString();
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('save')
             ->once()
@@ -109,12 +119,13 @@ class CreateBlogPostHandlerTest extends UnitTestCase
                 return $post instanceof BlogPost
                     && $post->status()->equals(PostStatus::draft())
                     && $post->publishedAt() === null;
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new CreateBlogPost($title, $content, $authorId);
         $result = ($this->handler)($command);
 
-        $this->assertIsString($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     protected function setUp(): void

@@ -13,6 +13,7 @@ use App\Domain\Blog\ValueObjects\PostStatus;
 use App\Domain\Blog\ValueObjects\PublishedAt;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\Exceptions\InvariantViolation;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
@@ -37,6 +38,8 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
 
         $this->assertTrue($post->isDraft());
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('findById')
             ->once()
@@ -49,12 +52,13 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
             ->with(Mockery::on(function ($savedPost) {
                 return $savedPost instanceof BlogPost
                     && $savedPost->isArchived();
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new ArchiveBlogPost($postId->toString());
         $result = ($this->handler)($command);
 
-        $this->assertNull($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     public function test_can_archive_published_blog_post(): void
@@ -72,6 +76,8 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
 
         $this->assertTrue($post->isPublished());
 
+        $eloquentPost = Mockery::mock(EloquentBlogPost::class);
+
         $this->repository
             ->shouldReceive('findById')
             ->once()
@@ -83,12 +89,13 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
             ->with(Mockery::on(function ($savedPost) {
                 return $savedPost instanceof BlogPost
                     && $savedPost->isArchived();
-            }));
+            }))
+            ->andReturn($eloquentPost);
 
         $command = new ArchiveBlogPost($postId->toString());
         $result = ($this->handler)($command);
 
-        $this->assertNull($result);
+        $this->assertInstanceOf(EloquentBlogPost::class, $result);
     }
 
     public function test_throws_exception_when_post_not_found(): void

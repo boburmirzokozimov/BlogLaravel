@@ -24,21 +24,21 @@ interface BlogPostRepository
     /**
      * Find a blog post by slug.
      */
-    public function findBySlug(string $slug): ?BlogPost;
+    public function findBySlug(string $slug): mixed;
 
     /**
      * Get all blog posts by author.
      *
      * @return BlogPost[]
      */
-    public function findByAuthor(AuthorId $authorId): array;
+    public function findByAuthor(AuthorId $authorId): mixed;
 
     /**
      * Get all published blog posts.
      *
      * @return BlogPost[]
      */
-    public function findPublished(int $limit = 10, int $offset = 0): array;
+    public function findPublished(int $limit = 10, int $offset = 0): mixed;
 
     /**
      * Delete a blog post.
