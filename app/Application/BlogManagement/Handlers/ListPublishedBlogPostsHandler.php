@@ -29,6 +29,6 @@ final readonly class ListPublishedBlogPostsHandler implements QueryHandler
             );
         }
 
-        return $this->repository->findPublished($query->limit, $query->offset);
+        return $this->repository->findPublished($query->filters);
     }
 }

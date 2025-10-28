@@ -42,8 +42,8 @@ class OAuthController extends Controller
         $token = auth()->login($user);
 
         return ApiResponse::success(
-            data: TokenResource::fromToken($token),
-            messageKey: 'messages.user_logged_in'
+            messageKey: 'messages.user_logged_in',
+            data: TokenResource::fromToken($token)
         );
     }
 }

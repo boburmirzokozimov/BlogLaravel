@@ -12,8 +12,7 @@ use App\Shared\CQRS\Query\Query;
 final readonly class ListPublishedBlogPosts implements Query
 {
     public function __construct(
-        public int $limit = 10,
-        public int $offset = 0
+        public int $filters
     ) {
     }
 }

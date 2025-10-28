@@ -48,8 +48,23 @@ class BlogPostController extends Controller
                 description: 'List of published blog posts',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'posts', type: 'array', items: new OA\Items(ref: '#/components/schemas/BlogPost')),
-                        new OA\Property(property: 'count', type: 'integer'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Success'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Успех'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(
+                            property: 'data',
+                            properties: [
+                                new OA\Property(property: 'posts', type: 'array', items: new OA\Items(ref: '#/components/schemas/BlogPost')),
+                                new OA\Property(property: 'count', type: 'integer', example: 10),
+                            ],
+                            type: 'object'
+                        ),
                     ]
                 )
             ),
@@ -77,14 +92,15 @@ class BlogPostController extends Controller
             content: new OA\JsonContent(
                 required: ['title', 'content'],
                 properties: [
-                    new OA\Property(property: 'title', type: 'string', example: 'My First Blog Post'),
-                    new OA\Property(property: 'content', type: 'string', example: 'This is the content of my blog post...'),
+                    new OA\Property(property: 'title', type: 'string', minLength: 3, maxLength: 255, example: 'My First Blog Post'),
+                    new OA\Property(property: 'content', type: 'string', minLength: 10, maxLength: 50000, example: 'This is the content of my blog post...'),
                     new OA\Property(property: 'slug', type: 'string', example: 'my-first-blog-post', nullable: true),
                     new OA\Property(
                         property: 'tags',
                         type: 'array',
                         items: new OA\Items(type: 'string'),
-                        example: ['laravel', 'php']
+                        example: ['laravel', 'php'],
+                        nullable: true
                     ),
                 ]
             )
@@ -96,15 +112,16 @@ class BlogPostController extends Controller
                 description: 'Blog post created successfully',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string'),
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post created successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге успешно создана'),
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(property: 'post_id', type: 'string', format: 'uuid'),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
                     ]
                 )
             ),
@@ -151,7 +168,20 @@ class BlogPostController extends Controller
             new OA\Response(
                 response: 200,
                 description: 'Blog post details',
-                content: new OA\JsonContent(ref: '#/components/schemas/BlogPost')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Success'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Успех'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
+                    ]
+                )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
         ]
@@ -176,14 +206,27 @@ class BlogPostController extends Controller
                 description: 'Blog Post slug',
                 in: 'path',
                 required: true,
-                schema: new OA\Schema(type: 'string')
+                schema: new OA\Schema(type: 'string', example: 'my-first-blog-post')
             ),
         ],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Blog post details',
-                content: new OA\JsonContent(ref: '#/components/schemas/BlogPost')
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Success'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Успех'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
+                    ]
+                )
             ),
             new OA\Response(response: 404, description: 'Blog post not found'),
         ]
@@ -207,10 +250,16 @@ class BlogPostController extends Controller
             content: new OA\JsonContent(
                 required: ['title', 'content'],
                 properties: [
-                    new OA\Property(property: 'title', type: 'string'),
-                    new OA\Property(property: 'content', type: 'string'),
-                    new OA\Property(property: 'slug', type: 'string', nullable: true),
-                    new OA\Property(property: 'tags', type: 'array', items: new OA\Items(type: 'string')),
+                    new OA\Property(property: 'title', type: 'string', minLength: 3, maxLength: 255, example: 'Updated Blog Post Title'),
+                    new OA\Property(property: 'content', type: 'string', minLength: 10, maxLength: 50000, example: 'Updated content...'),
+                    new OA\Property(property: 'slug', type: 'string', example: 'updated-blog-post-title', nullable: true),
+                    new OA\Property(
+                        property: 'tags',
+                        type: 'array',
+                        items: new OA\Items(type: 'string'),
+                        example: ['laravel', 'php', 'update'],
+                        nullable: true
+                    ),
                 ]
             )
         ),
@@ -218,6 +267,7 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'id',
+                description: 'Blog Post UUID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -229,14 +279,16 @@ class BlogPostController extends Controller
                 description: 'Blog post updated successfully',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string'),
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post updated successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге успешно обновлена'),
                             ],
                             type: 'object'
                         ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
                     ]
                 )
             ),
@@ -271,6 +323,7 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'id',
+                description: 'Blog Post UUID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -282,14 +335,16 @@ class BlogPostController extends Controller
                 description: 'Blog post published successfully',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string'),
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post published successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге успешно опубликована'),
                             ],
                             type: 'object'
                         ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
                     ]
                 )
             ),
@@ -315,6 +370,7 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'id',
+                description: 'Blog Post UUID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -326,14 +382,16 @@ class BlogPostController extends Controller
                 description: 'Blog post archived successfully',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string'),
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post archived successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге успешно архивирована'),
                             ],
                             type: 'object'
                         ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
                     ]
                 )
             ),
@@ -359,6 +417,7 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'id',
+                description: 'Blog Post UUID',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'string', format: 'uuid')
@@ -370,14 +429,16 @@ class BlogPostController extends Controller
                 description: 'Blog post deleted successfully',
                 content: new OA\JsonContent(
                     properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
-                                new OA\Property(property: 'en', type: 'string'),
-                                new OA\Property(property: 'ru', type: 'string'),
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post deleted successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге успешно удалена'),
                             ],
                             type: 'object'
                         ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/BlogPost'),
                     ]
                 )
             ),

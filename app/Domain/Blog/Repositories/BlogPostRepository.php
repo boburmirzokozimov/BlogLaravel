@@ -6,7 +6,6 @@ namespace App\Domain\Blog\Repositories;
 
 use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\ValueObjects\AuthorId;
-use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\ValueObjects\Id;
 
 interface BlogPostRepository
@@ -38,7 +37,7 @@ interface BlogPostRepository
      *
      * @return BlogPost[]
      */
-    public function findPublished(int $limit = 10, int $offset = 0): mixed;
+    public function findPublished(array $filters = []): mixed;
 
     /**
      * Delete a blog post.

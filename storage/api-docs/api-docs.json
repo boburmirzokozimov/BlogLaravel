@@ -572,14 +572,37 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "posts": {
-                                            "type": "array",
-                                            "items": {
-                                                "$ref": "#/components/schemas/BlogPost"
-                                            }
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
-                                        "count": {
-                                            "type": "integer"
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Success"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Успех"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "posts": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/BlogPost"
+                                                    }
+                                                },
+                                                "count": {
+                                                    "type": "integer",
+                                                    "example": 10
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -607,10 +630,14 @@
                                 "properties": {
                                     "title": {
                                         "type": "string",
+                                        "maxLength": 255,
+                                        "minLength": 3,
                                         "example": "My First Blog Post"
                                     },
                                     "content": {
                                         "type": "string",
+                                        "maxLength": 50000,
+                                        "minLength": 10,
                                         "example": "This is the content of my blog post..."
                                     },
                                     "slug": {
@@ -626,7 +653,8 @@
                                         "example": [
                                             "laravel",
                                             "php"
-                                        ]
+                                        ],
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -641,20 +669,25 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blog post created successfully"
                                                 },
                                                 "ru": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Статья в блоге успешно создана"
                                                 }
                                             },
                                             "type": "object"
                                         },
-                                        "post_id": {
-                                            "type": "string",
-                                            "format": "uuid"
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
                                         }
                                     },
                                     "type": "object"
@@ -701,7 +734,29 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/BlogPost"
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Success"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Успех"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -721,6 +776,7 @@
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Blog Post UUID",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -739,20 +795,33 @@
                                 ],
                                 "properties": {
                                     "title": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "minLength": 3,
+                                        "example": "Updated Blog Post Title"
                                     },
                                     "content": {
-                                        "type": "string"
+                                        "type": "string",
+                                        "maxLength": 50000,
+                                        "minLength": 10,
+                                        "example": "Updated content..."
                                     },
                                     "slug": {
                                         "type": "string",
+                                        "example": "updated-blog-post-title",
                                         "nullable": true
                                     },
                                     "tags": {
                                         "type": "array",
                                         "items": {
                                             "type": "string"
-                                        }
+                                        },
+                                        "example": [
+                                            "laravel",
+                                            "php",
+                                            "update"
+                                        ],
+                                        "nullable": true
                                     }
                                 },
                                 "type": "object"
@@ -767,16 +836,25 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blog post updated successfully"
                                                 },
                                                 "ru": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Статья в блоге успешно обновлена"
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
                                         }
                                     },
                                     "type": "object"
@@ -810,6 +888,7 @@
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Blog Post UUID",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -824,16 +903,25 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blog post deleted successfully"
                                                 },
                                                 "ru": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Статья в блоге успешно удалена"
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
                                         }
                                     },
                                     "type": "object"
@@ -869,7 +957,8 @@
                         "description": "Blog Post slug",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "string",
+                            "example": "my-first-blog-post"
                         }
                     }
                 ],
@@ -879,7 +968,29 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/BlogPost"
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Success"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Успех"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }
@@ -901,6 +1012,7 @@
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Blog Post UUID",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -915,16 +1027,25 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blog post published successfully"
                                                 },
                                                 "ru": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Статья в блоге успешно опубликована"
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
                                         }
                                     },
                                     "type": "object"
@@ -957,6 +1078,7 @@
                     {
                         "name": "id",
                         "in": "path",
+                        "description": "Blog Post UUID",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -971,16 +1093,25 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "properties": {
                                                 "en": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Blog post archived successfully"
                                                 },
                                                 "ru": {
-                                                    "type": "string"
+                                                    "type": "string",
+                                                    "example": "Статья в блоге успешно архивирована"
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "data": {
+                                            "$ref": "#/components/schemas/BlogPost"
                                         }
                                     },
                                     "type": "object"

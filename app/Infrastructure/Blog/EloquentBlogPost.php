@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Blog;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -62,5 +63,15 @@ class EloquentBlogPost extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function scopeFilter(Builder $builder, array $filters = []): Builder
+    {
+        return $builder->when(
+            !empty($filters['author_id']),
+            function (Builder $query) use ($filters) {
+                $query->where('author_id', $filters['author_id']);
+            }
+        );
     }
 }

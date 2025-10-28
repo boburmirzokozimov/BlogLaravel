@@ -62,10 +62,11 @@ class EloquentBlogPostRepository implements BlogPostRepository
             ->paginate();
     }
 
-    public function findPublished(int $limit = 10, int $offset = 0): LengthAwarePaginator
+    public function findPublished(array $filters = []): LengthAwarePaginator
     {
         return EloquentBlogPost::where('status', 'published')
             ->orderBy('published_at', 'desc')
+            ->filter($filters)
             ->paginate();
     }
 
