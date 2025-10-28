@@ -31,14 +31,14 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'limit',
-                in: 'query',
                 description: 'Number of posts to return',
+                in: 'query',
                 schema: new OA\Schema(type: 'integer', default: 10)
             ),
             new OA\Parameter(
                 name: 'offset',
-                in: 'query',
                 description: 'Offset for pagination',
+                in: 'query',
                 schema: new OA\Schema(type: 'integer', default: 0)
             ),
         ],
@@ -55,14 +55,17 @@ class BlogPostController extends Controller
             ),
         ]
     )]
-    public function index(Request $request)
+    public function index(Request $request): \Illuminate\Http\JsonResponse
     {
         $limit = (int) ($request->query('limit', 10));
         $offset = (int) ($request->query('offset', 0));
 
         $posts = $this->queries->ask(new ListPublishedBlogPosts($limit, $offset));
 
-        return ApiResponse::resource(new BlogPostCollection($posts));
+        return ApiResponse::success(
+            'success',
+            BlogPostCollection::collection($posts)
+        );
     }
 
     #[OA\Post(
@@ -95,11 +98,11 @@ class BlogPostController extends Controller
                     properties: [
                         new OA\Property(
                             property: 'message',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
                                 new OA\Property(property: 'ru', type: 'string'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                         new OA\Property(property: 'post_id', type: 'string', format: 'uuid'),
                     ]
@@ -109,7 +112,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function store(CreateBlogPostRequest $request)
+    public function store(CreateBlogPostRequest $request): \Illuminate\Http\JsonResponse
     {
 
         $authorId = auth()->id();
@@ -138,9 +141,9 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'id',
+                description: 'Blog Post UUID',
                 in: 'path',
                 required: true,
-                description: 'Blog Post UUID',
                 schema: new OA\Schema(type: 'string', format: 'uuid')
             ),
         ],
@@ -157,7 +160,10 @@ class BlogPostController extends Controller
     {
         $post = $this->queries->ask(new GetBlogPostById($id));
 
-        return ApiResponse::resource(new BlogPostResource($post));
+        return ApiResponse::success(
+            'success',
+            new BlogPostResource($post)
+        );
     }
 
     #[OA\Get(
@@ -167,9 +173,9 @@ class BlogPostController extends Controller
         parameters: [
             new OA\Parameter(
                 name: 'slug',
+                description: 'Blog Post slug',
                 in: 'path',
                 required: true,
-                description: 'Blog Post slug',
                 schema: new OA\Schema(type: 'string')
             ),
         ],
@@ -182,26 +188,20 @@ class BlogPostController extends Controller
             new OA\Response(response: 404, description: 'Blog post not found'),
         ]
     )]
-    public function showBySlug(string $slug)
+    public function showBySlug(string $slug): \Illuminate\Http\JsonResponse
     {
         $post = $this->queries->ask(new GetBlogPostBySlug($slug));
 
-        return ApiResponse::resource(new BlogPostResource($post));
+        return ApiResponse::success(
+            'success',
+            new BlogPostResource($post)
+        );
     }
 
     #[OA\Put(
         path: '/api/v1/blog-posts/{id}',
         summary: 'Update blog post',
         security: [['bearerAuth' => []]],
-        tags: ['Blog Posts'],
-        parameters: [
-            new OA\Parameter(
-                name: 'id',
-                in: 'path',
-                required: true,
-                schema: new OA\Schema(type: 'string', format: 'uuid')
-            ),
-        ],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
@@ -214,6 +214,15 @@ class BlogPostController extends Controller
                 ]
             )
         ),
+        tags: ['Blog Posts'],
+        parameters: [
+            new OA\Parameter(
+                name: 'id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'string', format: 'uuid')
+            ),
+        ],
         responses: [
             new OA\Response(
                 response: 200,
@@ -222,11 +231,11 @@ class BlogPostController extends Controller
                     properties: [
                         new OA\Property(
                             property: 'message',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
                                 new OA\Property(property: 'ru', type: 'string'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                     ]
                 )
@@ -238,17 +247,20 @@ class BlogPostController extends Controller
     )]
     public function update(UpdateBlogPostRequest $request, string $id)
     {
-        $this->commands->dispatch(
+        $post = $this->commands->dispatch(
             new UpdateBlogPost(
                 postId: $id,
                 title: $request->validated('title'),
                 content: $request->validated('content'),
-                slug: $request->validated('slug') ?? null,
+                slug: $request->validated('slug'),
                 tags: $request->validated('tags') ?? []
             )
         );
 
-        return ApiResponse::success('blog_post_updated_successfully');
+        return ApiResponse::success(
+            'blog_post_updated_successfully',
+            new BlogPostResource($post)
+        );
     }
 
     #[OA\Post(
@@ -272,11 +284,11 @@ class BlogPostController extends Controller
                     properties: [
                         new OA\Property(
                             property: 'message',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
                                 new OA\Property(property: 'ru', type: 'string'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                     ]
                 )
@@ -285,11 +297,14 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function publish(string $id)
+    public function publish(string $id): \Illuminate\Http\JsonResponse
     {
-        $this->commands->dispatch(new PublishBlogPost($id));
+        $post = $this->commands->dispatch(new PublishBlogPost($id));
 
-        return ApiResponse::success('blog_post_published_successfully');
+        return ApiResponse::success(
+            'blog_post_published_successfully',
+            new BlogPostResource($post)
+        );
     }
 
     #[OA\Post(
@@ -313,11 +328,11 @@ class BlogPostController extends Controller
                     properties: [
                         new OA\Property(
                             property: 'message',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
                                 new OA\Property(property: 'ru', type: 'string'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                     ]
                 )
@@ -326,11 +341,14 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function archive(string $id)
+    public function archive(string $id): \Illuminate\Http\JsonResponse
     {
-        $this->commands->dispatch(new ArchiveBlogPost($id));
+        $post = $this->commands->dispatch(new ArchiveBlogPost($id));
 
-        return ApiResponse::success('blog_post_archived_successfully');
+        return ApiResponse::success(
+            'blog_post_archived_successfully',
+            new BlogPostResource($post)
+        );
     }
 
     #[OA\Delete(
@@ -354,11 +372,11 @@ class BlogPostController extends Controller
                     properties: [
                         new OA\Property(
                             property: 'message',
-                            type: 'object',
                             properties: [
                                 new OA\Property(property: 'en', type: 'string'),
                                 new OA\Property(property: 'ru', type: 'string'),
-                            ]
+                            ],
+                            type: 'object'
                         ),
                     ]
                 )
@@ -367,10 +385,13 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function destroy(string $id)
+    public function destroy(string $id): \Illuminate\Http\JsonResponse
     {
-        $this->commands->dispatch(new DeleteBlogPost($id));
+        $post = $this->commands->dispatch(new DeleteBlogPost($id));
 
-        return ApiResponse::success('blog_post_deleted_successfully');
+        return ApiResponse::success(
+            'blog_post_deleted_successfully',
+            new BlogPostResource($post)
+        );
     }
 }

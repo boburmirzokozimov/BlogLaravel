@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Resources;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ApiResponse
@@ -13,7 +14,7 @@ class ApiResponse
      * Return a success response with bilingual message.
      */
     public static function success(
-        string $messageKey, JsonResource $data, int $statusCode = 200): JsonResponse
+        string $messageKey, JsonResource|AnonymousResourceCollection $data, int $statusCode = 200): JsonResponse
     {
         $response = [
             'success' => true,
