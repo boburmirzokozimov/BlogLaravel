@@ -14,7 +14,7 @@ class ApiResponse
      * Return a success response with bilingual message.
      */
     public static function success(
-        string $messageKey, JsonResource|AnonymousResourceCollection $data, int $statusCode = 200): JsonResponse
+        string $messageKey, JsonResource|AnonymousResourceCollection|null $data, int $statusCode = 200): JsonResponse
     {
         $response = [
             'success' => true,

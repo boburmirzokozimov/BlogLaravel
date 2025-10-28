@@ -81,7 +81,7 @@ class AuthController extends Controller
             ),
         ]
     )]
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         $data = $request->validated();
 
@@ -283,12 +283,13 @@ class AuthController extends Controller
             ),
         ]
     )]
-    public function logout()
+    public function logout(): JsonResponse
     {
         auth()->logout();
 
         return ApiResponse::success(
-            messageKey: 'messages.user_logged_out'
+            messageKey: 'messages.user_logged_out',
+            data: null
         );
     }
 

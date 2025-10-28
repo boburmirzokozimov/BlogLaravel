@@ -23,12 +23,12 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'code',
+                'success',
                 'message' => ['en', 'ru'],
                 'data' => ['id', 'name', 'email', 'status', 'email_verified_at', 'created_at', 'updated_at'],
             ])
             ->assertJson([
-                'code' => 'SUCCESS',
+                'success' => true,
                 'data' => [
                     'email' => 'john@example.com',
                     'status' => 'active',
@@ -52,11 +52,11 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'code',
+                'success',
                 'message' => ['en', 'ru'],
             ])
             ->assertJson([
-                'code' => 'SUCCESS',
+                'success' => true,
             ]);
     }
 
@@ -103,12 +103,12 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'code',
+                'success',
                 'message' => ['en', 'ru'],
                 'data' => ['access_token', 'token_type', 'expires_in'],
             ])
             ->assertJson([
-                'code' => 'SUCCESS',
+                'success' => true,
             ]);
     }
 
@@ -124,12 +124,12 @@ class JwtAuthenticationTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJsonStructure([
-                'code',
+                'success',
                 'message' => ['en', 'ru'],
                 'data' => ['access_token', 'token_type', 'expires_in'],
             ])
             ->assertJson([
-                'code' => 'SUCCESS',
+                'success' => true,
             ]);
     }
 }
