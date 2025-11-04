@@ -18,6 +18,7 @@ use App\Http\Requests\UpdateBlogPostRequest;
 use App\Http\Resources\ApiResponse;
 use App\Http\Resources\BlogPostCollection;
 use App\Http\Resources\BlogPostResource;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
 
@@ -70,12 +71,9 @@ class BlogPostController extends Controller
             ),
         ]
     )]
-    public function index(Request $request): \Illuminate\Http\JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        $limit = (int) ($request->query('limit', 10));
-        $offset = (int) ($request->query('offset', 0));
-
-        $posts = $this->queries->ask(new ListPublishedBlogPosts($limit, $offset));
+        $posts = $this->queries->ask(new ListPublishedBlogPosts($request->all()));
 
         return ApiResponse::success(
             'success',
@@ -129,7 +127,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function store(CreateBlogPostRequest $request): \Illuminate\Http\JsonResponse
+    public function store(CreateBlogPostRequest $request): JsonResponse
     {
 
         $authorId = auth()->id();
@@ -145,7 +143,7 @@ class BlogPostController extends Controller
         );
 
         return ApiResponse::success(
-            'blog_post_created_successfully',
+            'messages.blog_post_created_successfully',
             new BlogPostResource($post),
             201
         );
@@ -231,7 +229,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 404, description: 'Blog post not found'),
         ]
     )]
-    public function showBySlug(string $slug): \Illuminate\Http\JsonResponse
+    public function showBySlug(string $slug): JsonResponse
     {
         $post = $this->queries->ask(new GetBlogPostBySlug($slug));
 
@@ -352,7 +350,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function publish(string $id): \Illuminate\Http\JsonResponse
+    public function publish(string $id): JsonResponse
     {
         $post = $this->commands->dispatch(new PublishBlogPost($id));
 
@@ -399,7 +397,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function archive(string $id): \Illuminate\Http\JsonResponse
+    public function archive(string $id): JsonResponse
     {
         $post = $this->commands->dispatch(new ArchiveBlogPost($id));
 
@@ -446,7 +444,7 @@ class BlogPostController extends Controller
             new OA\Response(response: 401, description: 'Unauthenticated'),
         ]
     )]
-    public function destroy(string $id): \Illuminate\Http\JsonResponse
+    public function destroy(string $id): JsonResponse
     {
         $post = $this->commands->dispatch(new DeleteBlogPost($id));
 

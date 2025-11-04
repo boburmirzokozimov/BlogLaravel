@@ -12,7 +12,7 @@ use App\Shared\CQRS\Query\Query;
 final readonly class ListPublishedBlogPosts implements Query
 {
     public function __construct(
-        public int $filters
+        public array $filters
     ) {
     }
 }

@@ -67,7 +67,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
         return EloquentBlogPost::where('status', 'published')
             ->orderBy('published_at', 'desc')
             ->filter($filters)
-            ->paginate();
+            ->paginate($filters['per_page'] ?? 10);
     }
 
     public function delete(Id $id): void

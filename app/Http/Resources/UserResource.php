@@ -2,9 +2,14 @@
 
 namespace App\Http\Resources;
 
+use App\Domain\Blog\Entity\BlogPost;
+use App\Infrastructure\User\EloquentUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property EloquentUser $resource
+ */
 class UserResource extends JsonResource
 {
     /**
@@ -22,13 +27,13 @@ class UserResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email,
-            'status' => $this->status,
-            'email_verified_at' => $this->email_verified_at,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'id' => $this->resource->id,
+            'name' => $this->resource->name,
+            'email' => $this->resource->email,
+            'status' => $this->resource->status,
+            'email_verified_at' => $this->resource->email_verified_at,
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
         ];
     }
 }

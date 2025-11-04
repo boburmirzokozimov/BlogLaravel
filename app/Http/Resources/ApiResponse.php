@@ -21,8 +21,8 @@ class ApiResponse
         $response = [
             'success' => true,
             'message' => [
-                'en' => trans("messages.{$messageKey}", [], 'en'),
-                'ru' => trans("messages.{$messageKey}", [], 'ru'),
+                'en' => trans("{$messageKey}", [], 'en'),
+                'ru' => trans("{$messageKey}", [], 'ru'),
             ],
             'data' => $data,
         ];
@@ -38,8 +38,8 @@ class ApiResponse
         $response = [
             'success' => false,
             'message' => [
-                'en' => trans("messages.{$messageKey}", [], 'en'),
-                'ru' => trans("messages.{$messageKey}", [], 'ru'),
+                'en' => trans("{$messageKey}", [], 'en'),
+                'ru' => trans("{$messageKey}", [], 'ru'),
             ],
             'data' => $data,
         ];
