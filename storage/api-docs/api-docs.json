@@ -36,6 +36,8 @@
                                 "properties": {
                                     "name": {
                                         "type": "string",
+                                        "maxLength": 255,
+                                        "minLength": 1,
                                         "example": "John Doe"
                                     },
                                     "email": {
@@ -46,6 +48,7 @@
                                     "password": {
                                         "type": "string",
                                         "format": "password",
+                                        "minLength": 6,
                                         "example": "password123"
                                     },
                                     "password_confirmation": {
@@ -66,9 +69,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "SUCCESS"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
                                             "properties": {
@@ -84,21 +87,7 @@
                                             "type": "object"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "access_token": {
-                                                    "type": "string",
-                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-                                                },
-                                                "token_type": {
-                                                    "type": "string",
-                                                    "example": "bearer"
-                                                },
-                                                "expires_in": {
-                                                    "type": "integer",
-                                                    "example": 3600
-                                                }
-                                            },
-                                            "type": "object"
+                                            "$ref": "#/components/schemas/Token"
                                         }
                                     },
                                     "type": "object"
@@ -112,9 +101,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "VALIDATION_FAILED"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
                                         },
                                         "message": {
                                             "properties": {
@@ -129,7 +118,7 @@
                                             },
                                             "type": "object"
                                         },
-                                        "error": {
+                                        "data": {
                                             "type": "object",
                                             "example": {
                                                 "email": [
@@ -186,9 +175,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "SUCCESS"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
                                             "properties": {
@@ -204,21 +193,7 @@
                                             "type": "object"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "access_token": {
-                                                    "type": "string",
-                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-                                                },
-                                                "token_type": {
-                                                    "type": "string",
-                                                    "example": "bearer"
-                                                },
-                                                "expires_in": {
-                                                    "type": "integer",
-                                                    "example": 3600
-                                                }
-                                            },
-                                            "type": "object"
+                                            "$ref": "#/components/schemas/Token"
                                         }
                                     },
                                     "type": "object"
@@ -227,14 +202,14 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthorized",
+                        "description": "Unauthorized - Invalid credentials",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "UNAUTHORIZED"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
                                         },
                                         "message": {
                                             "properties": {
@@ -248,6 +223,43 @@
                                                 }
                                             },
                                             "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Validation failed"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Ошибка валидации данных"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "email": [
+                                                    "The email field is required."
+                                                ]
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -272,9 +284,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "SUCCESS"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
                                             "properties": {
@@ -290,45 +302,7 @@
                                             "type": "object"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "id": {
-                                                    "type": "string",
-                                                    "format": "uuid",
-                                                    "example": "9d0e5c1e-5b0a-4b1a-8c9a-1e5b0a4b1a8c"
-                                                },
-                                                "name": {
-                                                    "type": "string",
-                                                    "example": "John Doe"
-                                                },
-                                                "email": {
-                                                    "type": "string",
-                                                    "example": "john@example.com"
-                                                },
-                                                "status": {
-                                                    "type": "string",
-                                                    "enum": [
-                                                        "active",
-                                                        "inactive",
-                                                        "pending",
-                                                        "suspended"
-                                                    ],
-                                                    "example": "active"
-                                                },
-                                                "email_verified_at": {
-                                                    "type": "string",
-                                                    "format": "date-time",
-                                                    "nullable": true
-                                                },
-                                                "created_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                },
-                                                "updated_at": {
-                                                    "type": "string",
-                                                    "format": "date-time"
-                                                }
-                                            },
-                                            "type": "object"
+                                            "$ref": "#/components/schemas/User"
                                         }
                                     },
                                     "type": "object"
@@ -342,9 +316,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "UNAUTHENTICATED"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
                                         },
                                         "message": {
                                             "properties": {
@@ -387,9 +361,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "SUCCESS"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
                                             "properties": {
@@ -403,6 +377,10 @@
                                                 }
                                             },
                                             "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "null",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -416,9 +394,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "UNAUTHENTICATED"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
                                         },
                                         "message": {
                                             "properties": {
@@ -461,9 +439,9 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "SUCCESS"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
                                         "message": {
                                             "properties": {
@@ -479,21 +457,7 @@
                                             "type": "object"
                                         },
                                         "data": {
-                                            "properties": {
-                                                "access_token": {
-                                                    "type": "string",
-                                                    "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
-                                                },
-                                                "token_type": {
-                                                    "type": "string",
-                                                    "example": "bearer"
-                                                },
-                                                "expires_in": {
-                                                    "type": "integer",
-                                                    "example": 3600
-                                                }
-                                            },
-                                            "type": "object"
+                                            "$ref": "#/components/schemas/Token"
                                         }
                                     },
                                     "type": "object"
@@ -502,14 +466,14 @@
                         }
                     },
                     "401": {
-                        "description": "Unauthenticated",
+                        "description": "Unauthenticated - Invalid or expired token",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "UNAUTHENTICATED"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
                                         },
                                         "message": {
                                             "properties": {
@@ -547,21 +511,34 @@
                 "operationId": "0c658a50b7b4e77330ddc8714078fda2",
                 "parameters": [
                     {
-                        "name": "limit",
+                        "name": "per_page",
                         "in": "query",
-                        "description": "Number of posts to return",
+                        "description": "Number of posts per page",
                         "schema": {
                             "type": "integer",
-                            "default": 10
+                            "default": 10,
+                            "maximum": 100,
+                            "minimum": 1
                         }
                     },
                     {
-                        "name": "offset",
+                        "name": "page",
                         "in": "query",
-                        "description": "Offset for pagination",
+                        "description": "Page number",
                         "schema": {
                             "type": "integer",
-                            "default": 0
+                            "default": 1,
+                            "minimum": 1
+                        }
+                    },
+                    {
+                        "name": "author_id",
+                        "in": "query",
+                        "description": "Filter by author UUID",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
                         }
                     }
                 ],
@@ -590,25 +567,77 @@
                                             "type": "object"
                                         },
                                         "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/BlogPost"
+                                            }
+                                        },
+                                        "meta": {
+                                            "description": "Pagination metadata",
                                             "properties": {
-                                                "posts": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "$ref": "#/components/schemas/BlogPost"
-                                                    }
+                                                "current_page": {
+                                                    "type": "integer",
+                                                    "example": 1
                                                 },
-                                                "count": {
+                                                "from": {
+                                                    "type": "integer",
+                                                    "example": 1,
+                                                    "nullable": true
+                                                },
+                                                "last_page": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "per_page": {
                                                     "type": "integer",
                                                     "example": 10
+                                                },
+                                                "to": {
+                                                    "type": "integer",
+                                                    "example": 10,
+                                                    "nullable": true
+                                                },
+                                                "total": {
+                                                    "type": "integer",
+                                                    "example": 50
                                                 }
                                             },
-                                            "type": "object"
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "links": {
+                                            "description": "Pagination links",
+                                            "properties": {
+                                                "first": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8080/api/v1/blog-posts?page=1"
+                                                },
+                                                "last": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8080/api/v1/blog-posts?page=5"
+                                                },
+                                                "prev": {
+                                                    "type": "string",
+                                                    "example": null,
+                                                    "nullable": true
+                                                },
+                                                "next": {
+                                                    "type": "string",
+                                                    "example": "http://localhost:8080/api/v1/blog-posts?page=2",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "Validation error"
                     }
                 }
             },
@@ -696,10 +725,70 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Validation failed"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Ошибка валидации"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "title": [
+                                                    "The title field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Не аутентифицирован"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -762,7 +851,33 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             },
@@ -863,13 +978,128 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Validation failed"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Ошибка валидации"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "example": {
+                                                "title": [
+                                                    "The title field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Не аутентифицирован"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User is not authorized to update this blog post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Forbidden"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Доступ запрещен"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -930,10 +1160,91 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Не аутентифицирован"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User is not authorized to delete this blog post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Forbidden"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Доступ запрещен"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -996,7 +1307,33 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1054,10 +1391,91 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Не аутентифицирован"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User is not authorized to publish this blog post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Forbidden"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Доступ запрещен"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1120,10 +1538,91 @@
                         }
                     },
                     "404": {
-                        "description": "Blog post not found"
+                        "description": "Blog post not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Blog post not found"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Статья в блоге не найдена"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
-                        "description": "Unauthenticated"
+                        "description": "Unauthenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Unauthenticated"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Не аутентифицирован"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden - User is not authorized to archive this blog post",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "properties": {
+                                                "en": {
+                                                    "type": "string",
+                                                    "example": "Forbidden"
+                                                },
+                                                "ru": {
+                                                    "type": "string",
+                                                    "example": "Доступ запрещен"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     }
                 },
                 "security": [
@@ -1157,14 +1656,6 @@
                         "type": "string",
                         "example": "This is the full content of my blog post..."
                     },
-                    "excerpt": {
-                        "type": "string",
-                        "example": "This is the full content..."
-                    },
-                    "word_count": {
-                        "type": "integer",
-                        "example": 250
-                    },
                     "author_id": {
                         "type": "string",
                         "format": "uuid",
@@ -1195,18 +1686,26 @@
                             "php",
                             "web development"
                         ]
+                    }
+                },
+                "type": "object"
+            },
+            "Token": {
+                "title": "JWT Token",
+                "description": "JWT authentication token response",
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJ0eXAiOiJKV1QiLCJhbGc..."
                     },
-                    "is_published": {
-                        "type": "boolean",
-                        "example": true
+                    "token_type": {
+                        "type": "string",
+                        "example": "bearer"
                     },
-                    "is_draft": {
-                        "type": "boolean",
-                        "example": false
-                    },
-                    "is_archived": {
-                        "type": "boolean",
-                        "example": false
+                    "expires_in": {
+                        "description": "Token expiration time in seconds",
+                        "type": "integer",
+                        "example": 3600
                     }
                 },
                 "type": "object"

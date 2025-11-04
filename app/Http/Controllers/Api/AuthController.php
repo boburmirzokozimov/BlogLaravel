@@ -22,9 +22,9 @@ class AuthController extends Controller
             content: new OA\JsonContent(
                 required: ['name', 'email', 'password', 'password_confirmation'],
                 properties: [
-                    new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
+                    new OA\Property(property: 'name', type: 'string', minLength: 1, maxLength: 255, example: 'John Doe'),
                     new OA\Property(property: 'email', type: 'string', format: 'email', example: 'john@example.com'),
-                    new OA\Property(property: 'password', type: 'string', format: 'password', example: 'password123'),
+                    new OA\Property(property: 'password', type: 'string', format: 'password', minLength: 6, example: 'password123'),
                     new OA\Property(property: 'password_confirmation', type: 'string', format: 'password', example: 'password123'),
                 ]
             )
@@ -36,7 +36,7 @@ class AuthController extends Controller
                 description: 'Successful registration',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -45,15 +45,7 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(
-                            property: 'data',
-                            properties: [
-                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
-                            ],
-                            type: 'object'
-                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/Token'),
                     ]
                 )
             ),
@@ -62,7 +54,7 @@ class AuthController extends Controller
                 description: 'Validation error',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'VALIDATION_FAILED'),
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -71,11 +63,7 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(
-                            property: 'error',
-                            type: 'object',
-                            example: ['email' => ['The email field is required.']]
-                        ),
+                        new OA\Property(property: 'data', type: 'object', example: ['email' => ['The email field is required.']]),
                     ]
                 )
             ),
@@ -121,7 +109,7 @@ class AuthController extends Controller
                 description: 'Successful login',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -130,24 +118,16 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(
-                            property: 'data',
-                            properties: [
-                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
-                            ],
-                            type: 'object'
-                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/Token'),
                     ]
                 )
             ),
             new OA\Response(
                 response: 401,
-                description: 'Unauthorized',
+                description: 'Unauthorized - Invalid credentials',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHORIZED'),
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -156,6 +136,24 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Validation failed'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации данных'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(property: 'data', type: 'object', example: ['email' => ['The email field is required.']]),
                     ]
                 )
             ),
@@ -189,7 +187,7 @@ class AuthController extends Controller
                 description: 'User information',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -198,19 +196,7 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(
-                            property: 'data',
-                            properties: [
-                                new OA\Property(property: 'id', type: 'string', format: 'uuid', example: '9d0e5c1e-5b0a-4b1a-8c9a-1e5b0a4b1a8c'),
-                                new OA\Property(property: 'name', type: 'string', example: 'John Doe'),
-                                new OA\Property(property: 'email', type: 'string', example: 'john@example.com'),
-                                new OA\Property(property: 'status', type: 'string', enum: ['active', 'inactive', 'pending', 'suspended'], example: 'active'),
-                                new OA\Property(property: 'email_verified_at', type: 'string', format: 'date-time', nullable: true),
-                                new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
-                                new OA\Property(property: 'updated_at', type: 'string', format: 'date-time'),
-                            ],
-                            type: 'object'
-                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/User'),
                     ]
                 )
             ),
@@ -219,7 +205,7 @@ class AuthController extends Controller
                 description: 'Unauthenticated',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -252,7 +238,7 @@ class AuthController extends Controller
                 description: 'Successfully logged out',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -261,6 +247,7 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
+                        new OA\Property(property: 'data', type: 'null', nullable: true),
                     ]
                 )
             ),
@@ -269,7 +256,7 @@ class AuthController extends Controller
                 description: 'Unauthenticated',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -304,7 +291,7 @@ class AuthController extends Controller
                 description: 'New access token',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
                         new OA\Property(
                             property: 'message',
                             properties: [
@@ -313,24 +300,16 @@ class AuthController extends Controller
                             ],
                             type: 'object'
                         ),
-                        new OA\Property(
-                            property: 'data',
-                            properties: [
-                                new OA\Property(property: 'access_token', type: 'string', example: 'eyJ0eXAiOiJKV1QiLCJhbGc...'),
-                                new OA\Property(property: 'token_type', type: 'string', example: 'bearer'),
-                                new OA\Property(property: 'expires_in', type: 'integer', example: 3600),
-                            ],
-                            type: 'object'
-                        ),
+                        new OA\Property(property: 'data', ref: '#/components/schemas/Token'),
                     ]
                 )
             ),
             new OA\Response(
                 response: 401,
-                description: 'Unauthenticated',
+                description: 'Unauthenticated - Invalid or expired token',
                 content: new OA\JsonContent(
                     properties: [
-                        new OA\Property(property: 'code', type: 'string', example: 'UNAUTHENTICATED'),
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
                         new OA\Property(
                             property: 'message',
                             properties: [
