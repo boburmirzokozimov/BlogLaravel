@@ -30,16 +30,23 @@ class BlogPostController extends Controller
         tags: ['Blog Posts'],
         parameters: [
             new OA\Parameter(
-                name: 'limit',
-                description: 'Number of posts to return',
+                name: 'per_page',
+                description: 'Number of posts per page',
                 in: 'query',
-                schema: new OA\Schema(type: 'integer', default: 10)
+                schema: new OA\Schema(type: 'integer', default: 10, minimum: 1, maximum: 100)
             ),
             new OA\Parameter(
-                name: 'offset',
-                description: 'Offset for pagination',
+                name: 'page',
+                description: 'Page number',
                 in: 'query',
-                schema: new OA\Schema(type: 'integer', default: 0)
+                schema: new OA\Schema(type: 'integer', default: 1, minimum: 1)
+            ),
+            new OA\Parameter(
+                name: 'author_id',
+                description: 'Filter by author UUID',
+                in: 'query',
+                required: false,
+                schema: new OA\Schema(type: 'string', format: 'uuid')
             ),
         ],
         responses: [
@@ -59,15 +66,39 @@ class BlogPostController extends Controller
                         ),
                         new OA\Property(
                             property: 'data',
+                            type: 'array',
+                            items: new OA\Items(ref: '#/components/schemas/BlogPost')
+                        ),
+                        new OA\Property(
+                            property: 'meta',
+                            description: 'Pagination metadata',
                             properties: [
-                                new OA\Property(property: 'posts', type: 'array', items: new OA\Items(ref: '#/components/schemas/BlogPost')),
-                                new OA\Property(property: 'count', type: 'integer', example: 10),
+                                new OA\Property(property: 'current_page', type: 'integer', example: 1),
+                                new OA\Property(property: 'from', type: 'integer', nullable: true, example: 1),
+                                new OA\Property(property: 'last_page', type: 'integer', example: 5),
+                                new OA\Property(property: 'per_page', type: 'integer', example: 10),
+                                new OA\Property(property: 'to', type: 'integer', nullable: true, example: 10),
+                                new OA\Property(property: 'total', type: 'integer', example: 50),
                             ],
-                            type: 'object'
+                            type: 'object',
+                            nullable: true
+                        ),
+                        new OA\Property(
+                            property: 'links',
+                            description: 'Pagination links',
+                            properties: [
+                                new OA\Property(property: 'first', type: 'string', example: 'http://localhost:8080/api/v1/blog-posts?page=1'),
+                                new OA\Property(property: 'last', type: 'string', example: 'http://localhost:8080/api/v1/blog-posts?page=5'),
+                                new OA\Property(property: 'prev', type: 'string', nullable: true, example: null),
+                                new OA\Property(property: 'next', type: 'string', nullable: true, example: 'http://localhost:8080/api/v1/blog-posts?page=2'),
+                            ],
+                            type: 'object',
+                            nullable: true
                         ),
                     ]
                 )
             ),
+            new OA\Response(response: 422, description: 'Validation error'),
         ]
     )]
     public function index(Request $request): JsonResponse
@@ -122,8 +153,41 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Validation failed'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(property: 'data', type: 'object', example: ['title' => ['The title field is required.']]),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Не аутентифицирован'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function store(CreateBlogPostRequest $request): JsonResponse
@@ -180,7 +244,23 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function show(string $id)
@@ -225,7 +305,23 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function showBySlug(string $slug): JsonResponse
@@ -289,9 +385,75 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 422, description: 'Validation error'),
-            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 422,
+                description: 'Validation error',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Validation failed'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Ошибка валидации'),
+                            ],
+                            type: 'object'
+                        ),
+                        new OA\Property(property: 'data', type: 'object', example: ['title' => ['The title field is required.']]),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Не аутентифицирован'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden - User is not authorized to update this blog post',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Forbidden'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Доступ запрещен'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function update(UpdateBlogPostRequest $request, string $id)
@@ -345,8 +507,57 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Не аутентифицирован'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden - User is not authorized to publish this blog post',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Forbidden'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Доступ запрещен'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function publish(string $id): JsonResponse
@@ -392,8 +603,57 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Не аутентифицирован'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden - User is not authorized to archive this blog post',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Forbidden'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Доступ запрещен'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function archive(string $id): JsonResponse
@@ -439,8 +699,57 @@ class BlogPostController extends Controller
                     ]
                 )
             ),
-            new OA\Response(response: 404, description: 'Blog post not found'),
-            new OA\Response(response: 401, description: 'Unauthenticated'),
+            new OA\Response(
+                response: 404,
+                description: 'Blog post not found',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Blog post not found'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Статья в блоге не найдена'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 401,
+                description: 'Unauthenticated',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Unauthenticated'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Не аутентифицирован'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 403,
+                description: 'Forbidden - User is not authorized to delete this blog post',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Forbidden'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Доступ запрещен'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
         ]
     )]
     public function destroy(string $id): JsonResponse
