@@ -13,6 +13,7 @@ use App\Domain\Blog\ValueObjects\PublishedAt;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class EloquentBlogPostRepository implements BlogPostRepository
@@ -55,6 +56,9 @@ class EloquentBlogPostRepository implements BlogPostRepository
         return $record;
     }
 
+    /**
+     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     */
     public function findByAuthor(AuthorId $authorId): LengthAwarePaginator
     {
         return EloquentBlogPost::where('author_id', $authorId->toString())
@@ -62,6 +66,10 @@ class EloquentBlogPostRepository implements BlogPostRepository
             ->paginate();
     }
 
+    /**
+     * @param array<string, string> $filters
+     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     */
     public function index(array $filters = []): LengthAwarePaginator
     {
         return EloquentBlogPost::query()
@@ -90,6 +98,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
                 'draft' => PostStatus::draft(),
                 'published' => PostStatus::published(),
                 'archived' => PostStatus::archived(),
+                default => null,
             },
             publishedAt: $record->published_at ? PublishedAt::fromDateTime($record->published_at) : null,
             tags: $record->tags ?? []

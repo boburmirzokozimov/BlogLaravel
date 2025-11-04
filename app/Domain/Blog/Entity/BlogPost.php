@@ -29,7 +29,10 @@ final class BlogPost
 
     private ?PublishedAt $publishedAt;
 
-    private array $tags = [];
+    /**
+     * @var array<string>
+     */
+    private array $tags;
 
     // domain events
     private array $events = [];

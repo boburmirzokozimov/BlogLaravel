@@ -239,3 +239,12 @@ full:
 	docker-compose exec php-cli composer analyse
 	docker-compose exec php-cli php artisan test
 
+test:
+	docker-compose exec php-cli php artisan test
+
+analyse:
+	docker-compose exec php-cli composer analyse
+
+fix:
+	docker-compose exec php-cli composer fix
+

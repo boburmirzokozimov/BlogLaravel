@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Blog;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property string $author_id
  * @property string $status
  * @property Carbon|null $published_at
- * @property array $tags
+ * @property array<string> $tags
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -65,7 +66,13 @@ class EloquentBlogPost extends Model
         ];
     }
 
-    public function scopeFilter(Builder $builder, array $filters = []): Builder
+    /**
+     * @param Builder<EloquentBlogPost> $builder
+     * @param array<string, mixed> $filters
+     * @return Builder<EloquentBlogPost>
+     */
+    #[Scope]
+    protected function filter(Builder $builder, array $filters = []): Builder
     {
         return $builder->when(
             !empty($filters['author_id']),

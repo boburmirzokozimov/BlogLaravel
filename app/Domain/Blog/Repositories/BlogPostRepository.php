@@ -6,7 +6,9 @@ namespace App\Domain\Blog\Repositories;
 
 use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\ValueObjects\AuthorId;
+use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\ValueObjects\Id;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface BlogPostRepository
 {
@@ -28,14 +30,13 @@ interface BlogPostRepository
     /**
      * Get all blog posts by author.
      *
-     * @return BlogPost[]
+     * @return LengthAwarePaginator<int, EloquentBlogPost>
      */
     public function findByAuthor(AuthorId $authorId): mixed;
 
     /**
-     * Get all published blog posts.
-     *
-     * @return BlogPost[]
+     * @param array<string, string> $filters
+     * @return LengthAwarePaginator<int, EloquentBlogPost>
      */
     public function index(array $filters = []): mixed;
 
