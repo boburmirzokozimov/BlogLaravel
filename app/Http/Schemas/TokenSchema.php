@@ -20,4 +20,3 @@ use OpenApi\Attributes as OA;
 class TokenSchema
 {
 }
-
