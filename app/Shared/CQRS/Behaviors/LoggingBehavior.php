@@ -13,7 +13,7 @@ class LoggingBehavior implements Behavior
     {
         Log::info('[CQRS] Handling '.$message::class, ['message' => (array) $message]);
         $result = $next($message);
-        Log::info('[CQRS] Handled '.$message::class);
+        Log::info('[CQRS] Handled '.$message::class, ['result' => (array) $result]);
 
         return $result;
     }

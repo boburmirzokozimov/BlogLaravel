@@ -40,6 +40,7 @@ class CqrsServiceProvider extends ServiceProvider
             $app->make(HandlerLocator::class),
             $app->make(Pipeline::class),
             [
+                LoggingBehavior::class,
             ]
         ));
     }

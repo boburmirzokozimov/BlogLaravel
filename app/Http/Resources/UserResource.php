@@ -2,7 +2,6 @@
 
 namespace App\Http\Resources;
 
-use App\Domain\Blog\Entity\BlogPost;
 use App\Infrastructure\User\EloquentUser;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;

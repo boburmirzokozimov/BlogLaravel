@@ -16,7 +16,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBlogPostRequest;
 use App\Http\Requests\UpdateBlogPostRequest;
 use App\Http\Resources\ApiResponse;
-use App\Http\Resources\BlogPostCollection;
 use App\Http\Resources\BlogPostResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -77,7 +76,7 @@ class BlogPostController extends Controller
 
         return ApiResponse::success(
             'success',
-            BlogPostCollection::collection($posts)
+            BlogPostResource::collection($posts)
         );
     }
 

@@ -37,7 +37,7 @@ interface BlogPostRepository
      *
      * @return BlogPost[]
      */
-    public function findPublished(array $filters = []): mixed;
+    public function index(array $filters = []): mixed;
 
     /**
      * Delete a blog post.
