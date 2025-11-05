@@ -1,14 +1,10 @@
 server {
-    # Railway: listen on a fixed port inside the container (8080 here)
-    listen 0.0.0.0:8080;
+    listen 0.0.0.0:${PORT};
     server_name _;
 
     root /var/www/html/public;
     index index.php index.html index.htm;
     charset utf-8;
-
-    access_log /var/log/nginx/access.log;
-    error_log /var/log/nginx/error.log;
 
     location / {
         try_files $uri $uri/ /index.php?$query_string;
@@ -18,8 +14,7 @@ server {
         try_files $uri =404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
 
-        # 👉 Use the PHP-FPM service's internal hostname on Railway
-        fastcgi_pass YOUR_PHP_FPM_SERVICE.up.railway.internal:9000;
+        fastcgi_pass ${PHP_FPM_HOST}:${PHP_FPM_PORT};
 
         fastcgi_index index.php;
         include fastcgi_params;
