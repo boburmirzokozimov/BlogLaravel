@@ -1,0 +1,31 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main  # or master, depending on your default branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/blog
+            git pull origin main
+            docker-compose exec -T php-cli composer install --optimize-autoloader --no-dev
+            docker-compose exec -T php-cli php artisan migrate --force
+            docker-compose exec -T php-cli php artisan config:cache
+            docker-compose exec -T php-cli php artisan route:cache
+            docker-compose exec -T php-cli php artisan view:cache
+            docker-compose restart php-fpm nginx
+            echo "Deployment completed!"
