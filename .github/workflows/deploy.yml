@@ -26,6 +26,10 @@ jobs:
             # Pull latest changes
             git pull origin main
 
+            make down
+            make build
+            make up
+
             # Run everything as root to avoid permission issues
             docker-compose exec -T -u root php-cli bash -c "
               composer install --optimize-autoloader --no-dev && \
