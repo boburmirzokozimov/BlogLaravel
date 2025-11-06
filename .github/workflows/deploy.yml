@@ -33,8 +33,14 @@ jobs:
             # Run everything as root to avoid permission issues
             docker-compose exec -T -u root php-cli bash -c "
               composer install --optimize-autoloader --no-dev && \
-              chown -R www-data:www-data /var/www/html && \
-              chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+              chown -R www:www /var/www/html && \
+              chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache && \
+              php artisan migrate --force && \
+              php artisan optimize:clear && \
+              php artisan config:cache && \
+              php artisan route:cache && \
+              php artisan view:cache && \
+              php artisan l5-swagger:generate
             "
 
             # Restart services
