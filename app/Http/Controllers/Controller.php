@@ -12,7 +12,7 @@ use OpenApi\Attributes as OA;
     title: 'Blog Laravel API'
 )]
 #[OA\Server(
-    url: 'http://localhost:8080',
+    url: 'http://localhost:80',
     description: 'Local development server'
 )]
 #[OA\SecurityScheme(
