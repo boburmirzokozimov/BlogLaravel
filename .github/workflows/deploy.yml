@@ -52,4 +52,4 @@ jobs:
       - name: Health Check
         run: |
           sleep 5
-          curl -f http://167.99.64.90:8080 || exit 1
+          curl -f http://167.99.64.90:80 || exit 1
