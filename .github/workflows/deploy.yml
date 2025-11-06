@@ -3,11 +3,12 @@ name: Deploy to DigitalOcean
 on:
   push:
     branches:
-      - main  # or master, depending on your default branch
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    name: Deploy to Production
 
     steps:
       - name: Checkout code
@@ -21,11 +22,30 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /var/www/blog
+
+            # Pull latest changes
             git pull origin main
-            docker-compose exec -T php-cli composer install --optimize-autoloader --no-dev
-            docker-compose exec -T php-cli php artisan migrate --force
-            docker-compose exec -T php-cli php artisan config:cache
-            docker-compose exec -T php-cli php artisan route:cache
-            docker-compose exec -T php-cli php artisan view:cache
+
+            # Run everything as root to avoid permission issues
+            docker-compose exec -T -u root php-cli bash -c "
+              composer install --optimize-autoloader --no-dev && \
+              chown -R www-data:www-data /var/www/html && \
+              chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache && \
+              php artisan migrate --force && \
+              php artisan optimize:clear && \
+              php artisan config:cache && \
+              php artisan route:cache && \
+              php artisan view:cache && \
+              php artisan l5-swagger:generate
+            "
+
+            # Restart services
             docker-compose restart php-fpm nginx
-            echo "Deployment completed!"
+
+            echo "✅ Deployment completed!"
+
+
+      - name: Health Check
+        run: |
+          sleep 5
+          curl -f http://167.99.64.90:8080 || exit 1
