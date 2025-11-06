@@ -7,6 +7,7 @@ services:
     container_name: blog-php-fpm
     restart: unless-stopped
     working_dir: /var/www/html
+    user: "1000:1000"  # Explicitly set www user
     volumes:
       - ./:/var/www/html
       - ./docker/php-fpm/php.ini:/usr/local/etc/php/conf.d/custom.ini
@@ -42,6 +43,7 @@ services:
     container_name: blog-php-cli
     restart: unless-stopped
     working_dir: /var/www/html
+    user: "1000:1000"  # Explicitly set www user
     volumes:
       - ./:/var/www/html
     networks:
@@ -96,4 +98,3 @@ volumes:
     driver: local
   redisdata:
     driver: local
-
