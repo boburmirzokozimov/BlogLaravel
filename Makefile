@@ -1,4 +1,4 @@
-.PHONY: help build up down restart logs ps shell shell-cli shell-nginx composer artisan test migrate migrate-fresh seed cache-clear permission install setup clean rebuild
+.PHONY: help build up down restart logs ps shell shell-cli shell-nginx composer artisan run-test migrate migrate-fresh seed cache-clear permission install setup clean rebuild
 
 # Colors for output
 BLUE := \033[0;34m
@@ -115,7 +115,7 @@ migrate-fresh-seed: ## Fresh migration with seeding
 	docker-compose exec php-cli php artisan migrate:fresh --seed
 
 # Testing
-test: ## Run PHPUnit tests
+run-test: ## Run PHPUnit tests
 	@echo "$(BLUE)Running tests...$(NC)"
 	docker-compose exec php-cli php artisan test
 
@@ -237,9 +237,6 @@ info: ## Show application info
 full:
 	docker-compose exec php-cli composer fix
 	docker-compose exec php-cli composer analyse
-	docker-compose exec php-cli php artisan test
-
-test:
 	docker-compose exec php-cli php artisan test
 
 analyse:
