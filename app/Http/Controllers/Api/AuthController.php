@@ -163,7 +163,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth('api')->attempt($credentials)) {
+        if (!$token = auth()->attempt($credentials)) {
             return ApiResponse::error(
                 messageKey: 'errors.unauthenticated',
                 statusCode: 401
