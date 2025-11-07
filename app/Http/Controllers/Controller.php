@@ -11,6 +11,13 @@ use OpenApi\Attributes as OA;
     description: 'API documentation for Blog Laravel application using CQRS pattern with UUID-based entities',
     title: 'Blog Laravel API'
 )]
+#[OA\Server(
+    url: 'https://bobur.xyz',
+)]
+#[OA\Server(
+    url: 'http://localhost:80',
+    description: 'Local development server'
+)]
 #[OA\SecurityScheme(
     securityScheme: 'bearerAuth',
     type: 'http',
