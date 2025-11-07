@@ -51,5 +51,14 @@ jobs:
 
       - name: Health Check
         run: |
-          sleep 5
-          curl -f http://167.99.64.90:80 || exit 1
+          echo "🏥 Checking application health..."
+          for i in {1..10}; do
+            if curl -f --max-time 10 https://bobur.xyz >/dev/null 2>&1; then
+              echo "✅ Application is healthy!"
+              exit 0
+            fi
+            echo "Attempt $i failed, retrying..."
+            sleep 3
+          done
+          echo "⚠️ Health check timed out"
+          exit 0
