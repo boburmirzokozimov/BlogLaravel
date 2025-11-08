@@ -41,7 +41,7 @@ class UpdateBlogPostHandlerTest extends UnitTestCase
             ->andReturn($post);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with($post);
 
@@ -68,7 +68,7 @@ class UpdateBlogPostHandlerTest extends UnitTestCase
             ->andReturn($post);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($savedPost) use ($newSlug) {
                 return $savedPost instanceof BlogPost
@@ -103,7 +103,7 @@ class UpdateBlogPostHandlerTest extends UnitTestCase
             ->andReturn($post);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($savedPost) use ($newTags) {
                 return $savedPost instanceof BlogPost

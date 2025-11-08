@@ -18,20 +18,21 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class EloquentBlogPostRepository implements BlogPostRepository
 {
-    public function save(BlogPost $post): EloquentBlogPost
+    public function create(BlogPost $post): EloquentBlogPost
     {
-        return EloquentBlogPost::updateOrCreate(
-            ['id' => $post->id()->toString()],
-            [
-                'title' => $post->title()->getTitle(),
-                'slug' => $post->slug()->value(),
-                'content' => $post->content()->value(),
-                'author_id' => $post->authorId()->toString(),
-                'status' => $post->status()->value(),
-                'published_at' => $post->publishedAt()?->toDateTime(),
-                'tags' => $post->tags(),
-            ]
-        );
+        $model = new EloquentBlogPost();
+        $model->id = $post->id()->toString();
+        $model->title = $post->title()->getTitle();
+        $model->slug = $post->slug()->value();
+        $model->content = $post->content()->value();
+        $model->author_id = $post->authorId()->toString();
+        $model->status = $post->status()->value();
+        $model->published_at = $post->publishedAt()?->toDateTime();
+        $model->save();
+
+        $model->tags()->sync($post->tags());
+
+        return $model;
     }
 
     public function findById(Id $id): ?BlogPost
@@ -103,5 +104,23 @@ class EloquentBlogPostRepository implements BlogPostRepository
             publishedAt: $record->published_at ? PublishedAt::fromDateTime($record->published_at) : null,
             tags: $record->tags ?? []
         );
+    }
+
+    public function save(BlogPost $post): EloquentBlogPost
+    {
+        $model = EloquentBlogPost::find($post->id()->toString());
+
+        $model->id = $post->id()->toString();
+        $model->title = $post->title()->getTitle();
+        $model->slug = $post->slug()->value();
+        $model->content = $post->content()->value();
+        $model->author_id = $post->authorId()->toString();
+        $model->status = $post->status()->value();
+        $model->published_at = $post->publishedAt()?->toDateTime();
+        $model->save();
+
+        $model->tags()->sync($post->tags());
+
+        return $model;
     }
 }

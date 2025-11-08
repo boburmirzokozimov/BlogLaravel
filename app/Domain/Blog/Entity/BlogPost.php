@@ -250,10 +250,7 @@ final class BlogPost
      */
     public function setTags(array $tags): void
     {
-        $this->tags = array_values(array_unique(array_map(
-            fn ($tag) => strtolower(trim($tag)),
-            $tags
-        )));
+        $this->tags = $tags;
     }
 
     /**

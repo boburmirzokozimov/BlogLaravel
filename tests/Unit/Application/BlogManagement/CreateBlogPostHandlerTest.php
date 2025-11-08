@@ -29,7 +29,7 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $eloquentPost = Mockery::mock(EloquentBlogPost::class);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($post) use ($title, $content, $authorId) {
                 return $post instanceof BlogPost
@@ -57,7 +57,7 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $eloquentPost = Mockery::mock(EloquentBlogPost::class);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($post) use ($slug) {
                 return $post instanceof BlogPost
@@ -81,7 +81,7 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $eloquentPost = Mockery::mock(EloquentBlogPost::class);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($post) use ($tags) {
                 return $post instanceof BlogPost
@@ -113,7 +113,7 @@ class CreateBlogPostHandlerTest extends UnitTestCase
         $eloquentPost = Mockery::mock(EloquentBlogPost::class);
 
         $this->repository
-            ->shouldReceive('save')
+            ->shouldReceive('create')
             ->once()
             ->with(Mockery::on(function ($post) {
                 return $post instanceof BlogPost

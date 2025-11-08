@@ -46,6 +46,6 @@ final readonly class CreateBlogPostHandler implements CommandHandler
             $post->setTags($command->tags);
         }
 
-        return $this->repository->save($post);
+        return $this->repository->create($post);
     }
 }

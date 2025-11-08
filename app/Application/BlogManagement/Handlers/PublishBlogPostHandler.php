@@ -39,7 +39,7 @@ final readonly class PublishBlogPostHandler implements CommandHandler
 
         $post->publish();
 
-        $this->repository->save($post);
+        $this->repository->create($post);
 
         return null;
     }

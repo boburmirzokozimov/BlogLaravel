@@ -40,6 +40,6 @@ final readonly class ArchiveBlogPostHandler implements CommandHandler
 
         $post->archive();
 
-        return $this->repository->save($post);
+        return $this->repository->create($post);
     }
 }

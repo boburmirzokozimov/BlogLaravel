@@ -7,6 +7,7 @@ namespace App\Infrastructure\Blog;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -79,6 +80,21 @@ class EloquentBlogPost extends Model
             function (Builder $query) use ($filters) {
                 $query->where('author_id', $filters['author_id']);
             }
+        );
+    }
+
+    /**
+     * Get the tags that belong to this blog post.
+     *
+     * @return BelongsToMany<EloquentTag>
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            EloquentTag::class,
+            'blog_post_tag',
+            'blog_post_id',
+            'tag_id'
         );
     }
 }

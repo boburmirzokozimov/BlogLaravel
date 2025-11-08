@@ -27,7 +27,7 @@ class CreateBlogPostRequest extends FormRequest
             'content' => 'required|string|min:10|max:50000',
             'slug' => 'nullable|string|unique:blog_posts,slug',
             'tags' => 'nullable|array',
-            'tags.*' => 'string',
+            'tags.*' => 'required|string|exists:tags,id',
         ];
     }
 }
