@@ -110,7 +110,6 @@ class EloquentBlogPostRepository implements BlogPostRepository
     {
         $model = EloquentBlogPost::find($post->id()->toString());
 
-        $model->id = $post->id()->toString();
         $model->title = $post->title()->getTitle();
         $model->slug = $post->slug()->value();
         $model->content = $post->content()->value();

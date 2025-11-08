@@ -16,6 +16,7 @@ interface BlogPostRepository
      * Save a blog post (create or update).
      */
     public function create(BlogPost $post): mixed;
+
     public function save(BlogPost $post): mixed;
 
     /**
