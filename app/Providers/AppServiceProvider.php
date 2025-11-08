@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\User\Repositories\UserRepository;
+use App\Infrastructure\Blog\EloquentTagRepository;
 use App\Infrastructure\User\EloquentUserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -18,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
             \App\Domain\Blog\Repositories\BlogPostRepository::class,
             \App\Infrastructure\Blog\EloquentBlogPostRepository::class
         );
+        $this->app->bind(TagRepository::class, EloquentTagRepository::class);
     }
 
     /**
