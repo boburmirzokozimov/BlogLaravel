@@ -21,7 +21,7 @@ class TokenResource extends JsonResource
     {
         return new self([
             'token' => $token,
-            'expires_in' => $expiresIn ?? auth()->factory()->getTTL() * 60,
+            'expires_in' => $expiresIn ?? auth('api')->factory()->getTTL() * 60,
         ]);
     }
 
