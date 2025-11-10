@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login']); // no middleware
 Route::post('/register', [AuthController::class, 'register']); // no middleware
 
-Route::middleware(['api'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('refresh', [AuthController::class, 'refresh']);
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -23,7 +23,7 @@ Route::get('/blog-posts/{id}', [BlogPostController::class, 'show']);
 Route::get('/blog-posts/slug/{slug}', [BlogPostController::class, 'showBySlug']);
 
 // Blog Posts (Protected endpoints - require authentication)
-Route::middleware(['api'])->group(function () {
+Route::middleware(['auth:api'])->group(function () {
     Route::post('/blog-posts', [BlogPostController::class, 'store']);
     Route::put('/blog-posts/{id}', [BlogPostController::class, 'update']);
     Route::post('/blog-posts/{id}/publish', [BlogPostController::class, 'publish']);
