@@ -8,7 +8,6 @@ use App\Application\TagManagement\Handlers\CreateTagHandler;
 use App\Domain\Blog\Entity\Tag;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\Blog\ValueObjects\Slug;
-use App\Domain\Blog\ValueObjects\Title;
 use App\Infrastructure\Blog\EloquentTag;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
@@ -132,4 +131,3 @@ class CreateTagHandlerTest extends UnitTestCase
         parent::tearDown();
     }
 }
-

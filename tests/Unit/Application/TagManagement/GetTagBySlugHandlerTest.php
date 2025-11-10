@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\TagManagement;
 
+use App\Application\TagManagement\Handlers\GetTagBySlugHandler;
 use App\Application\TagManagement\Queries\GetTagById;
 use App\Application\TagManagement\Queries\GetTagBySlug;
-use App\Application\TagManagement\Handlers\GetTagBySlugHandler;
 use App\Domain\Blog\Entity\Tag;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\Blog\ValueObjects\Slug;
@@ -107,4 +107,3 @@ class GetTagBySlugHandlerTest extends UnitTestCase
         parent::tearDown();
     }
 }
-

@@ -70,4 +70,3 @@ class DeleteTagHandlerTest extends UnitTestCase
         parent::tearDown();
     }
 }
-

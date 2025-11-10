@@ -2,11 +2,10 @@
 
 namespace Tests\Unit\Application\TagManagement;
 
+use App\Application\TagManagement\Handlers\ListTagsHandler;
 use App\Application\TagManagement\Queries\GetTagById;
 use App\Application\TagManagement\Queries\ListTags;
-use App\Application\TagManagement\Handlers\ListTagsHandler;
 use App\Domain\Blog\Repositories\TagRepository;
-use App\Infrastructure\Blog\EloquentTag;
 use Illuminate\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
 use Mockery;
@@ -128,4 +127,3 @@ class ListTagsHandlerTest extends UnitTestCase
         parent::tearDown();
     }
 }
-

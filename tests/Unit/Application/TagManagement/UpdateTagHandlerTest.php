@@ -180,4 +180,3 @@ class UpdateTagHandlerTest extends UnitTestCase
         parent::tearDown();
     }
 }
-
