@@ -24,6 +24,12 @@ return [
     'blog_post_already_published' => 'Блог-пост уже опубликован',
     'blog_post_already_archived' => 'Блог-пост уже архивирован',
 
+    // Tag Messages
+    'tag_created_successfully' => 'Тег успешно создан',
+    'tag_updated_successfully' => 'Тег успешно обновлен',
+    'tag_deleted_successfully' => 'Тег успешно удален',
+    'tag_not_found' => 'Тег не найден',
+
     // Validation Messages
     'validation_failed' => 'Ошибка валидации',
     'unauthorized' => 'Неавторизован',

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\OAuthController;
 use App\Http\Controllers\Api\V1\BlogPostController;
+use App\Http\Controllers\Api\V1\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login']); // no middleware
@@ -29,4 +30,16 @@ Route::middleware(['auth:api'])->group(function () {
     Route::post('/blog-posts/{id}/publish', [BlogPostController::class, 'publish']);
     Route::post('/blog-posts/{id}/archive', [BlogPostController::class, 'archive']);
     Route::delete('/blog-posts/{id}', [BlogPostController::class, 'destroy']);
+});
+
+// Tags (Public endpoints)
+Route::get('/tags', [TagController::class, 'index']);
+Route::get('/tags/{id}', [TagController::class, 'show']);
+Route::get('/tags/slug/{slug}', [TagController::class, 'showBySlug']);
+
+// Tags (Protected endpoints - require authentication)
+Route::middleware(['auth:api'])->group(function () {
+    Route::post('/tags', [TagController::class, 'store']);
+    Route::put('/tags/{id}', [TagController::class, 'update']);
+    Route::delete('/tags/{id}', [TagController::class, 'destroy']);
 });

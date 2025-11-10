@@ -24,6 +24,12 @@ return [
     'blog_post_already_published' => 'Blog post is already published',
     'blog_post_already_archived' => 'Blog post is already archived',
 
+    // Tag Messages
+    'tag_created_successfully' => 'Tag created successfully',
+    'tag_updated_successfully' => 'Tag updated successfully',
+    'tag_deleted_successfully' => 'Tag deleted successfully',
+    'tag_not_found' => 'Tag not found',
+
     // Validation Messages
     'validation_failed' => 'Validation failed',
     'unauthorized' => 'Unauthorized',
