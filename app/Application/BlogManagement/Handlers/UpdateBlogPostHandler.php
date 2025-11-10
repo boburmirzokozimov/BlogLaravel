@@ -11,9 +11,9 @@ use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class UpdateBlogPostHandler implements CommandHandler
 {
@@ -37,7 +37,7 @@ final readonly class UpdateBlogPostHandler implements CommandHandler
         $post = $this->repository->findById(Id::fromString($command->postId));
 
         if (!$post) {
-            throw new RuntimeException("Blog post not found: {$command->postId}");
+            throw new NotFound('Blog post', $command->postId);
         }
 
         $post->update(

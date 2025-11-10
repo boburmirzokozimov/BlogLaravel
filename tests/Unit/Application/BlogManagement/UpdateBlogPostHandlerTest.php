@@ -13,7 +13,7 @@ use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use RuntimeException;
+use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class UpdateBlogPostHandlerTest extends UnitTestCase
@@ -132,8 +132,7 @@ class UpdateBlogPostHandlerTest extends UnitTestCase
             ->with(Mockery::on(fn ($id) => $id->equals($postId)))
             ->andReturn(null);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Blog post not found');
+        $this->expectException(NotFound::class);
 
         $command = new UpdateBlogPost($postId->toString(), 'Title', 'Content');
         ($this->handler)($command);

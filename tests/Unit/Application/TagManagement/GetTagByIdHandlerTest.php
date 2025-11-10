@@ -12,7 +12,7 @@ use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use RuntimeException;
+use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class GetTagByIdHandlerTest extends UnitTestCase
@@ -54,8 +54,7 @@ class GetTagByIdHandlerTest extends UnitTestCase
             ->with(Mockery::on(fn ($id) => $id->equals($tagId)))
             ->andReturn(null);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Tag not found: {$tagId->toString()}");
+        $this->expectException(NotFound::class);
 
         $query = new GetTagById($tagId->toString());
         ($this->handler)($query);

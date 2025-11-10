@@ -8,8 +8,8 @@ use App\Application\TagManagement\Queries\GetTagBySlug;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
+use App\Shared\Exceptions\NotFound;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class GetTagBySlugHandler implements QueryHandler
 {
@@ -33,7 +33,7 @@ final readonly class GetTagBySlugHandler implements QueryHandler
         $tag = $this->repository->findBySlug($query->slug);
 
         if (!$tag) {
-            throw new RuntimeException("Tag not found with slug: {$query->slug}");
+            throw new NotFound('Tag', $query->slug);
         }
 
         return $tag;

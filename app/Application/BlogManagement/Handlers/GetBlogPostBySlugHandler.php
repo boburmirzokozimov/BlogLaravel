@@ -9,8 +9,8 @@ use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
+use App\Shared\Exceptions\NotFound;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class GetBlogPostBySlugHandler implements QueryHandler
 {
@@ -34,7 +34,7 @@ final readonly class GetBlogPostBySlugHandler implements QueryHandler
         $post = $this->repository->findBySlug($query->slug);
 
         if (!$post) {
-            throw new RuntimeException("Blog post not found: {$query->slug}");
+            throw new NotFound('Blog post', $query->slug);
         }
 
         return $post;

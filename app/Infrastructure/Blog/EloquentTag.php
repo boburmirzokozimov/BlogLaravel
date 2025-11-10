@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Blog;
 
+use Database\Factories\TagFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\Pivot;
@@ -25,7 +27,17 @@ use Illuminate\Support\Carbon;
  */
 class EloquentTag extends Model
 {
+    use HasFactory;
+
     protected $table = 'tags';
+
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): TagFactory
+    {
+        return TagFactory::new();
+    }
 
     /**
      * Indicates if the IDs are auto-incrementing.

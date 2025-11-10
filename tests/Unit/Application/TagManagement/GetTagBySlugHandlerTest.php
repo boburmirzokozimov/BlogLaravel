@@ -12,7 +12,7 @@ use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use RuntimeException;
+use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class GetTagBySlugHandlerTest extends UnitTestCase
@@ -53,8 +53,7 @@ class GetTagBySlugHandlerTest extends UnitTestCase
             ->with($slug)
             ->andReturn(null);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage("Tag not found with slug: {$slug}");
+        $this->expectException(NotFound::class);
 
         $query = new GetTagBySlug($slug);
         ($this->handler)($query);

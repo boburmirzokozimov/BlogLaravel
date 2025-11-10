@@ -18,7 +18,7 @@ use App\Shared\Exceptions\InvariantViolation;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use RuntimeException;
+use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class ArchiveBlogPostHandlerTest extends UnitTestCase
@@ -108,8 +108,7 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
             ->with(Mockery::on(fn ($id) => $id->equals($postId)))
             ->andReturn(null);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Blog post not found');
+        $this->expectException(NotFound::class);
 
         $command = new ArchiveBlogPost($postId->toString());
         ($this->handler)($command);

@@ -9,9 +9,9 @@ use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class ArchiveBlogPostHandler implements CommandHandler
 {
@@ -35,7 +35,7 @@ final readonly class ArchiveBlogPostHandler implements CommandHandler
         $post = $this->repository->findById(Id::fromString($command->postId));
 
         if (!$post) {
-            throw new RuntimeException("Blog post not found: {$command->postId}");
+            throw new NotFound('Blog post', $command->postId);
         }
 
         $post->archive();

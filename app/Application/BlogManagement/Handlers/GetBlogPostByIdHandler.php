@@ -8,9 +8,9 @@ use App\Application\BlogManagement\Queries\GetBlogPostById;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class GetBlogPostByIdHandler implements QueryHandler
 {
@@ -34,7 +34,7 @@ final readonly class GetBlogPostByIdHandler implements QueryHandler
         $post = $this->repository->findById(Id::fromString($query->postId));
 
         if (!$post) {
-            throw new RuntimeException("Blog post not found: {$query->postId}");
+            throw new NotFound('Blog post', $query->postId);
         }
 
         return $post;

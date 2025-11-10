@@ -42,14 +42,14 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($e instanceof ValidationException) {
                 $validator = $e->validator;
                 $translatedErrors = [];
-                
+
                 foreach ($validator->failed() as $field => $rules) {
                     $translatedErrors[$field] = [];
-                    
+
                     foreach ($rules as $rule => $parameters) {
                         $ruleName = \Illuminate\Support\Str::snake($rule);
                         $attribute = str_replace('_', ' ', $field);
-                        
+
                         // Determine the type for size-based rules
                         $type = 'string'; // default
                         if ($validator->hasRule($field, ['Numeric', 'Integer'])) {
@@ -59,10 +59,10 @@ return Application::configure(basePath: dirname(__DIR__))
                         } elseif ($validator->hasRule($field, ['File', 'Image', 'Mimes', 'Mimetypes'])) {
                             $type = 'file';
                         }
-                        
+
                         // Build parameters array for translation with proper keys
                         $params = ['attribute' => $attribute];
-                        
+
                         // Map parameters based on the rule
                         if (in_array($rule, ['Min', 'Max', 'Size'])) {
                             $params[strtolower($rule)] = $parameters[0] ?? '';
@@ -80,11 +80,11 @@ return Application::configure(basePath: dirname(__DIR__))
                                 $params[is_numeric($key) ? "param{$key}" : $key] = $value;
                             }
                         }
-                        
+
                         // Get translated messages
                         $messageEn = __("validation.{$ruleName}", $params, 'en');
                         $messageRu = __("validation.{$ruleName}", $params, 'ru');
-                        
+
                         // If the message is an array (like min, max, size), select the appropriate type
                         if (is_array($messageEn)) {
                             $messageEn = $messageEn[$type] ?? $messageEn['string'];
@@ -92,14 +92,14 @@ return Application::configure(basePath: dirname(__DIR__))
                         if (is_array($messageRu)) {
                             $messageRu = $messageRu[$type] ?? $messageRu['string'];
                         }
-                        
+
                         $translatedErrors[$field][] = [
                             'en' => $messageEn,
                             'ru' => $messageRu,
                         ];
                     }
                 }
-                
+
                 return response()->json([
                     'code' => 'VALIDATION_FAILED',
                     'message' => [
@@ -132,7 +132,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'ru' => __('errors.unauthenticated', [], 'ru'),
                     ]
                 ], 401),
-                
+
                 $e instanceof TokenExpiredException => response()->json([
                     'code' => 'TOKEN_EXPIRED',
                     'message' => [
@@ -140,7 +140,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'ru' => __('errors.token_expired', [], 'ru'),
                     ]
                 ], 401),
-                
+
                 $e instanceof TokenInvalidException => response()->json([
                     'code' => 'TOKEN_INVALID',
                     'message' => [
@@ -148,7 +148,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'ru' => __('errors.token_invalid', [], 'ru'),
                     ]
                 ], 401),
-                
+
                 $e instanceof TokenBlacklistedException => response()->json([
                     'code' => 'TOKEN_BLACKLISTED',
                     'message' => [
@@ -156,7 +156,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'ru' => __('errors.token_blacklisted', [], 'ru'),
                     ]
                 ], 401),
-                
+
                 $isDevOrTesting => response()->json([
                     'code' => 'BAD_REQUEST',
                     'message' => [
@@ -169,8 +169,8 @@ return Application::configure(basePath: dirname(__DIR__))
                         'line' => $e->getLine(),
                         'trace' => $e->getTraceAsString(),
                     ]
-                ], 400),
-                
+                ], $e->getCode()),
+
                 default => response()->json([
                     'code' => 'BAD_REQUEST',
                     'message' => [

@@ -17,7 +17,7 @@ use App\Shared\Exceptions\InvariantViolation;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use RuntimeException;
+use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class PublishBlogPostHandlerTest extends UnitTestCase
@@ -68,8 +68,7 @@ class PublishBlogPostHandlerTest extends UnitTestCase
             ->with(Mockery::on(fn ($id) => $id->equals($postId)))
             ->andReturn(null);
 
-        $this->expectException(RuntimeException::class);
-        $this->expectExceptionMessage('Blog post not found');
+        $this->expectException(NotFound::class);
 
         $command = new PublishBlogPost($postId->toString());
         ($this->handler)($command);

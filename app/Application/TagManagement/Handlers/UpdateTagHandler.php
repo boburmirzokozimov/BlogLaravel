@@ -11,9 +11,9 @@ use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class UpdateTagHandler implements CommandHandler
 {
@@ -37,7 +37,7 @@ final readonly class UpdateTagHandler implements CommandHandler
         $existingTag = $this->repository->findById(Id::fromString($command->tagId));
 
         if (!$existingTag) {
-            throw new RuntimeException("Tag not found: {$command->tagId}");
+            throw new NotFound('Tag', $command->tagId);
         }
 
         $updatedTag = Tag::create(

@@ -12,6 +12,7 @@ use App\Domain\Blog\ValueObjects\PostStatus;
 use App\Domain\Blog\ValueObjects\PublishedAt;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -108,7 +109,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
         $model = EloquentBlogPost::find($post->id()->toString());
 
         if (!$model) {
-            throw new \RuntimeException('Blog post not found for id '.$post->id()->toString());
+            throw new NotFound('Blog post', $post->id()->toString());
         }
         $this->mapDomainToModel($post, $model);
         $model->save();

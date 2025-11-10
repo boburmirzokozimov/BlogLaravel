@@ -8,9 +8,9 @@ use App\Application\BlogManagement\Commands\PublishBlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
-use RuntimeException;
 
 final readonly class PublishBlogPostHandler implements CommandHandler
 {
@@ -34,7 +34,7 @@ final readonly class PublishBlogPostHandler implements CommandHandler
         $post = $this->repository->findById(Id::fromString($command->postId));
 
         if (!$post) {
-            throw new RuntimeException("Blog post not found: {$command->postId}");
+            throw new NotFound('Blog post', $command->postId);
         }
 
         $post->publish();
