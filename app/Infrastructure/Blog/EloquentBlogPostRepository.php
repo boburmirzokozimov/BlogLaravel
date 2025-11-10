@@ -97,8 +97,8 @@ class EloquentBlogPostRepository implements BlogPostRepository
                 default => null,
             },
             publishedAt: $record->published_at ? PublishedAt::fromDateTime($record->published_at) : null,
-            tags: $record->tags
-                ? $record->tags->pluck('id')->all()
+            tags: $record->tags()->exists()
+                ? $record->tags()->pluck('id')->all()
                 : []
         );
     }

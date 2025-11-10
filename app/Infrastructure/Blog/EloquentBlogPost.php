@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
+use Ramsey\Collection\Collection;
 
 /**
  * @property string $id
@@ -17,8 +19,8 @@ use Illuminate\Support\Carbon;
  * @property string $content
  * @property string $author_id
  * @property string $status
- * @property Carbon|null $published_at
- * @property array<string> $tags
+ * @property \DateTimeInterface|null $published_at
+ * @property Collection<string>|null $tags
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -86,7 +88,7 @@ class EloquentBlogPost extends Model
     /**
      * Get the tags that belong to this blog post.
      *
-     * @return BelongsToMany<EloquentTag>
+     * @return BelongsToMany<EloquentTag, $this, Pivot>
      */
     public function tags(): BelongsToMany
     {

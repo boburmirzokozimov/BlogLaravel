@@ -11,6 +11,9 @@ use App\Shared\CQRS\Query\Query;
 #[Handler(ListPublishedBlogPostsHandler::class)]
 final readonly class ListPublishedBlogPosts implements Query
 {
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function __construct(
         public array $filters
     ) {

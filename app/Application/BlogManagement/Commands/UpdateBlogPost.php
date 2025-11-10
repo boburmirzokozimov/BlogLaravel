@@ -11,6 +11,13 @@ use App\Shared\CQRS\Command\Command;
 #[Handler(UpdateBlogPostHandler::class)]
 final readonly class UpdateBlogPost implements Command
 {
+    /**
+     * @param string $postId
+     * @param string $title
+     * @param string $content
+     * @param string|null $slug
+     * @param array<string> $tags
+     */
     public function __construct(
         public string $postId,
         public string $title,

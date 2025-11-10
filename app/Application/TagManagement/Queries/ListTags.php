@@ -11,6 +11,9 @@ use App\Shared\CQRS\Query\Query;
 #[Handler(ListTagsHandler::class)]
 final readonly class ListTags implements Query
 {
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function __construct(
         public array $filters = []
     ) {

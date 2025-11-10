@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
 
 /**
@@ -71,8 +72,7 @@ class EloquentTag extends Model
      *
      * Defines a many-to-many relationship between tags and blog posts
      * through the `blog_post_tag` pivot table.
-     *
-     * @return BelongsToMany<EloquentBlogPost> The relationship instance
+     * @return BelongsToMany<EloquentBlogPost, $this, Pivot>
      */
     public function blogPosts(): BelongsToMany
     {
@@ -95,7 +95,7 @@ class EloquentTag extends Model
      * @return Builder<EloquentTag> The modified query builder instance
      */
     #[Scope]
-    public function filterRequest(Builder $builder, array $filters = []): Builder
+    protected function filter(Builder $builder, array $filters = []): Builder
     {
         return $builder->when(
             !empty($filters['search']),

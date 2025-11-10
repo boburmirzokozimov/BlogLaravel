@@ -35,8 +35,21 @@ final class BlogPost
     private array $tags;
 
     // domain events
+    /**
+     * @var array<string>
+     */
     private array $events = [];
 
+    /**
+     * @param Id $id
+     * @param Title $title
+     * @param Slug $slug
+     * @param Content $content
+     * @param AuthorId $authorId
+     * @param PostStatus $status
+     * @param PublishedAt|null $publishedAt
+     * @param array<string> $tags
+     */
     private function __construct(
         Id $id,
         Title $title,
@@ -80,6 +93,15 @@ final class BlogPost
 
     /**
      * Reconstitute from persistence.
+     * @param Id $id
+     * @param Title $title
+     * @param Slug $slug
+     * @param Content $content
+     * @param AuthorId $authorId
+     * @param PostStatus $status
+     * @param PublishedAt|null $publishedAt
+     * @param array<string> $tags
+     * @return BlogPost
      */
     public static function reconstitute(
         Id $id,
@@ -139,6 +161,9 @@ final class BlogPost
         return $this->publishedAt;
     }
 
+    /**
+     * @return string[]
+     */
     public function tags(): array
     {
         return $this->tags;
@@ -247,6 +272,7 @@ final class BlogPost
 
     /**
      * Set all tags (replacing existing ones).
+     * @param array<string> $tags
      */
     public function setTags(array $tags): void
     {
@@ -265,6 +291,7 @@ final class BlogPost
 
     /**
      * Get domain events.
+     * @return array<string>
      */
     public function releaseEvents(): array
     {

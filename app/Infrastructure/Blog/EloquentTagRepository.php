@@ -64,7 +64,7 @@ class EloquentTagRepository implements TagRepository
     public function index(array $filters = []): LengthAwarePaginator
     {
         return EloquentTag::query()
-            ->filterRequest($filters)
+            ->filter($filters)
             ->orderBy('name', 'asc')
             ->paginate($filters['per_page'] ?? 10);
     }
