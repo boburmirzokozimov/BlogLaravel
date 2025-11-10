@@ -22,12 +22,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
     {
         $model = new EloquentBlogPost();
         $model->id = $post->id()->toString();
-        $model->title = $post->title()->getTitle();
-        $model->slug = $post->slug()->value();
-        $model->content = $post->content()->value();
-        $model->author_id = $post->authorId()->toString();
-        $model->status = $post->status()->value();
-        $model->published_at = $post->publishedAt()?->toDateTime();
+        $this->mapDomainToModel($post, $model);
         $model->save();
 
         $model->tags()->sync($post->tags());
@@ -68,7 +63,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
     }
 
     /**
-     * @param array<string, string> $filters
+     * @param array<string, string|int> $filters
      * @return LengthAwarePaginator<int, EloquentBlogPost>
      */
     public function index(array $filters = []): LengthAwarePaginator
@@ -102,7 +97,9 @@ class EloquentBlogPostRepository implements BlogPostRepository
                 default => null,
             },
             publishedAt: $record->published_at ? PublishedAt::fromDateTime($record->published_at) : null,
-            tags: $record->tags ?? []
+            tags: $record->tags
+                ? $record->tags->pluck('id')->all()
+                : []
         );
     }
 
@@ -110,16 +107,24 @@ class EloquentBlogPostRepository implements BlogPostRepository
     {
         $model = EloquentBlogPost::find($post->id()->toString());
 
+        if (!$model) {
+            throw new \RuntimeException('Blog post not found for id '.$post->id()->toString());
+        }
+        $this->mapDomainToModel($post, $model);
+        $model->save();
+
+        $model->tags()->sync($post->tags());
+
+        return $model;
+    }
+
+    private function mapDomainToModel(BlogPost $post, EloquentBlogPost $model): void
+    {
         $model->title = $post->title()->getTitle();
         $model->slug = $post->slug()->value();
         $model->content = $post->content()->value();
         $model->author_id = $post->authorId()->toString();
         $model->status = $post->status()->value();
         $model->published_at = $post->publishedAt()?->toDateTime();
-        $model->save();
-
-        $model->tags()->sync($post->tags());
-
-        return $model;
     }
 }

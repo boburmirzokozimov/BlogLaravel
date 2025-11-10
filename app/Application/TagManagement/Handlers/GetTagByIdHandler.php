@@ -40,4 +40,3 @@ final readonly class GetTagByIdHandler implements QueryHandler
         return $tag;
     }
 }
-

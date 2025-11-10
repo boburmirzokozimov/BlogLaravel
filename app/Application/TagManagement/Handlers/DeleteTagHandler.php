@@ -35,4 +35,3 @@ final readonly class DeleteTagHandler implements CommandHandler
         return null;
     }
 }
-

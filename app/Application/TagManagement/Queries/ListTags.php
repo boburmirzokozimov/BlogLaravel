@@ -16,4 +16,3 @@ final readonly class ListTags implements Query
     ) {
     }
 }
-

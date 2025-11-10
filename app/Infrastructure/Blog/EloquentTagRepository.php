@@ -58,21 +58,14 @@ class EloquentTagRepository implements TagRepository
     }
 
     /**
-     * @param array<string, string> $filters
+     * @param array<string, string|int> $filters
      * @return LengthAwarePaginator<int, EloquentTag>
      */
     public function index(array $filters = []): LengthAwarePaginator
     {
-        $query = EloquentTag::query();
-
-        if (!empty($filters['search'])) {
-            $query->where(function ($q) use ($filters) {
-                $q->where('name', 'like', '%'.$filters['search'].'%')
-                    ->orWhere('slug', 'like', '%'.$filters['search'].'%');
-            });
-        }
-
-        return $query->orderBy('name', 'asc')
+        return EloquentTag::query()
+            ->filterRequest($filters)
+            ->orderBy('name', 'asc')
             ->paginate($filters['per_page'] ?? 10);
     }
 
@@ -108,4 +101,3 @@ class EloquentTagRepository implements TagRepository
         );
     }
 }
-

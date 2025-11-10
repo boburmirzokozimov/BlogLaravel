@@ -43,4 +43,3 @@ final readonly class CreateTagHandler implements CommandHandler
         return $this->repository->create($tag);
     }
 }
-

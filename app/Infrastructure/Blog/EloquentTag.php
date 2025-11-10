@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Blog;
 
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Carbon;
 
 /**
- * @property string $id
- * @property string $name
- * @property string $slug
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * Eloquent model representing a tag in the blog system.
+ *
+ * This model represents tags that can be associated with blog posts.
+ * Tags are identified by a UUID string and have a name and slug.
+ *
+ * @property string $id The unique identifier (UUID) of the tag
+ * @property string $name The name of the tag
+ * @property string $slug The URL-friendly slug of the tag
+ * @property Carbon $created_at The timestamp when the tag was created
+ * @property Carbon $updated_at The timestamp when the tag was last updated
  */
 class EloquentTag extends Model
 {
@@ -21,11 +28,15 @@ class EloquentTag extends Model
 
     /**
      * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
      */
     public $incrementing = false;
 
     /**
-     * The data type of the auto-incrementing ID.
+     * The data type of the primary key ID.
+     *
+     * @var string
      */
     protected $keyType = 'string';
 
@@ -43,7 +54,9 @@ class EloquentTag extends Model
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * Defines how Eloquent should cast attributes when retrieving them from the database.
+     *
+     * @return array<string, string> An array mapping attribute names to their cast types
      */
     protected function casts(): array
     {
@@ -56,7 +69,10 @@ class EloquentTag extends Model
     /**
      * Get the blog posts that belong to this tag.
      *
-     * @return BelongsToMany<EloquentBlogPost>
+     * Defines a many-to-many relationship between tags and blog posts
+     * through the `blog_post_tag` pivot table.
+     *
+     * @return BelongsToMany<EloquentBlogPost> The relationship instance
      */
     public function blogPosts(): BelongsToMany
     {
@@ -65,6 +81,30 @@ class EloquentTag extends Model
             'blog_post_tag',
             'tag_id',
             'blog_post_id'
+        );
+    }
+
+    /**
+     * Apply filters to the query builder.
+     *
+     * This scope method allows filtering tags based on various criteria.
+     * Currently, supports filtering by search term (searches in name and slug).
+     *
+     * @param Builder<EloquentTag> $builder The query builder instance
+     * @param array<string, mixed> $filters An associative array of filter criteria
+     * @return Builder<EloquentTag> The modified query builder instance
+     */
+    #[Scope]
+    public function filterRequest(Builder $builder, array $filters = []): Builder
+    {
+        return $builder->when(
+            !empty($filters['search']),
+            function (Builder $query) use ($filters) {
+                $query->where(function (Builder $q) use ($filters) {
+                    $q->where('name', 'like', '%'.$filters['search'].'%')
+                        ->orWhere('slug', 'like', '%'.$filters['search'].'%');
+                });
+            }
         );
     }
 }

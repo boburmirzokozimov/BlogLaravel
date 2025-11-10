@@ -18,11 +18,13 @@ class Tag
     {
     }
 
-    public static function create(Id $id, Title $name, Slug $slug): Tag{
+    public static function create(Id $id, Title $name, Slug $slug): self
+    {
         $tag = new self();
         $tag->id = $id;
         $tag->name = $name;
         $tag->slug = $slug;
+
         return $tag;
     }
 

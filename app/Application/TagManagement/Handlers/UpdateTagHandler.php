@@ -43,7 +43,7 @@ final readonly class UpdateTagHandler implements CommandHandler
         $updatedTag = Tag::create(
             id: $existingTag->getId(),
             name: Title::new($command->name),
-            slug: $command->slug ? Slug::fromString($command->slug) : Slug::fromTitle($command->name)
+            slug: Slug::fromTitle($command->slug ?? $command->name)
         );
 
         $this->repository->save($updatedTag);
@@ -51,4 +51,3 @@ final readonly class UpdateTagHandler implements CommandHandler
         return null;
     }
 }
-

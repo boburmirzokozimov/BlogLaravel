@@ -32,4 +32,3 @@ final readonly class ListTagsHandler implements QueryHandler
         return $this->repository->index($query->filters);
     }
 }
-
