@@ -81,7 +81,7 @@ class AuthController extends Controller
             )
         );
 
-        $token = auth()->login($user);
+        $token = auth('api')->login($user);
 
         return ApiResponse::success(
             messageKey: 'messages.user_registered',
@@ -163,7 +163,7 @@ class AuthController extends Controller
     {
         $credentials = $request->only('email', 'password');
 
-        if (!$token = auth()->attempt($credentials)) {
+        if (!$token = auth('api')->attempt($credentials)) {
             return ApiResponse::error(
                 messageKey: 'errors.unauthenticated',
                 statusCode: 401
@@ -223,7 +223,7 @@ class AuthController extends Controller
     {
         return ApiResponse::success(
             messageKey: 'messages.user_logged_in',
-            data: new UserResource(auth()->user())
+            data: new UserResource(auth('api')->user())
         );
     }
 
@@ -272,7 +272,7 @@ class AuthController extends Controller
     )]
     public function logout(): JsonResponse
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return ApiResponse::success(
             messageKey: 'messages.user_logged_out',
@@ -327,7 +327,7 @@ class AuthController extends Controller
     {
         return ApiResponse::success(
             messageKey: 'messages.token_refreshed',
-            data: TokenResource::fromToken(auth()->refresh())
+            data: TokenResource::fromToken(auth('api')->refresh())
         );
     }
 }

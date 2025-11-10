@@ -21,6 +21,10 @@ abstract class TestCase extends BaseTestCase
         $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
 
+        if (!$token) {
+            throw new \RuntimeException('Failed to generate JWT token. Check JWT_SECRET configuration.');
+        }
+
         return (object) [
             'user' => $user,
             'token' => $token,
@@ -37,6 +41,10 @@ abstract class TestCase extends BaseTestCase
     {
         $user = EloquentUser::factory()->create($attributes);
         $token = auth('api')->login($user);
+
+        if (!$token) {
+            throw new \RuntimeException('Failed to generate JWT token. Check JWT_SECRET configuration.');
+        }
 
         $this->withHeader('Authorization', 'Bearer '.$token);
 
