@@ -10,10 +10,10 @@ use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Domain\Blog\ValueObjects\AuthorId;
 use App\Domain\Blog\ValueObjects\Content;
 use App\Domain\Blog\ValueObjects\Title;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class UpdateBlogPostHandlerTest extends UnitTestCase

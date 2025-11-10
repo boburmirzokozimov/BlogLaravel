@@ -27,6 +27,7 @@ use Illuminate\Support\Carbon;
  */
 class EloquentTag extends Model
 {
+    /** @phpstan-ignore-next-line  */
     use HasFactory;
 
     protected $table = 'tags';

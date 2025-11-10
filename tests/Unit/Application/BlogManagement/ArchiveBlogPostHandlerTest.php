@@ -15,10 +15,10 @@ use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\Exceptions\InvariantViolation;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 use Mockery;
-use App\Shared\Exceptions\NotFound;
 use Tests\UnitTestCase;
 
 class ArchiveBlogPostHandlerTest extends UnitTestCase

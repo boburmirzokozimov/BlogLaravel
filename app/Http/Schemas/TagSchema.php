@@ -22,4 +22,3 @@ use OpenApi\Attributes as OA;
 class TagSchema
 {
 }
-
