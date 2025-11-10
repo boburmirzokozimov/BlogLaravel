@@ -234,10 +234,15 @@ info: ## Show application info
 	@echo "$(BLUE)Running Containers:$(NC)"
 	@docker-compose ps
 
-full:
+full: ## Run full check (fix, analyse, test) - requires Docker
 	docker-compose exec php-cli composer fix
 	docker-compose exec php-cli composer analyse
 	docker-compose exec php-cli php artisan test
+
+full-ci: ## Run full check (fix, analyse, test) - for CI/CD without Docker
+	composer fix || true
+	composer analyse
+	php artisan test
 
 analyse:
 	docker-compose exec php-cli composer analyse
