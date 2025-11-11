@@ -3,6 +3,8 @@
 namespace App\Infrastructure\User;
 
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -92,5 +94,43 @@ class EloquentUser extends Authenticatable implements JWTSubject
         return [
             'email_verified_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Apply filters to the query builder based on request parameters.
+     *
+     * This scope method allows filtering users based on various criteria:
+     * - search: searches in name and email fields
+     * - status: filters by user status (active, inactive, pending, suspended)
+     * - order_by: field to order by (default: created_at)
+     * - order_direction: direction of ordering (default: desc)
+     *
+     * @param  Builder<EloquentUser>  $builder  The query builder instance
+     * @param  array<string, mixed>  $filters  An associative array of filter criteria
+     * @return Builder<EloquentUser> The modified query builder instance
+     */
+    #[Scope]
+    public function scopeFilterRequest(Builder $builder, array $filters = []): Builder
+    {
+        return $builder
+            ->when(
+                ! empty($filters['search']),
+                function (Builder $query) use ($filters) {
+                    $query->where(function (Builder $q) use ($filters) {
+                        $q->where('name', 'like', '%'.$filters['search'].'%')
+                            ->orWhere('email', 'like', '%'.$filters['search'].'%');
+                    });
+                }
+            )
+            ->when(
+                ! empty($filters['status']),
+                function (Builder $query) use ($filters) {
+                    $query->where('status', $filters['status']);
+                }
+            )
+            ->orderBy(
+                $filters['order_by'] ?? 'created_at',
+                $filters['order_direction'] ?? 'desc'
+            );
     }
 }

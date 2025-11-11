@@ -23,4 +23,7 @@ Route::middleware([])->group(function () {
 Route::middleware(['auth:web', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // User Management
+    Route::resource('users', App\Http\Controllers\Admin\UserController::class);
 });
