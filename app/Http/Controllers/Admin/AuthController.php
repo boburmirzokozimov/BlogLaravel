@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,12 +22,9 @@ class AuthController extends Controller
     /**
      * Handle a login request.
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
+        $credentials = $request->validated();
 
         if (Auth::guard('web')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
@@ -35,8 +32,8 @@ class AuthController extends Controller
             return redirect()->intended(route('admin.dashboard'));
         }
 
-        throw ValidationException::withMessages([
-            'email' => __('auth.failed'),
+        return back()->withErrors([
+            'email' => __('errors.validation_failed'),
         ]);
     }
 

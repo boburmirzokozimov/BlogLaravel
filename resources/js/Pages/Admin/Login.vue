@@ -15,9 +15,13 @@
                             v-model="form.email"
                             type="email"
                             required
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            :class="[
+                                'appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm',
+                                form.errors.email ? 'border-red-500' : 'border-gray-300'
+                            ]"
                             placeholder="Email address"
                         />
+                        <p v-if="form.errors.email" class="mt-1 text-sm text-red-600">{{ form.errors.email }}</p>
                     </div>
                     <div>
                         <label for="password" class="sr-only">Password</label>
@@ -26,15 +30,20 @@
                             v-model="form.password"
                             type="password"
                             required
-                            class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                            :class="[
+                                'appearance-none rounded-none relative block w-full px-3 py-2 border placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm',
+                                form.errors.password ? 'border-red-500' : 'border-gray-300'
+                            ]"
                             placeholder="Password"
                         />
+                        <p v-if="form.errors.password" class="mt-1 text-sm text-red-600">{{ form.errors.password }}</p>
                     </div>
                 </div>
 
-                <div v-if="form.errors.email || form.errors.password" class="text-red-600 text-sm">
-                    <p v-if="form.errors.email">{{ form.errors.email }}</p>
-                    <p v-if="form.errors.password">{{ form.errors.password }}</p>
+                <div v-if="form.hasErrors && !form.errors.email && !form.errors.password" class="rounded-md bg-red-50 p-4">
+                    <div class="text-sm text-red-800">
+                        <p v-for="(error, key) in form.errors" :key="key">{{ error }}</p>
+                    </div>
                 </div>
 
                 <div>
@@ -66,7 +75,9 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('admin.login.post'), {
-        onFinish: () => form.reset('password'),
+        onSuccess: () => {
+            form.reset('password');
+        },
     });
 };
 </script>

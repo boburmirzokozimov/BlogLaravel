@@ -23,4 +23,12 @@ export default defineConfig({
         }),
         tailwindcss(),
     ],
+    server: {
+        host: process.env.APP_URL || '0.0.0.0',
+        port: parseInt(process.env.VITE_PORT || '5173', 10),
+        hmr: {
+            host: process.env.VITE_HMR_HOST || 'localhost',
+        },
+        cors: true,
+    },
 });

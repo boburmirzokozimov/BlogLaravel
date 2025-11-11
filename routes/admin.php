@@ -4,8 +4,17 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
+// Redirect /admin to login or dashboard
+Route::get('/admin', function () {
+    if (auth()->check()) {
+        return redirect()->route('admin.dashboard');
+    }
+
+    return redirect()->route('admin.login');
+})->name('admin');
+
 // Admin authentication routes (public)
-Route::middleware('guest:web')->group(function () {
+Route::middleware([])->group(function () {
     Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
     Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.post');
 });
