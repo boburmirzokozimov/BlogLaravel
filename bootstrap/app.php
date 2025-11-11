@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\ForceJsonResponseMiddleware;
+use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocaleMiddleware;
 use App\Shared\Exceptions\DomainException;
 use Illuminate\Auth\AuthenticationException;
@@ -16,7 +18,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__ . '/../routes/console.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
             Route::prefix('api/v1')
@@ -24,14 +26,17 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
+
+            Route::middleware(['web', HandleInertiaRequests::class])
+                ->group(base_path('routes/admin.php'));
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->prepend(ForceJsonResponseMiddleware::class);
         $middleware->prepend(SetLocaleMiddleware::class);
-//        $middleware->alias([
-//
-//        ]);
+        $middleware->alias([
+            'admin' => AdminMiddleware::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (Throwable $e): ?JsonResponse {
@@ -130,7 +135,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => [
                         'en' => __('errors.unauthenticated', [], 'en'),
                         'ru' => __('errors.unauthenticated', [], 'ru'),
-                    ]
+                    ],
                 ], 401),
 
                 $e instanceof TokenExpiredException => response()->json([
@@ -138,7 +143,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => [
                         'en' => __('errors.token_expired', [], 'en'),
                         'ru' => __('errors.token_expired', [], 'ru'),
-                    ]
+                    ],
                 ], 401),
 
                 $e instanceof TokenInvalidException => response()->json([
@@ -146,7 +151,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => [
                         'en' => __('errors.token_invalid', [], 'en'),
                         'ru' => __('errors.token_invalid', [], 'ru'),
-                    ]
+                    ],
                 ], 401),
 
                 $e instanceof TokenBlacklistedException => response()->json([
@@ -154,7 +159,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => [
                         'en' => __('errors.token_blacklisted', [], 'en'),
                         'ru' => __('errors.token_blacklisted', [], 'ru'),
-                    ]
+                    ],
                 ], 401),
 
                 $isDevOrTesting => response()->json([
@@ -168,7 +173,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'file' => $e->getFile(),
                         'line' => $e->getLine(),
                         'trace' => $e->getTraceAsString(),
-                    ]
+                    ],
                 ], $e->getCode()),
 
                 default => response()->json([
@@ -176,7 +181,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'message' => [
                         'en' => __('errors.bad_request', [], 'en'),
                         'ru' => __('errors.bad_request', [], 'ru'),
-                    ]
+                    ],
                 ], 400),
             };
         });

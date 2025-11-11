@@ -9,7 +9,8 @@ class ForceJsonResponseMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if ($request->is('api/*')) {
+        // Only force JSON for API routes, not admin routes
+        if ($request->is('api/*') && ! $request->is('admin/*')) {
             $request->headers->set('Accept', 'application/json');
         }
 
