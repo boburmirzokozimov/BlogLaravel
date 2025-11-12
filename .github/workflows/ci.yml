@@ -52,6 +52,17 @@ jobs:
       - name: Run migrations
         run: php artisan migrate --force
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
       - name: Run full check (fix, analyse, test)
         run: make full-ci
 
