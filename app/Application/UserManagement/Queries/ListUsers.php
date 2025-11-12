@@ -9,6 +9,9 @@ use App\Shared\CQRS\Query\Query;
 #[Handler(ListUsersHandler::class)]
 final readonly class ListUsers implements Query
 {
+    /**
+     * @param array<string, mixed> $filters
+     */
     public function __construct(
         public array $filters = []
     ) {

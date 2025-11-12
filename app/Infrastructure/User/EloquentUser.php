@@ -3,7 +3,6 @@
 namespace App\Infrastructure\User;
 
 use Database\Factories\UserFactory;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -21,6 +20,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @method Builder<EloquentUser> filterRequest($filters = [])
  */
 class EloquentUser extends Authenticatable implements JWTSubject
 {
@@ -105,16 +105,15 @@ class EloquentUser extends Authenticatable implements JWTSubject
      * - order_by: field to order by (default: created_at)
      * - order_direction: direction of ordering (default: desc)
      *
-     * @param  Builder<EloquentUser>  $builder  The query builder instance
-     * @param  array<string, mixed>  $filters  An associative array of filter criteria
+     * @param Builder<EloquentUser> $builder The query builder instance
+     * @param array<string, mixed> $filters An associative array of filter criteria
      * @return Builder<EloquentUser> The modified query builder instance
      */
-    #[Scope]
     public function scopeFilterRequest(Builder $builder, array $filters = []): Builder
     {
         return $builder
             ->when(
-                ! empty($filters['search']),
+                !empty($filters['search']),
                 function (Builder $query) use ($filters) {
                     $query->where(function (Builder $q) use ($filters) {
                         $q->where('name', 'like', '%'.$filters['search'].'%')
@@ -123,7 +122,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
                 }
             )
             ->when(
-                ! empty($filters['status']),
+                !empty($filters['status']),
                 function (Builder $query) use ($filters) {
                     $query->where('status', $filters['status']);
                 }

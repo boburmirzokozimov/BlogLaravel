@@ -7,13 +7,12 @@ use App\Infrastructure\User\EloquentUser;
 use App\Shared\Attributes\Handles;
 use App\Shared\CQRS\Query\Query;
 use App\Shared\CQRS\Query\QueryHandler;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
 
 #[Handles(ListUsers::class)]
 final readonly class ListUsersHandler implements QueryHandler
 {
-    public function __invoke(Query $query): LengthAwarePaginator
+    public function __invoke(Query $query): mixed
     {
         if (!$query instanceof ListUsers) {
             throw new InvalidArgumentException(

@@ -3,7 +3,6 @@
 namespace App\Application\UserManagement\Handlers;
 
 use App\Application\UserManagement\Commands\UpdateUser;
-use App\Application\UserManagement\Queries\GetUserById;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
@@ -12,6 +11,7 @@ use App\Domain\User\ValueObjects\Status;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 
@@ -19,7 +19,6 @@ final readonly class UpdateUserHandler implements CommandHandler
 {
     public function __construct(
         private UserRepository $users,
-        private \App\Shared\CQRS\Query\QueryBus $queryBus,
     ) {
     }
 
@@ -35,19 +34,19 @@ final readonly class UpdateUserHandler implements CommandHandler
             );
         }
 
-        $eloquentUser = $this->queryBus->ask(new GetUserById($command->userId));
-        $user = $this->users->getById(Id::fromString($eloquentUser->id));
+        $user = $this->users->getById(Id::fromString($command->userId));
 
         if (!$user) {
-            throw new \Illuminate\Database\Eloquent\ModelNotFoundException;
+            throw new NotFound(User::class, $command->userId);
         }
 
         $user->rename($command->name);
 
         // Update email if different, preserving verification status
-        $newEmail = $user->email();
-        if ($user->email()->value() !== $command->email) {
-            $newEmail = Email::reconstitute(
+        $email = $user->email();
+
+        if (!$user->email()->isEqual(Email::fromString($command->email))) {
+            $email = Email::reconstitute(
                 $command->email,
                 $user->email()->getEmailVerifiedAt()
             );
@@ -63,7 +62,7 @@ final readonly class UpdateUserHandler implements CommandHandler
         $user = User::reconstitute(
             $user->id(),
             $user->name(),
-            $newEmail,
+            $email,
             $newPassword,
             Status::fromString($command->status)
         );

@@ -74,4 +74,9 @@ final class Email implements Stringable, JsonSerializable
     {
         return $this->emailVerifiedAt;
     }
+
+    public function isEqual(self $other): bool
+    {
+        return $this->value === $other->value;
+    }
 }

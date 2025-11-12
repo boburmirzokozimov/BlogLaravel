@@ -30,7 +30,7 @@ final readonly class DeleteUserHandler implements CommandHandler
         }
 
         $user = $this->queryBus->ask(new GetUserById($command->userId));
-        /** @var EloquentUser $user */
+        /* @var EloquentUser $user */
         $user->delete();
 
         return true;
