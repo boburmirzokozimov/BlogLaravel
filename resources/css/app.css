@@ -9,3 +9,25 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* PrimeVue White Theme Overrides */
+.p-component,
+.p-datatable,
+.p-panel,
+.p-dialog {
+    background: white;
+    color: #1f2937;
+}
+
+.p-datatable .p-datatable-thead > tr > th {
+    background: #f9fafb;
+    color: #1f2937;
+}
+
+.p-datatable .p-datatable-tbody > tr {
+    background: white;
+}
+
+.p-datatable .p-datatable-tbody > tr:nth-child(even) {
+    background: #f9fafb;
+}
