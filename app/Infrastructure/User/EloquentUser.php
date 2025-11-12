@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\User;
 
+use App\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,10 +17,12 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $email
  * @property string $password
  * @property string $status
+ * @property Role $role
  * @property Carbon|null $email_verified_at
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ *
  * @method Builder<EloquentUser> filterRequest($filters = [])
  */
 class EloquentUser extends Authenticatable implements JWTSubject
@@ -51,6 +54,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
         'password',
         'email_verified_at',
         'status',
+        'role',
     ];
 
     /**
@@ -93,6 +97,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
     {
         return [
             'email_verified_at' => 'datetime',
+            'role' => Role::class,
         ];
     }
 
@@ -105,15 +110,15 @@ class EloquentUser extends Authenticatable implements JWTSubject
      * - order_by: field to order by (default: created_at)
      * - order_direction: direction of ordering (default: desc)
      *
-     * @param Builder<EloquentUser> $builder The query builder instance
-     * @param array<string, mixed> $filters An associative array of filter criteria
+     * @param  Builder<EloquentUser>  $builder  The query builder instance
+     * @param  array<string, mixed>  $filters  An associative array of filter criteria
      * @return Builder<EloquentUser> The modified query builder instance
      */
     public function scopeFilterRequest(Builder $builder, array $filters = []): Builder
     {
         return $builder
             ->when(
-                !empty($filters['search']),
+                ! empty($filters['search']),
                 function (Builder $query) use ($filters) {
                     $query->where(function (Builder $q) use ($filters) {
                         $q->where('name', 'like', '%'.$filters['search'].'%')
@@ -122,7 +127,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
                 }
             )
             ->when(
-                !empty($filters['status']),
+                ! empty($filters['status']),
                 function (Builder $query) use ($filters) {
                     $query->where('status', $filters['status']);
                 }
@@ -131,5 +136,10 @@ class EloquentUser extends Authenticatable implements JWTSubject
                 $filters['order_by'] ?? 'created_at',
                 $filters['order_direction'] ?? 'desc'
             );
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === Role::Admin;
     }
 }

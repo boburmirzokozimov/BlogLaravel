@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Infrastructure\User\EloquentUser;
+use App\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -34,6 +35,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'status' => 'active',
+            'role' => Role::User,
             'remember_token' => Str::random(10),
         ];
     }
@@ -75,6 +77,16 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => 'suspended',
+        ]);
+    }
+
+    /**
+     * Indicate that the user should be an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => Role::Admin,
         ]);
     }
 }

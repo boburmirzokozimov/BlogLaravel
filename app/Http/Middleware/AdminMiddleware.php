@@ -15,12 +15,13 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
             return redirect()->route('admin.login');
         }
 
-        // Add any additional admin checks here (e.g., role, permissions)
-        // For now, any authenticated user can access admin
+        if (! $request->user()->isAdmin()) {
+            abort(403);
+        }
 
         return $next($request);
     }
