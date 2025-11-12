@@ -5,6 +5,7 @@ use App\Http\Middleware\ForceJsonResponseMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocaleMiddleware;
 use App\Shared\Exceptions\DomainException;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,7 +20,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__.'/../routes/console.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         then: function () {
             Route::prefix('api/v1')
@@ -38,9 +39,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->trustProxies(
             at: '*',
             headers: Request::HEADER_X_FORWARDED_FOR |
-                Request::HEADER_X_FORWARDED_HOST |
-                Request::HEADER_X_FORWARDED_PORT |
-                Request::HEADER_X_FORWARDED_PROTO
+            Request::HEADER_X_FORWARDED_HOST |
+            Request::HEADER_X_FORWARDED_PORT |
+            Request::HEADER_X_FORWARDED_PROTO
         );
         $middleware->alias([
             'admin' => AdminMiddleware::class,
@@ -49,7 +50,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->renderable(function (Throwable $e): ?JsonResponse {
             $env = app()->environment();
-            $isDevOrTesting = in_array($env, ['local', 'development', 'testing']);
+            $isDevOrTesting = in_array($env, ['local', 'development']);
 
             // Handle ValidationException with standardized format
             if ($e instanceof ValidationException) {
@@ -146,6 +147,14 @@ return Application::configure(basePath: dirname(__DIR__))
                     ],
                 ], 401),
 
+                $e instanceof AuthorizationException, $e instanceof Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException => response()->json([
+                    'code' => 'UNAUTHENTICATED',
+                    'message' => [
+                        'ru' => __('errors.unauthorized', [], 'ru'),
+                        'en' => __('errors.unauthorized', [], 'en'),
+                    ],
+                ], 403),
+
                 $e instanceof TokenExpiredException => response()->json([
                     'code' => 'TOKEN_EXPIRED',
                     'message' => [
@@ -182,7 +191,7 @@ return Application::configure(basePath: dirname(__DIR__))
                         'line' => $e->getLine(),
                         'trace' => $e->getTraceAsString(),
                     ],
-                ], $e->getCode()),
+                ], 403),
 
                 default => response()->json([
                     'code' => 'BAD_REQUEST',

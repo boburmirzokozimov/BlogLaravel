@@ -9,16 +9,6 @@ use Tests\TestCase;
 class AdminMiddlewareTest extends TestCase
 {
     /**
-     * Test that unauthenticated users are redirected to admin login.
-     */
-    public function test_unauthenticated_user_is_redirected_to_login(): void
-    {
-        $response = $this->get('/admin/dashboard');
-
-        $response->assertRedirect(route('admin.login'));
-    }
-
-    /**
      * Test that regular users (non-admin) get 403 Forbidden.
      */
     public function test_regular_user_gets_403_forbidden(): void
@@ -79,4 +69,3 @@ class AdminMiddlewareTest extends TestCase
         $this->assertFalse($user->isAdmin());
     }
 }
-

@@ -118,7 +118,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
     {
         return $builder
             ->when(
-                ! empty($filters['search']),
+                !empty($filters['search']),
                 function (Builder $query) use ($filters) {
                     $query->where(function (Builder $q) use ($filters) {
                         $q->where('name', 'like', '%'.$filters['search'].'%')
@@ -127,7 +127,7 @@ class EloquentUser extends Authenticatable implements JWTSubject
                 }
             )
             ->when(
-                ! empty($filters['status']),
+                !empty($filters['status']),
                 function (Builder $query) use ($filters) {
                     $query->where('status', $filters['status']);
                 }
