@@ -43,32 +43,39 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
+            set -e
             cd /var/www/blog
 
-            # Pull latest changes
+            echo "📥 Pulling latest changes..."
             git pull origin main
 
+            echo "🔄 Rebuilding containers..."
             make down
             make build
             make up
 
-            # Run everything as root to avoid permission issues
+            echo "📦 Installing PHP dependencies..."
             docker-compose exec -T -u root php-cli bash -c "
               composer install --optimize-autoloader --no-dev && \
               chown -R www:www /var/www/html && \
-              chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache && \
-              php artisan migrate --force && \
-              php artisan optimize:clear && \
-              php artisan config:cache && \
-              php artisan route:cache && \
-              php artisan view:cache && \
-              php artisan l5-swagger:generate
+              chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
             "
 
-            # Restart services
-            docker-compose restart php-fpm nginx
+            echo "🗃️ Running migrations..."
+            docker-compose exec -T php-cli php artisan migrate --force
 
-            echo "✅ Deployment completed!"
+            echo "🧹 Clearing caches..."
+            docker-compose exec -T php-cli php artisan optimize:clear
+
+            echo "📚 Generating Swagger documentation..."
+            docker-compose exec -T php-cli php artisan l5-swagger:generate
+
+            echo "⚡ Caching configuration..."
+            docker-compose exec -T php-cli php artisan config:cache
+            docker-compose exec -T php-cli php artisan route:cache
+            docker-compose exec -T php-cli php artisan view:cache
+
+            echo "✅ Backend deployment completed!"
 
       - name: Upload built assets to server
         uses: appleboy/scp-action@v0.1.7
@@ -79,20 +86,34 @@ jobs:
           source: "public/build/*"
           target: "/var/www/blog/"
           strip_components: 0
+          overwrite: true
 
-      - name: Set permissions for built assets
+      - name: Set permissions and restart services
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            docker-compose exec -T -u root php-cli bash -c "chown -R www:www /var/www/html/public/build"
+            cd /var/www/blog
 
+            echo "🔐 Setting permissions for built assets..."
+            # Create directory if it doesn't exist
+            docker-compose exec -T -u root php-cli mkdir -p /var/www/html/public/build
+
+            # Set ownership and permissions
+            docker-compose exec -T -u root php-cli chown -R www:www /var/www/html/public/build
+            docker-compose exec -T -u root php-cli chmod -R 755 /var/www/html/public/build
+
+            echo "🔄 Restarting services..."
+            docker-compose restart php-fpm nginx
+
+            echo "✅ All done!"
 
       - name: Health Check
         run: |
           echo "🏥 Checking application health..."
+          sleep 5
           for i in {1..10}; do
             if curl -f --max-time 10 https://bobur.xyz >/dev/null 2>&1; then
               echo "✅ Application is healthy!"
