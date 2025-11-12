@@ -5,6 +5,7 @@ return [
     'unauthenticated' => 'Unauthenticated',
     'unauthorized' => 'Unauthorized access',
     'forbidden' => 'Access forbidden',
+    'do_not_have_permission' => 'Do not have permission',
 
     // JWT Token Errors
     'token_expired' => 'Token has expired',

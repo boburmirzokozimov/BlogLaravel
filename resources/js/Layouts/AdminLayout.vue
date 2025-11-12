@@ -52,12 +52,31 @@
 
         <!-- Page Content -->
         <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+            <ErrorAlert
+                v-if="permissionError"
+                :message="permissionError"
+                title="Permission Denied"
+            />
             <slot />
         </main>
     </div>
 </template>
 
 <script setup>
-import { Link } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Link, usePage } from '@inertiajs/vue3';
+import ErrorAlert from '@/Components/ErrorAlert.vue';
+import { getLocalizedError } from '@/Utils/errors';
+
+const page = usePage();
+
+const permissionError = computed(() => {
+    const error = page.props.errors?.permission || page.props.flash?.error;
+    if (!error) {
+        return null;
+    }
+    // Get localized message from bilingual object
+    return getLocalizedError(error);
+});
 </script>
 

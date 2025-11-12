@@ -5,6 +5,7 @@ return [
     'unauthenticated' => 'Необходима авторизация',
     'unauthorized' => 'Несанкционированный доступ',
     'forbidden' => 'Доступ запрещен',
+    'do_not_have_permission' => 'Нет разрешения',
 
     // JWT Token Errors
     'token_expired' => 'Срок действия токена истек',
