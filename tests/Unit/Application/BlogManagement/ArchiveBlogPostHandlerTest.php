@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\BlogManagement;
 
-use App\Application\BlogManagement\Commands\ArchiveBlogPost;
-use App\Application\BlogManagement\Commands\DeleteBlogPost;
-use App\Application\BlogManagement\Handlers\ArchiveBlogPostHandler;
+use App\Application\Commands\Blog\ArchiveBlogPost;
+use App\Application\Commands\Blog\DeleteBlogPost;
+use App\Application\Handlers\Blog\ArchiveBlogPostHandler;
 use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Domain\Blog\ValueObjects\AuthorId;

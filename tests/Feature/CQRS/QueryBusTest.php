@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Application\UserManagement\Queries\GetUserById;
+use App\Application\Queries\User\GetUserById;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\QueryBus;
 use App\Shared\CQRS\Query\Query;
@@ -45,8 +45,7 @@ class QueryBusTest extends TestCase
         $bus = app(QueryBus::class);
 
         // Create a query without a handler
-        $mockQuery = new class implements Query {
-        };
+        $mockQuery = new class implements Query {};
 
         $bus->ask($mockQuery);
     }

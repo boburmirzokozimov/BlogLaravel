@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\CQRS;
 
-use App\Application\UserManagement\Commands\CreateUser;
+use App\Application\Commands\User\CreateUser;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\CommandBus;
 use App\Shared\CQRS\Command\Command;
@@ -38,8 +38,7 @@ class CommandBusTest extends TestCase
         $bus = app(CommandBus::class);
 
         // Create a command without a handler
-        $mockCommand = new class implements Command {
-        };
+        $mockCommand = new class implements Command {};
 
         $bus->dispatch($mockCommand);
     }

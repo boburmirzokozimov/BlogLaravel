@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\UserManagement;
 
-use App\Application\UserManagement\Commands\AttachEmailToUser;
-use App\Application\UserManagement\Commands\CreateUser;
-use App\Application\UserManagement\Handlers\AttachEmailToUserHandler;
+use App\Application\Commands\User\AttachEmailToUser;
+use App\Application\Commands\User\CreateUser;
+use App\Application\Handlers\User\AttachEmailToUserHandler;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
@@ -33,7 +33,7 @@ class AttachEmailToUserHandlerTest extends TestCase
             PasswordHash::fromPlain('password123')
         );
 
-        $eloquentUser = new EloquentUser();
+        $eloquentUser = new EloquentUser;
         $eloquentUser->id = $userId->toString();
         $eloquentUser->email = 'new@example.com';
         $eloquentUser->status = 'active';
@@ -145,7 +145,7 @@ class AttachEmailToUserHandlerTest extends TestCase
         // Before attaching email, user should be pending
         $this->assertTrue($user->status()->equals(Status::pending()));
 
-        $eloquentUser = new EloquentUser();
+        $eloquentUser = new EloquentUser;
         $eloquentUser->id = $userId->toString();
         $eloquentUser->email = 'new@example.com';
         $eloquentUser->status = 'active';

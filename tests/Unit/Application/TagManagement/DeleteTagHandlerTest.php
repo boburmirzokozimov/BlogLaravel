@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\TagManagement;
 
-use App\Application\TagManagement\Commands\CreateTag;
-use App\Application\TagManagement\Commands\DeleteTag;
-use App\Application\TagManagement\Handlers\DeleteTagHandler;
+use App\Application\Commands\Tag\CreateTag;
+use App\Application\Commands\Tag\DeleteTag;
+use App\Application\Handlers\Tag\DeleteTagHandler;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;

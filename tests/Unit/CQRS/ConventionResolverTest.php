@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\CQRS;
 
-use App\Application\UserManagement\Commands\CreateUser;
-use App\Application\UserManagement\Queries\GetUserById;
+use App\Application\Commands\User\CreateUser;
+use App\Application\Queries\User\GetUserById;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\ConventionResolver;
 use PHPUnit\Framework\TestCase;
@@ -19,7 +19,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($command);
 
         $this->assertEquals(
-            'App\Application\UserManagement\Handlers\CreateUserHandler',
+            'App\Application\Handlers\User\CreateUserHandler',
             $handlerClass
         );
     }
@@ -30,7 +30,7 @@ class ConventionResolverTest extends TestCase
         $handlerClass = $this->resolver->resolveHandlerClass($query);
 
         $this->assertEquals(
-            'App\Application\UserManagement\Handlers\GetUserByIdHandler',
+            'App\Application\Handlers\User\GetUserByIdHandler',
             $handlerClass
         );
     }
@@ -41,8 +41,7 @@ class ConventionResolverTest extends TestCase
         $this->expectExceptionMessageMatches('/Handler .* not found/');
 
         // Create a mock command that doesn't have a handler
-        $mockCommand = new class implements Command {
-        };
+        $mockCommand = new class implements Command {};
 
         $this->resolver->resolveHandlerClass($mockCommand);
     }
@@ -50,6 +49,6 @@ class ConventionResolverTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->resolver = new ConventionResolver();
+        $this->resolver = new ConventionResolver;
     }
 }

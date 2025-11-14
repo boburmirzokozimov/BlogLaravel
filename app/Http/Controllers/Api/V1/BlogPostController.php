@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Application\BlogManagement\Commands\ArchiveBlogPost;
-use App\Application\BlogManagement\Commands\CreateBlogPost;
-use App\Application\BlogManagement\Commands\DeleteBlogPost;
-use App\Application\BlogManagement\Commands\PublishBlogPost;
-use App\Application\BlogManagement\Commands\UpdateBlogPost;
-use App\Application\BlogManagement\Queries\GetBlogPostById;
-use App\Application\BlogManagement\Queries\GetBlogPostBySlug;
-use App\Application\BlogManagement\Queries\ListPublishedBlogPosts;
+use App\Application\Commands\Blog\ArchiveBlogPost;
+use App\Application\Commands\Blog\CreateBlogPost;
+use App\Application\Commands\Blog\DeleteBlogPost;
+use App\Application\Commands\Blog\PublishBlogPost;
+use App\Application\Commands\Blog\UpdateBlogPost;
+use App\Application\Queries\Blog\GetBlogPostById;
+use App\Application\Queries\Blog\GetBlogPostBySlug;
+use App\Application\Queries\Blog\ListPublishedBlogPosts;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateBlogPostRequest;
 use App\Http\Requests\UpdateBlogPostRequest;

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Application\UserManagement\Commands\AttachEmailToUser;
-use App\Application\UserManagement\Commands\CreateUser;
+use App\Application\Commands\User\AttachEmailToUser;
+use App\Application\Commands\User\CreateUser;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiResponse;

@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\TagManagement;
 
-use App\Application\TagManagement\Handlers\ListTagsHandler;
-use App\Application\TagManagement\Queries\GetTagById;
-use App\Application\TagManagement\Queries\ListTags;
+use App\Application\Handlers\Tag\ListTagsHandler;
+use App\Application\Queries\Tag\GetTagById;
+use App\Application\Queries\Tag\ListTags;
 use App\Domain\Blog\Repositories\TagRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use InvalidArgumentException;
@@ -27,7 +27,7 @@ class ListTagsHandlerTest extends UnitTestCase
             ->with([])
             ->andReturn($paginator);
 
-        $query = new ListTags();
+        $query = new ListTags;
         $result = ($this->handler)($query);
 
         $this->assertInstanceOf(LengthAwarePaginator::class, $result);
@@ -107,7 +107,7 @@ class ListTagsHandlerTest extends UnitTestCase
             ->once()
             ->andReturn($paginator);
 
-        $query = new ListTags();
+        $query = new ListTags;
         $result = ($this->handler)($query);
 
         $this->assertSame($paginator, $result);

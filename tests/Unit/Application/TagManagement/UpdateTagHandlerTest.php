@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\TagManagement;
 
-use App\Application\TagManagement\Commands\CreateTag;
-use App\Application\TagManagement\Commands\UpdateTag;
-use App\Application\TagManagement\Handlers\UpdateTagHandler;
+use App\Application\Commands\Tag\CreateTag;
+use App\Application\Commands\Tag\UpdateTag;
+use App\Application\Handlers\Tag\UpdateTagHandler;
 use App\Domain\Blog\Entity\Tag;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\Blog\ValueObjects\Slug;

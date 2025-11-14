@@ -12,15 +12,16 @@ final class ConventionResolver
      * Resolves the handler class name for a given command or query.
      *
      * Convention:
-     * - App\Application\User\Commands\CreateUser → App\Application\User\Handlers\CreateUserHandler
-     * - App\Application\User\Queries\GetUserById → App\Application\User\Handlers\GetUserByIdHandler
+     * - App\Application\Commands\User\CreateUser → App\Application\Handlers\User\CreateUserHandler
+     * - App\Application\Queries\User\GetUserById → App\Application\Handlers\User\GetUserByIdHandler
+     * - App\Application\Commands\Blog\CreateBlogPost → App\Application\Handlers\Blog\CreateBlogPostHandler
      */
     public function resolveHandlerClass(Command|Query $message): string
     {
         $messageClass = get_class($message);
-        $messageName = class_basename($messageClass);
 
-        // Replace Commands or Queries namespace segment with Handlers
+        // Replace Commands or Queries with Handlers, keeping the group (Blog/User/Tag)
+        // App\Application\Commands\Blog\CreateBlogPost → App\Application\Handlers\Blog\CreateBlogPost
         $handlerClass = preg_replace(
             '/\\\\(Commands|Queries)\\\\/',
             '\\Handlers\\',

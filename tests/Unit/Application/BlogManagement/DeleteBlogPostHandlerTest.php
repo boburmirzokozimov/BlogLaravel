@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\BlogManagement;
 
-use App\Application\BlogManagement\Commands\ArchiveBlogPost;
-use App\Application\BlogManagement\Commands\DeleteBlogPost;
-use App\Application\BlogManagement\Handlers\DeleteBlogPostHandler;
+use App\Application\Commands\Blog\ArchiveBlogPost;
+use App\Application\Commands\Blog\DeleteBlogPost;
+use App\Application\Handlers\Blog\DeleteBlogPostHandler;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;

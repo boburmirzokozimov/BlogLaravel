@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Application\UserManagement\Commands\CreateUser;
-use App\Application\UserManagement\Commands\DeleteUser;
-use App\Application\UserManagement\Commands\UpdateUser;
-use App\Application\UserManagement\Queries\GetUserById;
-use App\Application\UserManagement\Queries\ListUsers;
+use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\DeleteUser;
+use App\Application\Commands\User\UpdateUser;
+use App\Application\Queries\User\GetUserById;
+use App\Application\Queries\User\ListUsers;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreUserRequest;
 use App\Http\Requests\Admin\UpdateUserRequest;

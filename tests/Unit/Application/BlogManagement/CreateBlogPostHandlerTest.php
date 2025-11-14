@@ -2,9 +2,9 @@
 
 namespace Tests\Unit\Application\BlogManagement;
 
-use App\Application\BlogManagement\Commands\CreateBlogPost;
-use App\Application\BlogManagement\Commands\UpdateBlogPost;
-use App\Application\BlogManagement\Handlers\CreateBlogPostHandler;
+use App\Application\Commands\Blog\CreateBlogPost;
+use App\Application\Commands\Blog\UpdateBlogPost;
+use App\Application\Handlers\Blog\CreateBlogPostHandler;
 use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
 use App\Domain\Blog\ValueObjects\PostStatus;

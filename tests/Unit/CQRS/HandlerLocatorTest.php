@@ -2,10 +2,10 @@
 
 namespace Tests\Unit\CQRS;
 
-use App\Application\UserManagement\Commands\CreateUser;
-use App\Application\UserManagement\Handlers\CreateUserHandler;
-use App\Application\UserManagement\Handlers\GetUserByIdHandler;
-use App\Application\UserManagement\Queries\GetUserById;
+use App\Application\Commands\User\CreateUser;
+use App\Application\Handlers\User\CreateUserHandler;
+use App\Application\Handlers\User\GetUserByIdHandler;
+use App\Application\Queries\User\GetUserById;
 use App\Shared\CQRS\HandlerLocator;
 use Tests\TestCase;
 

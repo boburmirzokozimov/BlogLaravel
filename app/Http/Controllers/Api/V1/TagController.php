@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Application\TagManagement\Commands\CreateTag;
-use App\Application\TagManagement\Commands\DeleteTag;
-use App\Application\TagManagement\Commands\UpdateTag;
-use App\Application\TagManagement\Queries\GetTagById;
-use App\Application\TagManagement\Queries\GetTagBySlug;
-use App\Application\TagManagement\Queries\ListTags;
+use App\Application\Commands\Tag\CreateTag;
+use App\Application\Commands\Tag\DeleteTag;
+use App\Application\Commands\Tag\UpdateTag;
+use App\Application\Queries\Tag\GetTagById;
+use App\Application\Queries\Tag\GetTagBySlug;
+use App\Application\Queries\Tag\ListTags;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateTagRequest;
 use App\Http\Requests\UpdateTagRequest;
