@@ -18,6 +18,7 @@ return [
     'invariant_violation' => 'Business rule violation',
     'email_has_been_activated_already' => 'Email has already been activated',
     'user_has_already_been_activated' => 'User has already been activated',
+    'invalid_verification_token' => 'Invalid or expired verification token',
 
     // Field Validation Messages
     'validation' => [

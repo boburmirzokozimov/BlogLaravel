@@ -105,11 +105,17 @@ class JwtAuthenticationTest extends TestCase
             ->assertJsonStructure([
                 'success',
                 'message' => ['en', 'ru'],
-                'data' => ['access_token', 'token_type', 'expires_in'],
+                'data',
             ])
             ->assertJson([
                 'success' => true,
             ]);
+
+        // Verify user was created but email is not verified
+        $this->assertDatabaseHas('users', [
+            'email' => 'test@example.com',
+            'email_verified_at' => null,
+        ]);
     }
 
     /**

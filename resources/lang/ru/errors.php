@@ -18,6 +18,7 @@ return [
     'invariant_violation' => 'Нарушение бизнес-правила',
     'email_has_been_activated_already' => 'Email уже был активирован',
     'user_has_already_been_activated' => 'Пользователь уже был активирован',
+    'invalid_verification_token' => 'Неверный или истекший токен подтверждения',
 
     // Field Validation Messages
     'validation' => [

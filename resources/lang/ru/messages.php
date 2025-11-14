@@ -6,6 +6,8 @@ return [
 
     // Authentication & User Messages
     'user_registered' => 'Пользователь успешно зарегистрирован',
+    'user_registered_verify_email' => 'Регистрация успешна. Пожалуйста, проверьте вашу почту для подтверждения аккаунта.',
+    'email_verified' => 'Ваш email успешно подтвержден.',
     'user_logged_in' => 'Пользователь успешно вошел в систему',
     'user_logged_out' => 'Пользователь успешно вышел из системы',
     'token_refreshed' => 'Токен успешно обновлен',

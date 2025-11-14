@@ -11,6 +11,8 @@ use App\Domain\User\ValueObjects\PasswordHash;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 final readonly class CreateUserHandler implements CommandHandler
@@ -37,7 +39,15 @@ final readonly class CreateUserHandler implements CommandHandler
             PasswordHash::fromPlain($command->password)
         );
 
-        UserRegisterEvent::dispatch($user);
+        // Generate verification token
+        $verificationToken = Str::random(64);
+        Cache::put(
+            "email_verification:{$verificationToken}",
+            $user->id()->toString(),
+            now()->addDays(7) // Token expires in 7 days
+        );
+
+        UserRegisterEvent::dispatch($user, $verificationToken);
 
         return $this->users->save($user);
     }

@@ -6,6 +6,8 @@ return [
 
     // Authentication & User Messages
     'user_registered' => 'User registered successfully',
+    'user_registered_verify_email' => 'Registration successful. Please check your email to verify your account.',
+    'email_verified' => 'Your email has been verified successfully.',
     'user_logged_in' => 'User logged in successfully',
     'user_logged_out' => 'User logged out successfully',
     'token_refreshed' => 'Token refreshed successfully',

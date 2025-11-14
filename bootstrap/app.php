@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\EnsureEmailVerified;
 use App\Http\Middleware\ForceJsonResponseMiddleware;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\SetLocaleMiddleware;
@@ -20,7 +21,7 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        commands: __DIR__ . '/../routes/console.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
             Route::middleware([ForceJsonResponseMiddleware::class])
@@ -45,6 +46,7 @@ return Application::configure(basePath: dirname(__DIR__))
         );
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'verified' => EnsureEmailVerified::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

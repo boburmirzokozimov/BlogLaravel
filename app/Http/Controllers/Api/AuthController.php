@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\VerifyEmail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\ApiResponse;
 use App\Http\Resources\TokenResource;
 use App\Http\Resources\UserResource;
+use App\Shared\Exceptions\NotFound;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use OpenApi\Attributes as OA;
@@ -81,11 +83,10 @@ class AuthController extends Controller
             )
         );
 
-        $token = auth('api')->login($user);
-
+        // Don't auto-login - require email verification first
         return ApiResponse::success(
-            messageKey: 'messages.user_registered',
-            data: TokenResource::fromToken($token)
+            messageKey: 'messages.user_registered_verify_email',
+            data: null
         );
     }
 
@@ -329,5 +330,63 @@ class AuthController extends Controller
             messageKey: 'messages.token_refreshed',
             data: TokenResource::fromToken(auth('api')->refresh())
         );
+    }
+
+    #[OA\Get(
+        path: '/api/v1/email/verify/{token}',
+        summary: 'Verify user email',
+        tags: ['Authentication'],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: 'Email verified successfully',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: true),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Email verified successfully'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Email успешно подтвержден'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+            new OA\Response(
+                response: 404,
+                description: 'Invalid verification token',
+                content: new OA\JsonContent(
+                    properties: [
+                        new OA\Property(property: 'success', type: 'boolean', example: false),
+                        new OA\Property(
+                            property: 'message',
+                            properties: [
+                                new OA\Property(property: 'en', type: 'string', example: 'Invalid verification token'),
+                                new OA\Property(property: 'ru', type: 'string', example: 'Неверный токен подтверждения'),
+                            ],
+                            type: 'object'
+                        ),
+                    ]
+                )
+            ),
+        ]
+    )]
+    public function verifyEmail(string $token): JsonResponse
+    {
+        try {
+            $this->commands->dispatch(new VerifyEmail($token));
+
+            return ApiResponse::success(
+                messageKey: 'messages.email_verified',
+                data: null
+            );
+        } catch (NotFound $e) {
+            return ApiResponse::error(
+                messageKey: 'errors.invalid_verification_token',
+                statusCode: 404
+            );
+        }
     }
 }

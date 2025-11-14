@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
+use App\Application\Events\UserRegisterEvent;
+use App\Application\Listeners\UserRegisteredListener;
 use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\User\Repositories\UserRepository;
 use App\Infrastructure\Blog\EloquentTagRepository;
 use App\Infrastructure\User\EloquentUserRepository;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -28,5 +31,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Event::listen(
+            UserRegisterEvent::class,
+            UserRegisteredListener::class
+        );
     }
 }
