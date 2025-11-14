@@ -258,21 +258,21 @@ const links = computed(() => {
     const linkData = props.data.links || [];
     // Laravel pagination links structure: {url: string|null, label: string, active: boolean}
     // Find Previous and Next links by checking labels
-    const prevLink = linkData.find(link => 
+    const prevLink = linkData.find(link =>
         link.label && (link.label.includes('Previous') || link.label.includes('&laquo;'))
     );
-    const nextLink = linkData.find(link => 
+    const nextLink = linkData.find(link =>
         link.label && (link.label.includes('Next') || link.label.includes('&raquo;'))
     );
     // Page numbers are all links except Previous and Next
     const pages = linkData.filter(link => {
         if (!link.label) return false;
-        return !link.label.includes('Previous') && 
-               !link.label.includes('Next') && 
-               !link.label.includes('&laquo;') && 
-               !link.label.includes('&raquo;');
+        return !link.label.includes('Previous') &&
+            !link.label.includes('Next') &&
+            !link.label.includes('&laquo;') &&
+            !link.label.includes('&raquo;');
     });
-    
+
     return {
         prev: prevLink?.url || null,
         next: nextLink?.url || null,

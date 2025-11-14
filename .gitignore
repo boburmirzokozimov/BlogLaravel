@@ -26,4 +26,3 @@ Thumbs.db
 docker-compose.override.yml
 storage/api-docs/api-docs.json
 storage/api-docs/*.json
-

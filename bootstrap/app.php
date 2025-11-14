@@ -11,9 +11,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpFoundation\Request as RequestAlias;
 use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
@@ -23,7 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__ . '/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::prefix('api/v1')
+            Route::middleware([ForceJsonResponseMiddleware::class])
+                ->prefix('api/v1')
                 ->group(base_path('routes/api_v1.php'));
 
             Route::middleware('web')
@@ -34,21 +35,25 @@ return Application::configure(basePath: dirname(__DIR__))
         }
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->prepend(ForceJsonResponseMiddleware::class);
         $middleware->prepend(SetLocaleMiddleware::class);
         $middleware->trustProxies(
             at: '*',
-            headers: Request::HEADER_X_FORWARDED_FOR |
-            Request::HEADER_X_FORWARDED_HOST |
-            Request::HEADER_X_FORWARDED_PORT |
-            Request::HEADER_X_FORWARDED_PROTO
+            headers: RequestAlias::HEADER_X_FORWARDED_FOR |
+            RequestAlias::HEADER_X_FORWARDED_HOST |
+            RequestAlias::HEADER_X_FORWARDED_PORT |
+            RequestAlias::HEADER_X_FORWARDED_PROTO
         );
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->renderable(function (Throwable $e): ?JsonResponse {
+        $exceptions->renderable(function (Throwable $e, $request): ?JsonResponse {
+            // Skip error handling for Inertia requests - let Inertia handle them
+            if ($request->header('X-Inertia')) {
+                return null;
+            }
+
             $env = app()->environment();
             $isDevOrTesting = in_array($env, ['local', 'development']);
 

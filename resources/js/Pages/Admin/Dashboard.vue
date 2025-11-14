@@ -1,5 +1,5 @@
 <template>
-    <Head title="Admin Dashboard" />
+    <Head title="Admin Dashboard"/>
     <AdminLayout>
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { Head, Link } from '@inertiajs/vue3';
+import {Head, Link} from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 </script>
 

@@ -10,105 +10,106 @@
             </div>
 
             <div class="mt-8 max-w-2xl">
-                <form @submit.prevent="submit" class="space-y-6 bg-white shadow px-4 py-5 sm:rounded-lg sm:p-6">
-                    <ErrorAlert v-if="form.hasErrors" :message="generalErrors" />
+                <Panel class="shadow">
+                    <template #header>
+                        <div class="flex items-center gap-2">
+                            <i class="pi pi-user-plus"></i>
+                            <span>User Information</span>
+                        </div>
+                    </template>
 
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-1">
-                        <div>
-                            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                            <input
-                                id="name"
-                                v-model="form.name"
-                                type="text"
-                                required
-                                :class="[
-                                    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
-                                    form.errors.name ? 'border-red-300' : ''
-                                ]"
+                    <form @submit.prevent="submit" class="space-y-6">
+                        <ErrorAlert v-if="form.hasErrors" :message="generalErrors" />
+
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="flex flex-col gap-2">
+                                <label for="name" class="text-sm font-medium text-gray-700">Name</label>
+                                <InputText
+                                    id="name"
+                                    v-model="form.name"
+                                    :invalid="!!form.errors.name"
+                                    class="w-full"
+                                    required
+                                />
+                                <InputError :message="form.errors.name" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="email" class="text-sm font-medium text-gray-700">Email</label>
+                                <InputText
+                                    id="email"
+                                    v-model="form.email"
+                                    type="email"
+                                    :invalid="!!form.errors.email"
+                                    class="w-full"
+                                    required
+                                />
+                                <InputError :message="form.errors.email" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+                                <Password
+                                    id="password"
+                                    v-model="form.password"
+                                    :invalid="!!form.errors.password"
+                                    :feedback="false"
+                                    toggleMask
+                                    class="w-full"
+                                    inputClass="w-full"
+                                    required
+                                />
+                                <InputError :message="form.errors.password" />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="password_confirmation" class="text-sm font-medium text-gray-700">
+                                    Confirm Password
+                                </label>
+                                <Password
+                                    id="password_confirmation"
+                                    v-model="form.password_confirmation"
+                                    :feedback="false"
+                                    toggleMask
+                                    class="w-full"
+                                    inputClass="w-full"
+                                    required
+                                />
+                            </div>
+
+                            <div class="flex flex-col gap-2">
+                                <label for="status" class="text-sm font-medium text-gray-700">Status</label>
+                                <Dropdown
+                                    id="status"
+                                    v-model="form.status"
+                                    :options="statusOptions"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    :invalid="!!form.errors.status"
+                                    class="w-full"
+                                    required
+                                />
+                                <InputError :message="form.errors.status" />
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-3 pt-4">
+                            <Link :href="route('admin.users.index')">
+                                <Button
+                                    label="Cancel"
+                                    severity="secondary"
+                                    outlined
+                                />
+                            </Link>
+                            <Button
+                                type="submit"
+                                :label="form.processing ? 'Creating...' : 'Create User'"
+                                :disabled="form.processing"
+                                :loading="form.processing"
                             />
-                            <InputError :message="form.errors.name" />
                         </div>
-
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                            <input
-                                id="email"
-                                v-model="form.email"
-                                type="email"
-                                required
-                                :class="[
-                                    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
-                                    form.errors.email ? 'border-red-300' : ''
-                                ]"
-                            />
-                            <InputError :message="form.errors.email" />
-                        </div>
-
-                        <div>
-                            <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                            <input
-                                id="password"
-                                v-model="form.password"
-                                type="password"
-                                required
-                                :class="[
-                                    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
-                                    form.errors.password ? 'border-red-300' : ''
-                                ]"
-                            />
-                            <InputError :message="form.errors.password" />
-                        </div>
-
-                        <div>
-                            <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
-                                Confirm Password
-                            </label>
-                            <input
-                                id="password_confirmation"
-                                v-model="form.password_confirmation"
-                                type="password"
-                                required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                            />
-                        </div>
-
-                        <div>
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select
-                                id="status"
-                                v-model="form.status"
-                                required
-                                :class="[
-                                    'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm',
-                                    form.errors.status ? 'border-red-300' : ''
-                                ]"
-                            >
-                                <option value="active">Active</option>
-                                <option value="inactive">Inactive</option>
-                                <option value="pending">Pending</option>
-                                <option value="suspended">Suspended</option>
-                            </select>
-                            <InputError :message="form.errors.status" />
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end space-x-3">
-                        <Link
-                            :href="route('admin.users.index')"
-                            class="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                        >
-                            Cancel
-                        </Link>
-                        <button
-                            type="submit"
-                            :disabled="form.processing"
-                            class="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:opacity-50"
-                        >
-                            <span v-if="form.processing">Creating...</span>
-                            <span v-else>Create User</span>
-                        </button>
-                    </div>
-                </form>
+                    </form>
+                </Panel>
             </div>
         </div>
     </AdminLayout>
@@ -121,6 +122,11 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 import ErrorAlert from '@/Components/ErrorAlert.vue';
 import InputError from '@/Components/InputError.vue';
 import { getAllLocalizedErrors } from '@/Utils/errors';
+import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Password from 'primevue/password';
+import Dropdown from 'primevue/dropdown';
+import Panel from 'primevue/panel';
 
 const form = useForm({
     name: '',
@@ -129,6 +135,13 @@ const form = useForm({
     password_confirmation: '',
     status: 'active',
 });
+
+const statusOptions = [
+    { label: 'Active', value: 'active' },
+    { label: 'Inactive', value: 'inactive' },
+    { label: 'Pending', value: 'pending' },
+    { label: 'Suspended', value: 'suspended' },
+];
 
 const submit = () => {
     form.post(route('admin.users.store'));
