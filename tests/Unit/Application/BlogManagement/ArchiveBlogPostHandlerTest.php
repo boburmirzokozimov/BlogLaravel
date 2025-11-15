@@ -47,7 +47,7 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
             ->andReturn($post);
 
         $this->repository
-            ->shouldReceive('create')
+            ->shouldReceive('save')
             ->once()
             ->with(Mockery::on(function ($savedPost) {
                 return $savedPost instanceof BlogPost
@@ -84,7 +84,7 @@ class ArchiveBlogPostHandlerTest extends UnitTestCase
             ->andReturn($post);
 
         $this->repository
-            ->shouldReceive('create')
+            ->shouldReceive('save')
             ->once()
             ->with(Mockery::on(function ($savedPost) {
                 return $savedPost instanceof BlogPost

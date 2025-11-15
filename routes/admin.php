@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -43,4 +44,10 @@ Route::middleware(['auth:web', 'admin'])->prefix('admin')->name('admin.')->group
     Route::get('/tags/{id}/edit', [TagController::class, 'edit'])->name('tags.edit');
     Route::put('/tags/{id}', [TagController::class, 'update'])->name('tags.update');
     Route::delete('/tags/{id}', [TagController::class, 'destroy'])->name('tags.destroy');
+
+    // Blog Post Management
+    Route::get('/blog-posts', [BlogPostController::class, 'index'])->name('blog-posts.index');
+    Route::get('/blog-posts/{id}', [BlogPostController::class, 'show'])->name('blog-posts.show');
+    Route::get('/blog-posts/{id}/edit', [BlogPostController::class, 'edit'])->name('blog-posts.edit');
+    Route::put('/blog-posts/{id}', [BlogPostController::class, 'update'])->name('blog-posts.update');
 });

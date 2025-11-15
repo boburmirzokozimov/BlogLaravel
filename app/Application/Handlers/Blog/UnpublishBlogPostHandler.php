@@ -4,29 +4,28 @@ declare(strict_types=1);
 
 namespace App\Application\Handlers\Blog;
 
-use App\Application\Commands\Blog\ArchiveBlogPost;
+use App\Application\Commands\Blog\UnpublishBlogPost;
 use App\Domain\Blog\Repositories\BlogPostRepository;
-use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
 use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use InvalidArgumentException;
 
-final readonly class ArchiveBlogPostHandler implements CommandHandler
+final readonly class UnpublishBlogPostHandler implements CommandHandler
 {
     public function __construct(
         private BlogPostRepository $repository
     ) {
     }
 
-    public function __invoke(Command $command): EloquentBlogPost
+    public function __invoke(Command $command): mixed
     {
-        if (!$command instanceof ArchiveBlogPost) {
+        if (!$command instanceof UnpublishBlogPost) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'ArchiveBlogPostHandler expects %s, got %s',
-                    ArchiveBlogPost::class,
+                    'UnpublishBlogPostHandler expects %s, got %s',
+                    UnpublishBlogPost::class,
                     get_class($command)
                 )
             );
@@ -38,8 +37,10 @@ final readonly class ArchiveBlogPostHandler implements CommandHandler
             throw new NotFound('Blog post', $command->postId);
         }
 
-        $post->archive();
+        $post->unpublish();
 
-        return $this->repository->save($post);
+        $this->repository->save($post);
+
+        return null;
     }
 }

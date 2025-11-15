@@ -36,6 +36,8 @@ class BlogPostResource extends JsonResource
             'status' => $this->resource->status,
             'published_at' => $this->resource->published_at,
             'tags' => $this->resource->tags,
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
         ];
     }
 }
