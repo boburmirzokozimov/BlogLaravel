@@ -32,7 +32,7 @@ class OAuthController extends Controller
             $user = $this->commands->dispatch(new RegisterUser(
                 $oauthUser->getName() ?? 'NEW USER',
                 $oauthUser->getEmail(),
-                PasswordHash::generateRandom()
+                PasswordHash::generateRandom()->value()
             ));
         }
 
