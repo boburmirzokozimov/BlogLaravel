@@ -1,17 +1,17 @@
 <template>
-    <Head title="Users Management"/>
+    <Head title="Tags Management"/>
     <AdminLayout>
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-2xl font-semibold text-gray-900">Users</h1>
+                    <h1 class="text-2xl font-semibold text-gray-900">Tags</h1>
                     <p class="mt-2 text-sm text-gray-700">
-                        A list of all users in the system including their name, email, and status.
+                        A list of all tags in the system including their name and slug.
                     </p>
                 </div>
                 <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                    <Link :href="route('admin.users.create')">
-                        <Button label="Add user" icon="pi pi-plus"/>
+                    <Link :href="route('admin.tags.create')">
+                        <Button label="Add tag" icon="pi pi-plus"/>
                     </Link>
                 </div>
             </div>
@@ -26,30 +26,16 @@
                 </template>
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-12">
                     <!-- Search Input -->
-                    <div class="sm:col-span-7">
+                    <div class="sm:col-span-11">
                         <span class="p-input-icon-left w-full">
                             <InputText
                                 id="search"
                                 v-model="searchQuery"
-                                placeholder="Search by name or email..."
+                                placeholder="Search by name or slug..."
                                 class="w-full"
                                 @keyup.enter="applyFilters"
                             />
                         </span>
-                    </div>
-
-                    <!-- Status Filter -->
-                    <div class="sm:col-span-4">
-                        <Dropdown
-                            id="status"
-                            v-model="statusFilter"
-                            :options="statusOptions"
-                            optionLabel="label"
-                            optionValue="value"
-                            placeholder="All Statuses"
-                            class="w-full"
-                            @change="applyFilters"
-                        />
                     </div>
 
                     <!-- Apply Button -->
@@ -71,12 +57,6 @@
                         severity="info"
                         @remove="searchQuery = ''; applyFilters()"
                     />
-                    <Tag
-                        v-if="statusFilter"
-                        :value="statusTagValue"
-                        severity="info"
-                        @remove="statusFilter = ''; applyFilters()"
-                    />
                 </div>
 
                 <div v-if="hasActiveFilters" class="mt-4">
@@ -97,41 +77,23 @@
                 class="mt-4"
             />
 
-            <!-- Users Table -->
+            <!-- Tags Table -->
             <DataTable
-                :value="users"
+                :value="tags"
                 :paginator="false"
                 class="mt-8"
                 stripedRows
                 showGridlines
-                :emptyMessage="'No users found.'"
+                :emptyMessage="'No tags found.'"
             >
                 <Column field="name" header="Name" sortable>
                     <template #body="{ data }">
                         <span class="font-medium">{{ data.name }}</span>
                     </template>
                 </Column>
-                <Column field="email" header="Email" sortable/>
-                <Column field="status" header="Status" sortable>
+                <Column field="slug" header="Slug" sortable>
                     <template #body="{ data }">
-                        <Tag
-                            :value="data.status"
-                            :severity="getStatusSeverity(data.status)"
-                        />
-                    </template>
-                </Column>
-                <Column field="email_verified_at" header="Email Verified">
-                    <template #body="{ data }">
-                        <i
-                            v-if="data.email_verified_at"
-                            class="pi pi-check-circle text-green-600"
-                            title="Verified"
-                        />
-                        <i
-                            v-else
-                            class="pi pi-times-circle text-gray-400"
-                            title="Not verified"
-                        />
+                        <code class="text-sm bg-gray-100 px-2 py-1 rounded">{{ data.slug }}</code>
                     </template>
                 </Column>
                 <Column field="created_at" header="Created" sortable>
@@ -142,7 +104,7 @@
                 <Column header="Actions" :exportable="false">
                     <template #body="{ data }">
                         <div class="flex gap-2">
-                            <Link :href="route('admin.users.edit', data.id)">
+                            <Link :href="route('admin.tags.edit', data.id)">
                                 <Button
                                     icon="pi pi-pencil"
                                     severity="secondary"
@@ -168,12 +130,12 @@
             <SimplePagination :data="data" />
 
             <!-- Delete Confirmation Modal -->
-            <DeleteModal
-                v-if="userToDelete"
-                :show="!!userToDelete"
-                :user="userToDelete"
-                @close="userToDelete = null"
-                @confirm="deleteUser"
+            <DeleteTagModal
+                v-if="tagToDelete"
+                :show="!!tagToDelete"
+                :tag="tagToDelete"
+                @close="tagToDelete = null"
+                @confirm="deleteTag"
             />
         </div>
     </AdminLayout>
@@ -184,11 +146,10 @@ import {ref, computed} from 'vue';
 import {Head, Link, router} from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import SuccessAlert from '@/Components/SuccessAlert.vue';
-import DeleteModal from '@/Components/DeleteModal.vue';
+import DeleteTagModal from '@/Components/DeleteTagModal.vue';
 import SimplePagination from '@/Components/SimplePagination.vue';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
-import Dropdown from 'primevue/dropdown';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Tag from 'primevue/tag';
@@ -201,31 +162,22 @@ const props = defineProps({
     },
 });
 
-// Extract users array from Inertia's paginated response
-const users = computed(() => props.data.data || []);
+// Extract tags array from Inertia's paginated response
+const tags = computed(() => props.data.data || []);
 
 // Get filters from URL query params
 const searchQuery = ref(new URLSearchParams(window.location.search).get('search') || '');
-const statusFilter = ref(new URLSearchParams(window.location.search).get('status') || '');
-const userToDelete = ref(null);
+const tagToDelete = ref(null);
 
-const statusOptions = [
-    {label: 'All Statuses', value: ''},
-    {label: 'Active', value: 'active'},
-    {label: 'Inactive', value: 'inactive'},
-    {label: 'Pending', value: 'pending'},
-    {label: 'Suspended', value: 'suspended'},
-];
-
-const confirmDelete = (user) => {
-    userToDelete.value = user;
+const confirmDelete = (tag) => {
+    tagToDelete.value = tag;
 };
 
-const deleteUser = () => {
-    if (userToDelete.value) {
-        router.delete(route('admin.users.destroy', userToDelete.value.id), {
+const deleteTag = () => {
+    if (tagToDelete.value) {
+        router.delete(route('admin.tags.destroy', tagToDelete.value.id), {
             onSuccess: () => {
-                userToDelete.value = null;
+                tagToDelete.value = null;
             },
         });
     }
@@ -236,10 +188,7 @@ const applyFilters = () => {
     if (searchQuery.value) {
         params.set('search', searchQuery.value);
     }
-    if (statusFilter.value) {
-        params.set('status', statusFilter.value);
-    }
-    router.get(route('admin.users.index'), Object.fromEntries(params), {
+    router.get(route('admin.tags.index'), Object.fromEntries(params), {
         preserveState: true,
         preserveScroll: true,
     });
@@ -247,36 +196,16 @@ const applyFilters = () => {
 
 const clearFilters = () => {
     searchQuery.value = '';
-    statusFilter.value = '';
-    router.get(route('admin.users.index'));
-};
-
-
-const getStatusSeverity = (status) => {
-    const severities = {
-        active: 'success',
-        inactive: 'secondary',
-        pending: 'warning',
-        suspended: 'danger',
-    };
-    return severities[status] || 'secondary';
+    router.get(route('admin.tags.index'));
 };
 
 const hasActiveFilters = computed(() => {
-    return !!searchQuery.value || !!statusFilter.value;
+    return !!searchQuery.value;
 });
 
 const searchTagValue = computed(() => {
     return `Search: "${searchQuery.value}"`;
 });
-
-const statusTagValue = computed(() => {
-    return `Status: ${formatStatus(statusFilter.value)}`;
-});
-
-const formatStatus = (status) => {
-    return status.charAt(0).toUpperCase() + status.slice(1);
-};
 
 const formatDate = (date) => {
     if (!date) {

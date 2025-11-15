@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,4 +34,13 @@ Route::middleware(['auth:web', 'admin'])->prefix('admin')->name('admin.')->group
     Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
     Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+
+    // Tag Management
+    Route::get('/tags', [TagController::class, 'index'])->name('tags.index');
+    Route::get('/tags/create', [TagController::class, 'create'])->name('tags.create');
+    Route::post('/tags', [TagController::class, 'store'])->name('tags.store');
+    Route::get('/tags/{id}', [TagController::class, 'show'])->name('tags.show');
+    Route::get('/tags/{id}/edit', [TagController::class, 'edit'])->name('tags.edit');
+    Route::put('/tags/{id}', [TagController::class, 'update'])->name('tags.update');
+    Route::delete('/tags/{id}', [TagController::class, 'destroy'])->name('tags.destroy');
 });

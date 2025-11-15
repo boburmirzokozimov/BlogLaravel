@@ -6,7 +6,7 @@ use App\Application\Handlers\Tag\ListTagsHandler;
 use App\Application\Queries\Tag\GetTagById;
 use App\Application\Queries\Tag\ListTags;
 use App\Domain\Blog\Repositories\TagRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 use InvalidArgumentException;
 use Mockery;
 use Tests\UnitTestCase;
@@ -19,7 +19,7 @@ class ListTagsHandlerTest extends UnitTestCase
 
     public function test_can_list_tags_without_filters(): void
     {
-        $paginator = Mockery::mock(LengthAwarePaginator::class);
+        $paginator = Mockery::mock(Paginator::class);
 
         $this->repository
             ->shouldReceive('index')
@@ -30,7 +30,7 @@ class ListTagsHandlerTest extends UnitTestCase
         $query = new ListTags;
         $result = ($this->handler)($query);
 
-        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
+        $this->assertInstanceOf(Paginator::class, $result);
     }
 
     public function test_can_list_tags_with_filters(): void
@@ -39,7 +39,7 @@ class ListTagsHandlerTest extends UnitTestCase
             'search' => 'php',
             'per_page' => 20,
         ];
-        $paginator = Mockery::mock(LengthAwarePaginator::class);
+        $paginator = Mockery::mock(Paginator::class);
 
         $this->repository
             ->shouldReceive('index')
@@ -50,13 +50,13 @@ class ListTagsHandlerTest extends UnitTestCase
         $query = new ListTags($filters);
         $result = ($this->handler)($query);
 
-        $this->assertInstanceOf(LengthAwarePaginator::class, $result);
+        $this->assertInstanceOf(Paginator::class, $result);
     }
 
     public function test_passes_search_filter_to_repository(): void
     {
         $filters = ['search' => 'laravel'];
-        $paginator = Mockery::mock(LengthAwarePaginator::class);
+        $paginator = Mockery::mock(Paginator::class);
 
         $this->repository
             ->shouldReceive('index')
@@ -74,7 +74,7 @@ class ListTagsHandlerTest extends UnitTestCase
     public function test_passes_per_page_filter_to_repository(): void
     {
         $filters = ['per_page' => 15];
-        $paginator = Mockery::mock(LengthAwarePaginator::class);
+        $paginator = Mockery::mock(Paginator::class);
 
         $this->repository
             ->shouldReceive('index')
@@ -100,7 +100,7 @@ class ListTagsHandlerTest extends UnitTestCase
 
     public function test_returns_paginator_from_repository(): void
     {
-        $paginator = Mockery::mock(LengthAwarePaginator::class);
+        $paginator = Mockery::mock(Paginator::class);
 
         $this->repository
             ->shouldReceive('index')
