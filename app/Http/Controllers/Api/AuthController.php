@@ -75,7 +75,7 @@ class AuthController extends Controller
     {
         $data = $request->validated();
 
-        $user = $this->commands->dispatch(
+        $this->commands->dispatch(
             new RegisterUser(
                 name: $data['name'],
                 email: $data['email'],
@@ -83,7 +83,6 @@ class AuthController extends Controller
             )
         );
 
-        // Don't auto-login - require email verification first
         return ApiResponse::success(
             messageKey: 'messages.user_registered_verify_email',
             data: null
