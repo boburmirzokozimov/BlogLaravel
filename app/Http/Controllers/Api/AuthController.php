@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\RegisterUser;
 use App\Application\Commands\User\VerifyEmail;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
@@ -76,7 +76,7 @@ class AuthController extends Controller
         $data = $request->validated();
 
         $user = $this->commands->dispatch(
-            new CreateUser(
+            new RegisterUser(
                 name: $data['name'],
                 email: $data['email'],
                 password: $data['password']

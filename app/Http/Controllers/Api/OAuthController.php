@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Application\Commands\User\AttachEmailToUser;
-use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\RegisterUser;
 use App\Domain\User\ValueObjects\PasswordHash;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ApiResponse;
@@ -29,7 +29,7 @@ class OAuthController extends Controller
 
         $user = auth()->user();
         if (!$user) {
-            $user = $this->commands->dispatch(new CreateUser(
+            $user = $this->commands->dispatch(new RegisterUser(
                 $oauthUser->getName() ?? 'NEW USER',
                 $oauthUser->getEmail(),
                 PasswordHash::generateRandom()

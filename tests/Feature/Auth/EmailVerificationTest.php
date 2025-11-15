@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Auth;
 
-use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\RegisterUser;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\CommandBus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -41,7 +41,7 @@ class EmailVerificationTest extends TestCase
     {
         $bus = app(CommandBus::class);
 
-        $user = $bus->dispatch(new CreateUser(
+        $user = $bus->dispatch(new RegisterUser(
             name: 'Test User',
             email: 'test@example.com',
             password: 'password123'
@@ -54,7 +54,7 @@ class EmailVerificationTest extends TestCase
         ]);
 
         // Note: We can't easily check the exact token in cache without knowing it
-        // But we know the token generation happens in CreateUserHandler
+        // But we know the token generation happens in RegisterUserHandler
     }
 
     public function test_can_verify_email_with_valid_token(): void

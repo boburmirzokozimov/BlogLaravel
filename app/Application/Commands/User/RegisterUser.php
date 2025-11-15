@@ -2,15 +2,15 @@
 
 namespace App\Application\Commands\User;
 
-use App\Application\Handlers\User\CreateUserHandler;
+use App\Application\Handlers\User\RegisterUserHandler;
 use App\Shared\Attributes\Handler;
 use App\Shared\CQRS\Command\Command;
 
 /**
- * @handler App\Application\Handlers\User\CreateUserHandler
+ * @handler App\Application\Handlers\User\RegisterUserHandler
  */
-#[Handler(CreateUserHandler::class)]
-final readonly class CreateUser implements Command
+#[Handler(RegisterUserHandler::class)]
+final readonly class RegisterUser implements Command
 {
     public function __construct(
         public string $name,

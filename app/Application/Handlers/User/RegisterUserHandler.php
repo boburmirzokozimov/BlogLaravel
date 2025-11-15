@@ -2,7 +2,8 @@
 
 namespace App\Application\Handlers\User;
 
-use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\RegisterUser;
+use App\Application\Events\UserRegisterEvent;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepository;
 use App\Domain\User\ValueObjects\Email;
@@ -10,9 +11,11 @@ use App\Domain\User\ValueObjects\PasswordHash;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Command\Command;
 use App\Shared\CQRS\Command\CommandHandler;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-final readonly class CreateUserHandler implements CommandHandler
+final readonly class RegisterUserHandler implements CommandHandler
 {
     public function __construct(private UserRepository $users)
     {
@@ -20,11 +23,11 @@ final readonly class CreateUserHandler implements CommandHandler
 
     public function __invoke(Command $command): EloquentUser
     {
-        if (!$command instanceof CreateUser) {
+        if (!$command instanceof RegisterUser) {
             throw new InvalidArgumentException(
                 sprintf(
-                    'CreateUserHandler expects %s, got %s',
-                    CreateUser::class,
+                    'RegisterUserHandler expects %s, got %s',
+                    RegisterUser::class,
                     get_class($command)
                 )
             );
@@ -36,9 +39,15 @@ final readonly class CreateUserHandler implements CommandHandler
             PasswordHash::fromPlain($command->password)
         );
 
-        // Admin-created users are automatically activated and verified
-        $user->email()->activate();
-        $user->activate();
+        // Generate verification token
+        $verificationToken = Str::random(64);
+        Cache::put(
+            "email_verification:{$verificationToken}",
+            $user->id()->toString(),
+            now()->addDays(7) // Token expires in 7 days
+        );
+
+        UserRegisterEvent::dispatch($user, $verificationToken);
 
         return $this->users->save($user);
     }

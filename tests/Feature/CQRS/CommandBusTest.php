@@ -3,6 +3,7 @@
 namespace Tests\Feature\CQRS;
 
 use App\Application\Commands\User\CreateUser;
+use App\Application\Commands\User\RegisterUser;
 use App\Infrastructure\User\EloquentUser;
 use App\Shared\CQRS\Bus\CommandBus;
 use App\Shared\CQRS\Command\Command;
@@ -19,7 +20,7 @@ class CommandBusTest extends TestCase
     {
         $bus = app(CommandBus::class);
 
-        $bus->dispatch(new CreateUser(
+        $bus->dispatch(new RegisterUser(
             name: 'Alice Johnson',
             email: 'alice@example.com',
             password: 'password123'
@@ -68,7 +69,7 @@ class CommandBusTest extends TestCase
 
         Log::shouldReceive('info');
         // Act
-        $bus->dispatch(new CreateUser(
+        $bus->dispatch(new RegisterUser(
             name: 'Alice Johnson',
             email: 'alice@example.com',
             password: 'password123'
