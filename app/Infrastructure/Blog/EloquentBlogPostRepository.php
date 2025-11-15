@@ -15,13 +15,13 @@ use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class EloquentBlogPostRepository implements BlogPostRepository
 {
     public function create(BlogPost $post): EloquentBlogPost
     {
-        $model = new EloquentBlogPost();
+        $model = new EloquentBlogPost;
         $model->id = $post->id()->toString();
         $this->mapDomainToModel($post, $model);
         $model->save();
@@ -54,25 +54,25 @@ class EloquentBlogPostRepository implements BlogPostRepository
     }
 
     /**
-     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     * @return Paginator<int, EloquentBlogPost>
      */
-    public function findByAuthor(AuthorId $authorId): LengthAwarePaginator
+    public function findByAuthor(AuthorId $authorId): Paginator
     {
         return EloquentBlogPost::where('author_id', $authorId->toString())
             ->orderBy('created_at', 'desc')
-            ->paginate();
+            ->simplePaginate();
     }
 
     /**
-     * @param array<string, string|int> $filters
-     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     * @param  array<string, string|int>  $filters
+     * @return Paginator<int, EloquentBlogPost>
      */
-    public function index(array $filters = []): LengthAwarePaginator
+    public function index(array $filters = []): Paginator
     {
         return EloquentBlogPost::query()
             ->orderBy('published_at', 'desc')
             ->filter($filters)
-            ->paginate($filters['per_page'] ?? 10);
+            ->simplePaginate($filters['per_page'] ?? 10);
     }
 
     public function delete(Id $id): void

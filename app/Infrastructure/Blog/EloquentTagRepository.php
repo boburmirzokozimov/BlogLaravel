@@ -9,13 +9,13 @@ use App\Domain\Blog\Repositories\TagRepository;
 use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\ValueObjects\Id;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class EloquentTagRepository implements TagRepository
 {
     public function create(Tag $tag): EloquentTag
     {
-        $model = new EloquentTag();
+        $model = new EloquentTag;
         $model->id = $tag->getId()->toString();
         $model->name = $tag->getName()->getTitle();
         $model->slug = $tag->getSlug()->value();
@@ -58,15 +58,15 @@ class EloquentTagRepository implements TagRepository
     }
 
     /**
-     * @param array<string, string|int> $filters
-     * @return LengthAwarePaginator<int, EloquentTag>
+     * @param  array<string, string|int>  $filters
+     * @return Paginator<int, EloquentTag>
      */
-    public function index(array $filters = []): LengthAwarePaginator
+    public function index(array $filters = []): Paginator
     {
         return EloquentTag::query()
             ->filter($filters)
             ->orderBy('name', 'asc')
-            ->paginate($filters['per_page'] ?? 10);
+            ->simplePaginate($filters['per_page'] ?? 10);
     }
 
     public function delete(Id $id): void

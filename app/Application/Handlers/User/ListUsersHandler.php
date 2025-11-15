@@ -26,6 +26,6 @@ final readonly class ListUsersHandler implements QueryHandler
 
         return EloquentUser::query()
             ->filterRequest($query->filters)
-            ->paginate($query->filters['per_page'] ?? 10);
+            ->simplePaginate($query->filters['per_page'] ?? 10);
     }
 }

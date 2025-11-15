@@ -19,7 +19,8 @@ class EmailVerificationMail extends Mailable
     public function __construct(
         public User $user,
         public string $token
-    ) {}
+    ) {
+    }
 
     public function envelope(): Envelope
     {

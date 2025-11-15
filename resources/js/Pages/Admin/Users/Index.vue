@@ -165,15 +165,11 @@
             </DataTable>
 
             <!-- Pagination -->
-            <div v-if="pagination.last_page > 1" class="mt-6 flex items-center justify-between">
+            <div v-if="hasPagination" class="mt-6 flex items-center justify-between">
                 <div class="text-sm text-gray-700">
-                    Showing
-                    <span class="font-medium">{{ pagination.from }}</span>
-                    to
-                    <span class="font-medium">{{ pagination.to }}</span>
-                    of
-                    <span class="font-medium">{{ pagination.total }}</span>
-                    results
+                    Page
+                    <span class="font-medium">{{ pagination.current_page }}</span>
+                    <span v-if="links.next">(More pages available)</span>
                 </div>
                 <div class="flex gap-2">
                     <Link v-if="links.prev" :href="links.prev">
@@ -184,25 +180,17 @@
                             :disabled="!links.prev"
                         />
                     </Link>
-                    <template v-for="(link, index) in links.pages" :key="index">
-                        <Link
-                            v-if="link.url && !link.active && link.label !== '...'"
-                            :href="link.url"
-                            v-html="link.label"
-                            class="px-3 py-2 border rounded hover:bg-gray-50"
+                    <Link v-if="links.first" :href="links.first">
+                        <Button
+                            label="First"
+                            severity="secondary"
+                            outlined
+                            :disabled="pagination.current_page === 1"
                         />
-                        <span
-                            v-else-if="link.label === '...'"
-                            class="px-3 py-2"
-                        >
-                            ...
-                        </span>
-                        <span
-                            v-else-if="link.active"
-                            class="px-3 py-2 border rounded bg-primary text-white"
-                            v-html="link.label"
-                        />
-                    </template>
+                    </Link>
+                    <span class="px-3 py-2 border rounded bg-primary text-white">
+                        {{ pagination.current_page }}
+                    </span>
                     <Link v-if="links.next" :href="links.next">
                         <Button
                             icon="pi pi-angle-right"
@@ -248,36 +236,25 @@ const props = defineProps({
 });
 
 // Extract users array and pagination from Inertia's paginated response
-// When UserResource::collection() is used with a paginator, Laravel automatically includes:
+// When UserResource::collection() is used with a simple paginator, Laravel automatically includes:
 // - data.data: array of resources
-// - data.links: pagination links (prev, next, numbered pages)
-// - data.meta: pagination metadata
+// - data.links: simple pagination links (prev, next, first)
+// - data.meta: simple pagination metadata (current_page, per_page)
 const users = computed(() => props.data.data || []);
 const pagination = computed(() => props.data.meta || {});
 const links = computed(() => {
-    const linkData = props.data.links || [];
-    // Laravel pagination links structure: {url: string|null, label: string, active: boolean}
-    // Find Previous and Next links by checking labels
-    const prevLink = linkData.find(link =>
-        link.label && (link.label.includes('Previous') || link.label.includes('&laquo;'))
-    );
-    const nextLink = linkData.find(link =>
-        link.label && (link.label.includes('Next') || link.label.includes('&raquo;'))
-    );
-    // Page numbers are all links except Previous and Next
-    const pages = linkData.filter(link => {
-        if (!link.label) return false;
-        return !link.label.includes('Previous') &&
-            !link.label.includes('Next') &&
-            !link.label.includes('&laquo;') &&
-            !link.label.includes('&raquo;');
-    });
-
+    // Simple pagination structure: {prev: string|null, next: string|null, first: string|null}
+    const linkData = props.data.links || {};
+    
     return {
-        prev: prevLink?.url || null,
-        next: nextLink?.url || null,
-        pages: pages,
+        prev: linkData.prev || null,
+        next: linkData.next || null,
+        first: linkData.first || null,
     };
+});
+
+const hasPagination = computed(() => {
+    return links.value.prev !== null || links.value.next !== null;
 });
 
 // Get filters from URL query params

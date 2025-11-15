@@ -71,24 +71,19 @@ class BlogPostController extends Controller
                         ),
                         new OA\Property(
                             property: 'meta',
-                            description: 'Pagination metadata',
+                            description: 'Simple pagination metadata',
                             properties: [
                                 new OA\Property(property: 'current_page', type: 'integer', example: 1),
-                                new OA\Property(property: 'from', type: 'integer', nullable: true, example: 1),
-                                new OA\Property(property: 'last_page', type: 'integer', example: 5),
                                 new OA\Property(property: 'per_page', type: 'integer', example: 10),
-                                new OA\Property(property: 'to', type: 'integer', nullable: true, example: 10),
-                                new OA\Property(property: 'total', type: 'integer', example: 50),
                             ],
                             type: 'object',
                             nullable: true
                         ),
                         new OA\Property(
                             property: 'links',
-                            description: 'Pagination links',
+                            description: 'Simple pagination links',
                             properties: [
                                 new OA\Property(property: 'first', type: 'string', example: 'http://localhost:8080/api/v1/blog-posts?page=1'),
-                                new OA\Property(property: 'last', type: 'string', example: 'http://localhost:8080/api/v1/blog-posts?page=5'),
                                 new OA\Property(property: 'prev', type: 'string', nullable: true, example: null),
                                 new OA\Property(property: 'next', type: 'string', nullable: true, example: 'http://localhost:8080/api/v1/blog-posts?page=2'),
                             ],

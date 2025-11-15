@@ -20,11 +20,12 @@ final readonly class RegisterUserHandler implements CommandHandler
     public function __construct(
         private UserRepository $users,
         private CacheService $cache
-    ) {}
+    ) {
+    }
 
     public function __invoke(Command $command): EloquentUser
     {
-        if (! $command instanceof RegisterUser) {
+        if (!$command instanceof RegisterUser) {
             throw new InvalidArgumentException(
                 sprintf(
                     'RegisterUserHandler expects %s, got %s',

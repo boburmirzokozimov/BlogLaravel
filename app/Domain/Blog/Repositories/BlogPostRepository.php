@@ -8,7 +8,7 @@ use App\Domain\Blog\Entity\BlogPost;
 use App\Domain\Blog\ValueObjects\AuthorId;
 use App\Infrastructure\Blog\EloquentBlogPost;
 use App\Shared\ValueObjects\Id;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 interface BlogPostRepository
 {
@@ -32,13 +32,13 @@ interface BlogPostRepository
     /**
      * Get all blog posts by author.
      *
-     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     * @return Paginator<int, EloquentBlogPost>
      */
     public function findByAuthor(AuthorId $authorId): mixed;
 
     /**
-     * @param array<string, string> $filters
-     * @return LengthAwarePaginator<int, EloquentBlogPost>
+     * @param  array<string, string>  $filters
+     * @return Paginator<int, EloquentBlogPost>
      */
     public function index(array $filters = []): mixed;
 

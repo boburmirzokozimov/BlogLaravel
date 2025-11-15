@@ -69,24 +69,19 @@ class TagController extends Controller
                         ),
                         new OA\Property(
                             property: 'meta',
-                            description: 'Pagination metadata',
+                            description: 'Simple pagination metadata',
                             properties: [
                                 new OA\Property(property: 'current_page', type: 'integer', example: 1),
-                                new OA\Property(property: 'from', type: 'integer', example: 1, nullable: true),
-                                new OA\Property(property: 'last_page', type: 'integer', example: 5),
                                 new OA\Property(property: 'per_page', type: 'integer', example: 10),
-                                new OA\Property(property: 'to', type: 'integer', example: 10, nullable: true),
-                                new OA\Property(property: 'total', type: 'integer', example: 50),
                             ],
                             type: 'object',
                             nullable: true
                         ),
                         new OA\Property(
                             property: 'links',
-                            description: 'Pagination links',
+                            description: 'Simple pagination links',
                             properties: [
                                 new OA\Property(property: 'first', type: 'string', example: 'http://localhost:8080/api/v1/tags?page=1'),
-                                new OA\Property(property: 'last', type: 'string', example: 'http://localhost:8080/api/v1/tags?page=5'),
                                 new OA\Property(property: 'prev', type: 'string', example: null, nullable: true),
                                 new OA\Property(property: 'next', type: 'string', example: 'http://localhost:8080/api/v1/tags?page=2', nullable: true),
                             ],

@@ -9,7 +9,8 @@ final readonly class LaravelCacheService implements CacheService
 {
     public function __construct(
         private Repository $cache
-    ) {}
+    ) {
+    }
 
     public function put(string $key, mixed $value, \DateTimeInterface|\DateInterval|int|null $ttl = null): bool
     {

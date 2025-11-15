@@ -7,7 +7,7 @@ namespace App\Domain\Blog\Repositories;
 use App\Domain\Blog\Entity\Tag;
 use App\Infrastructure\Blog\EloquentTag;
 use App\Shared\ValueObjects\Id;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 interface TagRepository
 {
@@ -39,10 +39,10 @@ interface TagRepository
     /**
      * Get all tags with optional filters.
      *
-     * @param array<string, string> $filters
-     * @return LengthAwarePaginator<int, EloquentTag>
+     * @param  array<string, string>  $filters
+     * @return Paginator<int, EloquentTag>
      */
-    public function index(array $filters = []): LengthAwarePaginator;
+    public function index(array $filters = []): Paginator;
 
     /**
      * Delete a tag.
