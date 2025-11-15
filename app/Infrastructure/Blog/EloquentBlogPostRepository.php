@@ -14,7 +14,6 @@ use App\Domain\Blog\ValueObjects\Slug;
 use App\Domain\Blog\ValueObjects\Title;
 use App\Shared\Exceptions\NotFound;
 use App\Shared\ValueObjects\Id;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\Paginator;
 
 class EloquentBlogPostRepository implements BlogPostRepository
@@ -42,6 +41,17 @@ class EloquentBlogPostRepository implements BlogPostRepository
         return $this->toDomain($record);
     }
 
+    public function findByIdEloquent(Id $id): ?EloquentBlogPost
+    {
+        $record = EloquentBlogPost::find($id->toString());
+
+        if (!$record) {
+            return null;
+        }
+
+        return $record;
+    }
+
     public function findBySlug(string $slug): ?EloquentBlogPost
     {
         $record = EloquentBlogPost::where('slug', $slug)->first();
@@ -64,7 +74,7 @@ class EloquentBlogPostRepository implements BlogPostRepository
     }
 
     /**
-     * @param  array<string, string|int>  $filters
+     * @param array<string, string|int> $filters
      * @return Paginator<int, EloquentBlogPost>
      */
     public function index(array $filters = []): Paginator

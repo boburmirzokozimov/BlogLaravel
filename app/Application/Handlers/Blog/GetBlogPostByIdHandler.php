@@ -31,7 +31,7 @@ final readonly class GetBlogPostByIdHandler implements QueryHandler
             );
         }
 
-        $post = $this->repository->findById(Id::fromString($query->postId));
+        $post = $this->repository->findByIdEloquent(Id::fromString($query->postId));
 
         if (!$post) {
             throw new NotFound('Blog post', $query->postId);

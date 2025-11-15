@@ -24,6 +24,8 @@ interface BlogPostRepository
      */
     public function findById(Id $id): ?BlogPost;
 
+    public function findByIdEloquent(Id $id): ?EloquentBlogPost;
+
     /**
      * Find a blog post by slug.
      */
@@ -37,7 +39,7 @@ interface BlogPostRepository
     public function findByAuthor(AuthorId $authorId): mixed;
 
     /**
-     * @param  array<string, string>  $filters
+     * @param array<string, string> $filters
      * @return Paginator<int, EloquentBlogPost>
      */
     public function index(array $filters = []): mixed;
